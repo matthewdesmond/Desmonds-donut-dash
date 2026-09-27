@@ -1,47 +1,1047 @@
 <!DOCTYPE html>
-
 <html lang="en">
-
 <head>
-
 <meta charset="UTF-8">
-
-<meta name="viewport" content="width=device-width,initial-scale=1">
-
-<meta name="theme-color" content="#f6b73c">
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#f4a62a">
 <title>Desmond's Donut Dash</title>
 
 <style>
+* {
+  box-sizing: border-box;
+}
 
-body{font-family:-apple-system,BlinkMacSystemFont,sans-serif;margin:0;background:#fff8ed;color:#222}
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background: #fff7eb;
+  color: #222;
+}
 
-main{max-width:700px;margin:auto;padding:20px}
+main {
+  max-width: 720px;
+  margin: auto;
+  padding: 18px;
+}
 
-h1{font-size:32px}
+h1 {
+  font-size: 32px;
+  margin-bottom: 5px;
+}
 
-.card{background:white;border-radius:18px;padding:18px;margin:14px 0;box-shadow:0 2px 8px #0002}
+h2 {
+  margin-top: 0;
+}
 
-button{display:block;width:100%;min-height:52px;margin:10px 0;padding:12px;border:0;border-radius:12px;background:#f6b73c;color:#111;font-size:17px;font-weight:700}
+.card {
+  background: white;
+  border-radius: 18px;
+  padding: 18px;
+  margin: 14px 0;
+  border: 1px solid #ddd;
+}
 
-button:disabled{background:#ccc}
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
 
-.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.stat {
+  text-align: center;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 14px;
+  padding: 12px;
+}
 
-.stat{text-align:center;background:#fff;border:1px solid #ddd;border-radius:12px;padding:12px}
+.stat strong {
+  display: block;
+  font-size: 25px;
+  margin-top: 4px;
+}
 
-.stat strong{display:block;font-size:24px}
+button {
+  width: 100%;
+  min-height: 52px;
+  margin: 7px 0;
+  padding: 12px;
+  border: 0;
+  border-radius: 13px;
+  background: #f4a62a;
+  color: #111;
+  font-size: 17px;
+  font-weight: 700;
+  cursor: pointer;
+}
 
-#message{font-size:18px;font-weight:600}
+button:focus {
+  outline: 4px solid #146cff;
+  outline-offset: 2px;
+}
 
+button.secondary {
+  background: #eee;
+}
+
+.notice {
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.45;
+}
+
+.progress {
+  font-size: 17px;
+  line-height: 1.5;
+}
+
+.reward {
+  background: #fff0c9;
+  border-left: 6px solid #f4a62a;
+  padding: 12px;
+  border-radius: 8px;
+}
+
+.small {
+  color: #555;
+  font-size: 15px;
+}
 </style>
-
 </head>
 
 <body>
 
 <main>
 
+<header class="card">
 <h1>🍩 Desmond's Donut Dash</h1>
 
-<p>Run your own donut shop. Bake, se
+<p>
+Run your own donut shop! Bake donuts, serve customers,
+earn money, unlock flavors, buy upgrades, and build your
+donut empire.
+</p>
+</header>
+
+<section class="stats" aria-label="Game statistics">
+
+<div class="stat">
+Cash
+<strong id="cash">$50</strong>
+</div>
+
+<div class="stat">
+Donuts Sold
+<strong id="sold">0</strong>
+</div>
+
+<div class="stat">
+Level
+<strong id="level">1</strong>
+</div>
+
+</section>
+
+<section class="card">
+
+<h2>🏪 Shop</h2>
+
+<p id="shopStatus" class="notice" aria-live="polite">
+Your shop is closed.
+</p>
+
+<button id="openShop">
+Open Shop
+</button>
+
+<button id="shopReport" class="secondary">
+Read Shop Report
+</button>
+
+</section>
+
+<section class="card">
+
+<h2>🍩 Donut Kitchen</h2>
+
+<p class="small">
+Choose a donut to bake and sell to your next customer.
+Some special flavors unlock as you sell more donuts.
+</p>
+
+<button data-donut="Glazed" data-price="4">
+🍩 Classic Glazed — $4
+</button>
+
+<button data-donut="Chocolate" data-price="6">
+🍫 Chocolate Frosted — $6
+</button>
+
+<button data-donut="Jelly Filled" data-price="8">
+🍓 Jelly Filled — $8
+</button>
+
+<button data-donut="Cinnamon Sugar" data-price="10">
+🍂 Cinnamon Sugar — $10
+</button>
+
+<button data-donut="Maple Bacon" data-price="14">
+🥓 Maple Bacon — $14
+</button>
+
+<button data-donut="Boston Cream" data-price="16">
+🍮 Boston Cream — $16
+</button>
+
+<button data-donut="Rainbow Sprinkle" data-price="20">
+🌈 Rainbow Sprinkle — $20
+</button>
+
+<button data-donut="Desmond's Dream" data-price="30">
+⭐ Desmond's Dream — $30
+</button>
+
+</section>
+
+<section class="card">
+
+<h2>🎯 Level Progress</h2>
+
+<p id="levelName" class="notice">
+Level 1 — New Shop
+</p>
+
+<p id="goal" class="progress" aria-live="polite">
+Sell 10 donuts to reach Level 2.
+</p>
+
+<div id="reward" class="reward">
+Next reward: $25 bonus + Cinnamon Sugar
+</div>
+
+</section>
+
+<section class="card">
+
+<h2>🏆 Special Rewards</h2>
+
+<p id="milestones" class="progress">
+10 donuts → Level 2 + $25<br>
+25 donuts → Level 3 + $50<br>
+50 donuts → Level 4 + $100<br>
+100 donuts → Level 5 + $200<br>
+200 donuts → Level 6 + $400
+</p>
+
+</section>
+
+<section class="card">
+
+<h2>🔧 Shop Upgrades</h2>
+
+<button id="oven">
+Upgrade Oven — $30
+</button>
+
+<button id="recipes">
+Improve Recipes — $45
+</button>
+
+<button id="helper">
+Hire Helper — $80
+</button>
+
+<button id="display">
+Buy Fancy Display Case — $100
+</button>
+
+<button id="coffee">
+Add Coffee Station — $150
+</button>
+
+<p id="upgradeStatus" class="small" aria-live="polite">
+No upgrades purchased.
+</p>
+
+</section>
+
+<section class="card">
+
+<h2>📰 Shop News</h2>
+
+<p id="news" class="notice" aria-live="polite">
+Welcome to Desmond's Donut Dash!
+Start by opening your shop.
+</p>
+
+<button id="event">
+Check Today's Special Event
+</button>
+
+</section>
+
+<section class="card">
+
+<h2>⚙️ Game</h2>
+
+<button id="newGame" class="secondary">
+Start a New Game
+</button>
+
+<p class="small">
+Progress automatically saves on this device when supported by the browser.
+All important game actions use accessible buttons and VoiceOver-friendly announcements.
+</p>
+
+</section>
+
+<div
+id="announcement"
+aria-live="assertive"
+aria-atomic="true"
+style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);"
+></div>
+
+<script>
+
+(function () {
+
+"use strict";
+
+let cash = 50;
+let sold = 0;
+let level = 1;
+let shopOpen = false;
+
+let oven = 0;
+let recipes = 0;
+let helper = 0;
+let display = 0;
+let coffee = 0;
+
+const milestones = [
+
+{
+sales: 10,
+level: 2,
+bonus: 25,
+unlock: "Cinnamon Sugar"
+},
+
+{
+sales: 25,
+level: 3,
+bonus: 50,
+unlock: "Maple Bacon"
+},
+
+{
+sales: 50,
+level: 4,
+bonus: 100,
+unlock: "Boston Cream"
+},
+
+{
+sales: 100,
+level: 5,
+bonus: 200,
+unlock: "Rainbow Sprinkle"
+},
+
+{
+sales: 200,
+level: 6,
+bonus: 400,
+unlock: "Desmond's Dream"
+}
+
+];
+
+function get(id) {
+return document.getElementById(id);
+}
+
+function announce(text) {
+
+get("announcement").textContent = "";
+
+setTimeout(function () {
+
+get("announcement").textContent = text;
+
+}, 30);
+
+if ("speechSynthesis" in window) {
+
+try {
+
+speechSynthesis.cancel();
+
+const voice = new SpeechSynthesisUtterance(text);
+
+voice.rate = 0.95;
+
+speechSynthesis.speak(voice);
+
+} catch (error) {}
+
+}
+
+}
+
+function saveGame() {
+
+try {
+
+const game = {
+
+cash: cash,
+sold: sold,
+level: level,
+shopOpen: shopOpen,
+oven: oven,
+recipes: recipes,
+helper: helper,
+display: display,
+coffee: coffee
+
+};
+
+localStorage.setItem(
+"desmondsDonutDash",
+JSON.stringify(game)
+);
+
+} catch (error) {}
+
+}
+
+function loadGame() {
+
+try {
+
+const saved =
+localStorage.getItem("desmondsDonutDash");
+
+if (!saved) return;
+
+const game = JSON.parse(saved);
+
+cash = Number(game.cash) || 50;
+sold = Number(game.sold) || 0;
+level = Number(game.level) || 1;
+shopOpen = Boolean(game.shopOpen);
+
+oven = Number(game.oven) || 0;
+recipes = Number(game.recipes) || 0;
+helper = Number(game.helper) || 0;
+display = Number(game.display) || 0;
+coffee = Number(game.coffee) || 0;
+
+} catch (error) {}
+
+}
+
+function getLevelName() {
+
+const names = {
+
+1: "New Shop",
+2: "Neighborhood Favorite",
+3: "Donut Star",
+4: "Donut Champion",
+5: "Donut Legend",
+6: "Master Baker"
+
+};
+
+return names[level] || "Donut Master";
+
+}
+
+function updateScreen() {
+
+get("cash").textContent =
+"$" + Math.floor(cash);
+
+get("sold").textContent =
+sold;
+
+get("level").textContent =
+level;
+
+get("levelName").textContent =
+"Level " + level +
+" — " +
+getLevelName();
+
+const next =
+milestones.find(function (item) {
+
+return sold < item.sales;
+
+});
+
+if (next) {
+
+get("goal").textContent =
+"Sell " +
+next.sales +
+" donuts to reach Level " +
+next.level +
+". You have sold " +
+sold +
+".";
+
+get("reward").textContent =
+"Next reward: $" +
+next.bonus +
+" bonus + " +
+next.unlock +
+" unlocked.";
+
+} else {
+
+get("goal").textContent =
+"All major sale milestones completed!";
+
+get("reward").textContent =
+"🏆 You are the Desmond's Donut Dash Master Baker!";
+
+}
+
+if (oven >= 3) {
+
+get("oven").textContent =
+"Oven MAXED OUT";
+
+} else {
+
+get("oven").textContent =
+"Upgrade Oven — $" +
+(30 * (oven + 1));
+
+}
+
+if (recipes >= 3) {
+
+get("recipes").textContent =
+"Recipes MAXED OUT";
+
+} else {
+
+get("recipes").textContent =
+"Improve Recipes — $" +
+(45 * (recipes + 1));
+
+}
+
+if (helper >= 3) {
+
+get("helper").textContent =
+"Helpers MAXED OUT";
+
+} else {
+
+get("helper").textContent =
+"Hire Helper — $" +
+(80 * (helper + 1));
+
+}
+
+if (display >= 3) {
+
+get("display").textContent =
+"Display Case MAXED OUT";
+
+} else {
+
+get("display").textContent =
+"Buy Fancy Display Case — $" +
+(100 * (display + 1));
+
+}
+
+if (coffee >= 3) {
+
+get("coffee").textContent =
+"Coffee Station MAXED OUT";
+
+} else {
+
+get("coffee").textContent =
+"Add Coffee Station — $" +
+(150 * (coffee + 1));
+
+}
+
+get("upgradeStatus").textContent =
+"Oven " + oven + "/3. " +
+"Recipes " + recipes + "/3. " +
+"Helpers " + helper + "/3. " +
+"Display " + display + "/3. " +
+"Coffee " + coffee + "/3.";
+
+saveGame();
+
+}
+
+function checkMilestones() {
+
+const milestone =
+milestones.find(function (item) {
+
+return sold >= item.sales &&
+level < item.level;
+
+});
+
+if (!milestone) return;
+
+level =
+milestone.level;
+
+cash +=
+milestone.bonus;
+
+const message =
+"Congratulations! " +
+"You reached Level " +
+level +
+". You earned $" +
+milestone.bonus +
+" and unlocked " +
+milestone.unlock +
+"!";
+
+get("news").textContent =
+message;
+
+announce(message);
+
+}
+
+get("openShop").addEventListener(
+"click",
+function () {
+
+shopOpen =
+!shopOpen;
+
+if (shopOpen) {
+
+this.textContent =
+"Close Shop";
+
+get("shopStatus").textContent =
+"The shop is open! Customers are arriving.";
+
+get("news").textContent =
+"Customers are lining up for donuts!";
+
+announce(
+"Desmond's Donut Dash is open! Customers are arriving."
+);
+
+} else {
+
+this.textContent =
+"Open Shop";
+
+get("shopStatus").textContent =
+"Your shop is closed.";
+
+announce(
+"The shop is closed."
+);
+
+}
+
+saveGame();
+
+});
+
+document
+.querySelectorAll("[data-donut]")
+.forEach(function (button) {
+
+button.addEventListener(
+"click",
+function () {
+
+if (!shopOpen) {
+
+announce(
+"Your shop is closed. Open the shop first."
+);
+
+return;
+
+}
+
+const name =
+this.getAttribute("data-donut");
+
+const basePrice =
+Number(
+this.getAttribute("data-price")
+);
+
+let requiredSales = 0;
+
+if (name === "Cinnamon Sugar")
+requiredSales = 10;
+
+if (name === "Maple Bacon")
+requiredSales = 25;
+
+if (name === "Boston Cream")
+requiredSales = 50;
+
+if (name === "Rainbow Sprinkle")
+requiredSales = 100;
+
+if (name === "Desmond's Dream")
+requiredSales = 200;
+
+if (sold < requiredSales) {
+
+announce(
+name +
+" is locked. Sell " +
+(requiredSales - sold) +
+" more donuts to unlock it."
+);
+
+return;
+
+}
+
+let bonus = 0;
+
+bonus += oven * 2;
+bonus += recipes * 2;
+bonus += helper * 3;
+bonus += display * 2;
+bonus += coffee * 3;
+
+const earned =
+basePrice +
+bonus;
+
+cash +=
+earned;
+
+sold++;
+
+checkMilestones();
+
+get("news").textContent =
+"Customer bought a " +
+name +
+" donut for $" +
+earned +
+"!";
+
+announce(
+"Sold a " +
+name +
+" donut for " +
+earned +
+" dollars."
+);
+
+updateScreen();
+
+});
+
+});
+
+function buyUpgrade(
+property,
+baseCost,
+name
+) {
+
+if (window[property] >= 3) {
+
+announce(
+name +
+" is already fully upgraded."
+);
+
+return;
+
+}
+
+const cost =
+baseCost *
+(window[property] + 1);
+
+if (cash < cost) {
+
+announce(
+"You need $" +
+(cost - cash) +
+" more for " +
+name +
+"."
+);
+
+return;
+
+}
+
+cash -=
+cost;
+
+window[property]++;
+
+announce(
+name +
+" upgraded to level " +
+window[property] +
+"."
+);
+
+updateScreen();
+
+}
+
+get("oven").addEventListener(
+"click",
+function () {
+
+buyUpgrade(
+"oven",
+30,
+"Oven"
+);
+
+});
+
+get("recipes").addEventListener(
+"click",
+function () {
+
+buyUpgrade(
+"recipes",
+45,
+"Recipes"
+);
+
+});
+
+get("helper").addEventListener(
+"click",
+function () {
+
+buyUpgrade(
+"helper",
+80,
+"Helper"
+);
+
+});
+
+get("display").addEventListener(
+"click",
+function () {
+
+buyUpgrade(
+"display",
+100,
+"Display Case"
+);
+
+});
+
+get("coffee").addEventListener(
+"click",
+function () {
+
+buyUpgrade(
+"coffee",
+150,
+"Coffee Station"
+);
+
+});
+
+get("shopReport").addEventListener(
+"click",
+function () {
+
+const report =
+"Shop report. " +
+"Level " +
+level +
+", " +
+sold +
+" donuts sold, " +
+cash +
+" dollars in cash. " +
+"Oven level " +
+oven +
+". Recipes level " +
+recipes +
+". Helpers level " +
+helper +
+". Display level " +
+display +
+". Coffee level " +
+coffee +
+".";
+
+announce(report);
+
+});
+
+get("event").addEventListener(
+"click",
+function () {
+
+if (!shopOpen) {
+
+announce(
+"Open the shop before checking today's event."
+);
+
+return;
+
+}
+
+const events = [
+
+{
+text:
+"School bus rush! Ten customers arrived.",
+money: 20
+},
+
+{
+text:
+"A food blogger visited your shop!",
+money: 30
+},
+
+{
+text:
+"A customer left a huge tip!",
+money: 50
+},
+
+{
+text:
+"Quiet morning. Nothing special happened.",
+money: 0
+},
+
+{
+text:
+"Donut delivery arrived early!",
+money: 40
+}
+
+];
+
+const event =
+events[
+Math.floor(
+Math.random() *
+events.length
+)
+];
+
+cash +=
+event.money;
+
+get("news").textContent =
+event.text +
+(
+event.money
+?
+" You earned $" +
+event.money +
+"."
+:
+""
+);
+
+announce(
+event.text +
+(
+event.money
+?
+" You earned " +
+event.money +
+" dollars."
+:
+""
+)
+);
+
+updateScreen();
+
+});
+
+get("newGame").addEventListener(
+"click",
+function () {
+
+const confirmed =
+confirm(
+"Start a new Desmond's Donut Dash game?"
+);
+
+if (!confirmed) return;
+
+cash = 50;
+sold = 0;
+level = 1;
+shopOpen = false;
+
+oven = 0;
+recipes = 0;
+helper = 0;
+display = 0;
+coffee = 0;
+
+get("openShop").textContent =
+"Open Shop";
+
+get("shopStatus").textContent =
+"Your shop is closed.";
+
+get("news").textContent =
+"Welcome back to Desmond's Donut Dash!";
+
+announce(
+"New game started. You have 50 dollars."
+);
+
+updateScreen();
+
+});
+
+loadGame();
+
+if (shopOpen) {
+
+get("openShop").textContent =
+"Close Shop";
+
+get("shopStatus").textContent =
+"The shop is open!";
+
+}
+
+updateScreen();
+
+})();
+
+</script>
+
+</body>
+</html>
