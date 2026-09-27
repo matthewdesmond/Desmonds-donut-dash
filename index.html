@@ -3,1043 +3,963 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#f4a62a">
 <title>Desmond's Donut Dash</title>
 
 <style>
-* {
-  box-sizing: border-box;
-}
-
 body {
+  font-family: Arial, sans-serif;
+  background: #fff4e6;
+  color: #3b2416;
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  background: #fff7eb;
-  color: #222;
-}
-
-main {
-  max-width: 720px;
-  margin: auto;
-  padding: 18px;
+  padding: 16px;
 }
 
 h1 {
-  font-size: 32px;
-  margin-bottom: 5px;
+  text-align: center;
+  font-size: 28px;
 }
 
 h2 {
-  margin-top: 0;
+  margin-bottom: 8px;
 }
 
 .card {
   background: white;
-  border-radius: 18px;
-  padding: 18px;
-  margin: 14px 0;
-  border: 1px solid #ddd;
+  border-radius: 14px;
+  padding: 16px;
+  margin-bottom: 16px;
+  box-shadow: 0 2px 8px rgba(0,0,0,.12);
 }
 
 .stats {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 8px;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
 }
 
 .stat {
-  text-align: center;
-  background: white;
-  border: 1px solid #ddd;
-  border-radius: 14px;
+  background: #fff0d9;
   padding: 12px;
-}
-
-.stat strong {
-  display: block;
-  font-size: 25px;
-  margin-top: 4px;
+  border-radius: 10px;
+  font-weight: bold;
 }
 
 button {
   width: 100%;
-  min-height: 52px;
-  margin: 7px 0;
-  padding: 12px;
-  border: 0;
-  border-radius: 13px;
-  background: #f4a62a;
-  color: #111;
-  font-size: 17px;
-  font-weight: 700;
-  cursor: pointer;
-}
-
-button:focus {
-  outline: 4px solid #146cff;
-  outline-offset: 2px;
-}
-
-button.secondary {
-  background: #eee;
-}
-
-.notice {
+  padding: 15px;
+  margin: 6px 0;
+  border: none;
+  border-radius: 10px;
   font-size: 18px;
-  font-weight: 600;
-  line-height: 1.45;
+  font-weight: bold;
+  background: #d2691e;
+  color: white;
 }
 
-.progress {
-  font-size: 17px;
-  line-height: 1.5;
+button:disabled {
+  background: #aaa;
 }
 
-.reward {
-  background: #fff0c9;
-  border-left: 6px solid #f4a62a;
-  padding: 12px;
-  border-radius: 8px;
+.order {
+  background: #fff8ef;
+  border: 2px solid #d2691e;
+  border-radius: 12px;
+  padding: 14px;
+  font-size: 20px;
+  margin: 10px 0;
+}
+
+.selected {
+  background: #8b4513 !important;
+}
+
+#announcement {
+  position: absolute;
+  left: -9999px;
 }
 
 .small {
-  color: #555;
-  font-size: 15px;
+  font-size: 14px;
+  color: #666;
 }
 </style>
 </head>
 
 <body>
 
-<main>
-
-<header class="card">
 <h1>🍩 Desmond's Donut Dash</h1>
 
-<p>
-Run your own donut shop! Bake donuts, serve customers,
-earn money, unlock flavors, buy upgrades, and build your
-donut empire.
-</p>
-</header>
+<div id="announcement" aria-live="assertive"></div>
 
-<section class="stats" aria-label="Game statistics">
+<div class="card">
+  <h2>Shop Status</h2>
 
-<div class="stat">
-Cash
-<strong id="cash">$50</strong>
+  <div class="stats">
+    <div class="stat">
+      💰 Cash: $<span id="cash">50</span>
+    </div>
+
+    <div class="stat">
+      🍩 Sold: <span id="sold">0</span>
+    </div>
+
+    <div class="stat">
+      ⭐ Level: <span id="level">1</span>
+    </div>
+
+    <div class="stat">
+      📈 Next Goal: <span id="nextGoal">10</span>
+    </div>
+  </div>
+
+  <p id="levelName">New Shop</p>
 </div>
 
-<div class="stat">
-Donuts Sold
-<strong id="sold">0</strong>
+<div class="card">
+  <h2>👤 Customer</h2>
+
+  <div id="customerStatus">
+    No customer is waiting.
+  </div>
+
+  <button id="takeOrderButton" onclick="takeOrder()">
+    Take Order
+  </button>
+
+  <div id="orderArea"></div>
 </div>
 
-<div class="stat">
-Level
-<strong id="level">1</strong>
+<div class="card">
+  <h2>🍩 Donuts</h2>
+
+  <p class="small">
+    Select the donuts needed for the customer's order.
+  </p>
+
+  <div id="donutButtons"></div>
+
+  <button id="serveButton" onclick="serveOrder()" disabled>
+    Serve Order
+  </button>
+
+  <button onclick="clearSelection()">
+    Clear Selection
+  </button>
 </div>
 
-</section>
+<div class="card">
+  <h2>⬆️ Shop Upgrades</h2>
 
-<section class="card">
+  <button onclick="upgrade('oven')">
+    Upgrade Oven
+  </button>
 
-<h2>🏪 Shop</h2>
+  <button onclick="upgrade('recipes')">
+    Upgrade Recipes
+  </button>
 
-<p id="shopStatus" class="notice" aria-live="polite">
-Your shop is closed.
-</p>
+  <button onclick="upgrade('helper')">
+    Hire / Upgrade Helper
+  </button>
 
-<button id="openShop">
-Open Shop
-</button>
+  <button onclick="upgrade('display')">
+    Upgrade Display Case
+  </button>
 
-<button id="shopReport" class="secondary">
-Read Shop Report
-</button>
+  <button onclick="upgrade('coffee')">
+    Upgrade Coffee Station
+  </button>
 
-</section>
-
-<section class="card">
-
-<h2>🍩 Donut Kitchen</h2>
-
-<p class="small">
-Choose a donut to bake and sell to your next customer.
-Some special flavors unlock as you sell more donuts.
-</p>
-
-<button data-donut="Glazed" data-price="4">
-🍩 Classic Glazed — $4
-</button>
-
-<button data-donut="Chocolate" data-price="6">
-🍫 Chocolate Frosted — $6
-</button>
-
-<button data-donut="Jelly Filled" data-price="8">
-🍓 Jelly Filled — $8
-</button>
-
-<button data-donut="Cinnamon Sugar" data-price="10">
-🍂 Cinnamon Sugar — $10
-</button>
-
-<button data-donut="Maple Bacon" data-price="14">
-🥓 Maple Bacon — $14
-</button>
-
-<button data-donut="Boston Cream" data-price="16">
-🍮 Boston Cream — $16
-</button>
-
-<button data-donut="Rainbow Sprinkle" data-price="20">
-🌈 Rainbow Sprinkle — $20
-</button>
-
-<button data-donut="Desmond's Dream" data-price="30">
-⭐ Desmond's Dream — $30
-</button>
-
-</section>
-
-<section class="card">
-
-<h2>🎯 Level Progress</h2>
-
-<p id="levelName" class="notice">
-Level 1 — New Shop
-</p>
-
-<p id="goal" class="progress" aria-live="polite">
-Sell 10 donuts to reach Level 2.
-</p>
-
-<div id="reward" class="reward">
-Next reward: $25 bonus + Cinnamon Sugar
+  <p id="upgradeStatus"></p>
 </div>
 
-</section>
+<div class="card">
+  <h2>📊 Shop Report</h2>
 
-<section class="card">
+  <button onclick="shopReport()">
+    Hear Shop Report
+  </button>
 
-<h2>🏆 Special Rewards</h2>
-
-<p id="milestones" class="progress">
-10 donuts → Level 2 + $25<br>
-25 donuts → Level 3 + $50<br>
-50 donuts → Level 4 + $100<br>
-100 donuts → Level 5 + $200<br>
-200 donuts → Level 6 + $400
-</p>
-
-</section>
-
-<section class="card">
-
-<h2>🔧 Shop Upgrades</h2>
-
-<button id="oven">
-Upgrade Oven — $30
-</button>
-
-<button id="recipes">
-Improve Recipes — $45
-</button>
-
-<button id="helper">
-Hire Helper — $80
-</button>
-
-<button id="display">
-Buy Fancy Display Case — $100
-</button>
-
-<button id="coffee">
-Add Coffee Station — $150
-</button>
-
-<p id="upgradeStatus" class="small" aria-live="polite">
-No upgrades purchased.
-</p>
-
-</section>
-
-<section class="card">
-
-<h2>📰 Shop News</h2>
-
-<p id="news" class="notice" aria-live="polite">
-Welcome to Desmond's Donut Dash!
-Start by opening your shop.
-</p>
-
-<button id="event">
-Check Today's Special Event
-</button>
-
-</section>
-
-<section class="card">
-
-<h2>⚙️ Game</h2>
-
-<button id="newGame" class="secondary">
-Start a New Game
-</button>
-
-<p class="small">
-Progress automatically saves on this device when supported by the browser.
-All important game actions use accessible buttons and VoiceOver-friendly announcements.
-</p>
-
-</section>
-
-<div
-id="announcement"
-aria-live="assertive"
-aria-atomic="true"
-style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);"
-></div>
+  <button onclick="newGame()">
+    Start New Game
+  </button>
+</div>
 
 <script>
 
-(function () {
+let game = {
+  cash: 50,
+  sold: 0,
+  level: 1,
 
-"use strict";
+  upgrades: {
+    oven: 0,
+    recipes: 0,
+    helper: 0,
+    display: 0,
+    coffee: 0
+  },
 
-let cash = 50;
-let sold = 0;
-let level = 1;
-let shopOpen = false;
-
-let oven = 0;
-let recipes = 0;
-let helper = 0;
-let display = 0;
-let coffee = 0;
-
-const milestones = [
-
-{
-sales: 10,
-level: 2,
-bonus: 25,
-unlock: "Cinnamon Sugar"
-},
-
-{
-sales: 25,
-level: 3,
-bonus: 50,
-unlock: "Maple Bacon"
-},
-
-{
-sales: 50,
-level: 4,
-bonus: 100,
-unlock: "Boston Cream"
-},
-
-{
-sales: 100,
-level: 5,
-bonus: 200,
-unlock: "Rainbow Sprinkle"
-},
-
-{
-sales: 200,
-level: 6,
-bonus: 400,
-unlock: "Desmond's Dream"
-}
-
-];
-
-function get(id) {
-return document.getElementById(id);
-}
-
-function announce(text) {
-
-get("announcement").textContent = "";
-
-setTimeout(function () {
-
-get("announcement").textContent = text;
-
-}, 30);
-
-if ("speechSynthesis" in window) {
-
-try {
-
-speechSynthesis.cancel();
-
-const voice = new SpeechSynthesisUtterance(text);
-
-voice.rate = 0.95;
-
-speechSynthesis.speak(voice);
-
-} catch (error) {}
-
-}
-
-}
-
-function saveGame() {
-
-try {
-
-const game = {
-
-cash: cash,
-sold: sold,
-level: level,
-shopOpen: shopOpen,
-oven: oven,
-recipes: recipes,
-helper: helper,
-display: display,
-coffee: coffee
-
+  currentOrder: null,
+  selected: {}
 };
 
-localStorage.setItem(
-"desmondsDonutDash",
-JSON.stringify(game)
-);
+const levelNames = [
+  "",
+  "New Shop",
+  "Neighborhood Favorite",
+  "Donut Star",
+  "Donut Champion",
+  "Donut Legend",
+  "Master Baker",
+  "Donut Empire"
+];
 
-} catch (error) {}
+const donuts = [
+  {
+    id: "glazed",
+    name: "Glazed",
+    price: 4,
+    unlock: 0
+  },
+  {
+    id: "chocolate",
+    name: "Chocolate",
+    price: 6,
+    unlock: 0
+  },
+  {
+    id: "jelly",
+    name: "Jelly Filled",
+    price: 8,
+    unlock: 0
+  },
+  {
+    id: "cinnamon",
+    name: "Cinnamon Sugar",
+    price: 10,
+    unlock: 10
+  },
+  {
+    id: "maple",
+    name: "Maple Bacon",
+    price: 14,
+    unlock: 25
+  },
+  {
+    id: "boston",
+    name: "Boston Cream",
+    price: 16,
+    unlock: 50
+  },
+  {
+    id: "rainbow",
+    name: "Rainbow Sprinkle",
+    price: 20,
+    unlock: 100
+  },
+  {
+    id: "dream",
+    name: "Desmond's Dream",
+    price: 30,
+    unlock: 200
+  }
+];
 
+const milestones = [
+  {
+    sales: 10,
+    level: 2,
+    reward: 25,
+    donut: "cinnamon"
+  },
+  {
+    sales: 25,
+    level: 3,
+    reward: 50,
+    donut: "maple"
+  },
+  {
+    sales: 50,
+    level: 4,
+    reward: 100,
+    donut: "boston"
+  },
+  {
+    sales: 100,
+    level: 5,
+    reward: 200,
+    donut: "rainbow"
+  },
+  {
+    sales: 200,
+    level: 6,
+    reward: 400,
+    donut: "dream"
+  }
+];
+
+function saveGame() {
+  localStorage.setItem(
+    "desmondsDonutDash",
+    JSON.stringify(game)
+  );
 }
 
 function loadGame() {
 
-try {
+  const saved = localStorage.getItem(
+    "desmondsDonutDash"
+  );
 
-const saved =
-localStorage.getItem("desmondsDonutDash");
+  if (saved) {
+    try {
+      game = JSON.parse(saved);
+    } catch (e) {
+      console.log("Save could not be loaded.");
+    }
+  }
 
-if (!saved) return;
+  if (!game.upgrades) {
+    game.upgrades = {
+      oven: 0,
+      recipes: 0,
+      helper: 0,
+      display: 0,
+      coffee: 0
+    };
+  }
 
-const game = JSON.parse(saved);
+  game.currentOrder = null;
+  game.selected = {};
 
-cash = Number(game.cash) || 50;
-sold = Number(game.sold) || 0;
-level = Number(game.level) || 1;
-shopOpen = Boolean(game.shopOpen);
-
-oven = Number(game.oven) || 0;
-recipes = Number(game.recipes) || 0;
-helper = Number(game.helper) || 0;
-display = Number(game.display) || 0;
-coffee = Number(game.coffee) || 0;
-
-} catch (error) {}
-
+  updateScreen();
 }
 
-function getLevelName() {
+function speak(text) {
 
-const names = {
+  const announcement =
+    document.getElementById("announcement");
 
-1: "New Shop",
-2: "Neighborhood Favorite",
-3: "Donut Star",
-4: "Donut Champion",
-5: "Donut Legend",
-6: "Master Baker"
+  announcement.textContent = "";
 
-};
+  setTimeout(() => {
+    announcement.textContent = text;
+  }, 50);
 
-return names[level] || "Donut Master";
+  if ("speechSynthesis" in window) {
 
+    window.speechSynthesis.cancel();
+
+    const speech =
+      new SpeechSynthesisUtterance(text);
+
+    speech.rate = 0.95;
+    speech.pitch = 1;
+
+    window.speechSynthesis.speak(speech);
+  }
 }
 
-function updateScreen() {
+function getUnlockedDonuts() {
 
-get("cash").textContent =
-"$" + Math.floor(cash);
-
-get("sold").textContent =
-sold;
-
-get("level").textContent =
-level;
-
-get("levelName").textContent =
-"Level " + level +
-" — " +
-getLevelName();
-
-const next =
-milestones.find(function (item) {
-
-return sold < item.sales;
-
-});
-
-if (next) {
-
-get("goal").textContent =
-"Sell " +
-next.sales +
-" donuts to reach Level " +
-next.level +
-". You have sold " +
-sold +
-".";
-
-get("reward").textContent =
-"Next reward: $" +
-next.bonus +
-" bonus + " +
-next.unlock +
-" unlocked.";
-
-} else {
-
-get("goal").textContent =
-"All major sale milestones completed!";
-
-get("reward").textContent =
-"🏆 You are the Desmond's Donut Dash Master Baker!";
-
+  return donuts.filter(d =>
+    game.sold >= d.unlock
+  );
 }
 
-if (oven >= 3) {
+function getMaxOrderSize() {
 
-get("oven").textContent =
-"Oven MAXED OUT";
+  if (game.level <= 1) return 1;
+  if (game.level <= 2) return 2;
+  if (game.level <= 4) return 3;
+  if (game.level <= 6) return 4;
 
-} else {
-
-get("oven").textContent =
-"Upgrade Oven — $" +
-(30 * (oven + 1));
-
+  return 5;
 }
 
-if (recipes >= 3) {
+function takeOrder() {
 
-get("recipes").textContent =
-"Recipes MAXED OUT";
+  if (game.currentOrder) {
 
-} else {
+    speak(
+      "You already have an order. Choose the donuts and serve it."
+    );
 
-get("recipes").textContent =
-"Improve Recipes — $" +
-(45 * (recipes + 1));
+    return;
+  }
 
+  const available = getUnlockedDonuts();
+
+  const maxSize = getMaxOrderSize();
+
+  const orderSize =
+    Math.floor(Math.random() * maxSize) + 1;
+
+  const order = {};
+
+  for (let i = 0; i < orderSize; i++) {
+
+    const donut =
+      available[
+        Math.floor(Math.random() * available.length)
+      ];
+
+    if (!order[donut.id]) {
+      order[donut.id] = 0;
+    }
+
+    order[donut.id]++;
+  }
+
+  game.currentOrder = order;
+  game.selected = {};
+
+  displayOrder();
+
+  const spokenOrder =
+    orderToSpeech(order);
+
+  speak(
+    "New customer. Your order is: " +
+    spokenOrder +
+    "."
+  );
+
+  updateScreen();
 }
 
-if (helper >= 3) {
+function orderToSpeech(order) {
 
-get("helper").textContent =
-"Helpers MAXED OUT";
+  const parts = [];
 
-} else {
+  Object.keys(order).forEach(id => {
 
-get("helper").textContent =
-"Hire Helper — $" +
-(80 * (helper + 1));
+    const donut =
+      donuts.find(d => d.id === id);
 
+    const amount = order[id];
+
+    if (amount === 1) {
+      parts.push("1 " + donut.name);
+    } else {
+      parts.push(
+        amount + " " +
+        donut.name + " donuts"
+      );
+    }
+  });
+
+  if (parts.length === 1) {
+    return parts[0];
+  }
+
+  if (parts.length === 2) {
+    return parts[0] +
+      " and " +
+      parts[1];
+  }
+
+  return parts.slice(0, -1).join(", ") +
+    ", and " +
+    parts[parts.length - 1];
 }
 
-if (display >= 3) {
+function displayOrder() {
 
-get("display").textContent =
-"Display Case MAXED OUT";
+  const area =
+    document.getElementById("orderArea");
 
-} else {
+  if (!game.currentOrder) {
 
-get("display").textContent =
-"Buy Fancy Display Case — $" +
-(100 * (display + 1));
+    area.innerHTML = "";
 
+    return;
+  }
+
+  area.innerHTML = `
+    <div class="order" tabindex="0">
+      <strong>Current Order:</strong><br>
+      ${orderToSpeech(game.currentOrder)}
+    </div>
+  `;
 }
 
-if (coffee >= 3) {
+function createDonutButtons() {
 
-get("coffee").textContent =
-"Coffee Station MAXED OUT";
+  const container =
+    document.getElementById("donutButtons");
 
-} else {
+  container.innerHTML = "";
 
-get("coffee").textContent =
-"Add Coffee Station — $" +
-(150 * (coffee + 1));
+  getUnlockedDonuts().forEach(donut => {
 
+    const button =
+      document.createElement("button");
+
+    button.textContent =
+      donut.name +
+      " — $" +
+      donut.price;
+
+    button.setAttribute(
+      "aria-label",
+      "Add " + donut.name + " donut"
+    );
+
+    button.onclick = () =>
+      selectDonut(donut.id);
+
+    container.appendChild(button);
+  });
 }
 
-get("upgradeStatus").textContent =
-"Oven " + oven + "/3. " +
-"Recipes " + recipes + "/3. " +
-"Helpers " + helper + "/3. " +
-"Display " + display + "/3. " +
-"Coffee " + coffee + "/3.";
+function selectDonut(id) {
 
-saveGame();
+  if (!game.currentOrder) {
 
+    speak(
+      "Take a customer's order first."
+    );
+
+    return;
+  }
+
+  if (!game.selected[id]) {
+    game.selected[id] = 0;
+  }
+
+  game.selected[id]++;
+
+  const donut =
+    donuts.find(d => d.id === id);
+
+  speak(
+    "Added 1 " +
+    donut.name +
+    ". You selected " +
+    game.selected[id] +
+    "."
+  );
+
+  updateScreen();
+}
+
+function clearSelection() {
+
+  game.selected = {};
+
+  speak("Your donut selection has been cleared.");
+
+  updateScreen();
+}
+
+function selectionsMatchOrder() {
+
+  const order =
+    game.currentOrder;
+
+  const selected =
+    game.selected;
+
+  const orderKeys =
+    Object.keys(order);
+
+  const selectedKeys =
+    Object.keys(selected)
+      .filter(k => selected[k] > 0);
+
+  if (
+    orderKeys.length !== selectedKeys.length
+  ) {
+    return false;
+  }
+
+  for (const id of orderKeys) {
+
+    if (
+      selected[id] !== order[id]
+    ) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
+function calculateOrderValue() {
+
+  let total = 0;
+
+  Object.keys(game.currentOrder)
+    .forEach(id => {
+
+      const donut =
+        donuts.find(d => d.id === id);
+
+      total +=
+        donut.price *
+        game.currentOrder[id];
+    });
+
+  return total;
+}
+
+function serveOrder() {
+
+  if (!game.currentOrder) {
+
+    speak(
+      "There is no order waiting."
+    );
+
+    return;
+  }
+
+  if (!selectionsMatchOrder()) {
+
+    speak(
+      "Wrong order. The customer wanted " +
+      orderToSpeech(game.currentOrder) +
+      ". Your order was " +
+      orderToSpeech(
+        game.selected
+      ) +
+      ". Try again."
+    );
+
+    return;
+  }
+
+  let earnings =
+    calculateOrderValue();
+
+  const upgradeBonus =
+    game.upgrades.oven * 2 +
+    game.upgrades.recipes * 3 +
+    game.upgrades.helper * 2 +
+    game.upgrades.display * 2 +
+    game.upgrades.coffee * 3;
+
+  earnings += upgradeBonus;
+
+  game.cash += earnings;
+  game.sold +=
+    Object.values(game.currentOrder)
+      .reduce((a, b) => a + b, 0);
+
+  speak(
+    "Order correct! Great job. " +
+    "You earned $" +
+    earnings +
+    "."
+  );
+
+  game.currentOrder = null;
+  game.selected = {};
+
+  checkMilestones();
+
+  randomEvent();
+
+  saveGame();
+  updateScreen();
 }
 
 function checkMilestones() {
 
-const milestone =
-milestones.find(function (item) {
+  milestones.forEach(milestone => {
 
-return sold >= item.sales &&
-level < item.level;
+    if (
+      game.sold >= milestone.sales &&
+      game.level < milestone.level
+    ) {
 
-});
+      game.level =
+        milestone.level;
 
-if (!milestone) return;
+      game.cash +=
+        milestone.reward;
 
-level =
-milestone.level;
+      const donut =
+        donuts.find(
+          d => d.id === milestone.donut
+        );
 
-cash +=
-milestone.bonus;
-
-const message =
-"Congratulations! " +
-"You reached Level " +
-level +
-". You earned $" +
-milestone.bonus +
-" and unlocked " +
-milestone.unlock +
-"!";
-
-get("news").textContent =
-message;
-
-announce(message);
-
+      speak(
+        "Congratulations! " +
+        "You reached level " +
+        game.level +
+        ". You received $" +
+        milestone.reward +
+        " and unlocked " +
+        donut.name +
+        "."
+      );
+    }
+  });
 }
 
-get("openShop").addEventListener(
-"click",
-function () {
+function randomEvent() {
 
-shopOpen =
-!shopOpen;
+  const chance =
+    Math.random();
 
-if (shopOpen) {
+  if (chance > 0.25) {
+    return;
+  }
 
-this.textContent =
-"Close Shop";
+  const events = [
 
-get("shopStatus").textContent =
-"The shop is open! Customers are arriving.";
+    {
+      text:
+        "A school bus stopped by! " +
+        "The shop received a $20 bonus.",
+      money: 20
+    },
 
-get("news").textContent =
-"Customers are lining up for donuts!";
+    {
+      text:
+        "A food blogger visited! " +
+        "Your shop received a $30 bonus.",
+      money: 30
+    },
 
-announce(
-"Desmond's Donut Dash is open! Customers are arriving."
-);
+    {
+      text:
+        "A customer left a huge tip! " +
+        "You received $50.",
+      money: 50
+    },
 
-} else {
+    {
+      text:
+        "A donut delivery arrived! " +
+        "You received a $40 bonus.",
+      money: 40
+    }
+  ];
 
-this.textContent =
-"Open Shop";
+  const event =
+    events[
+      Math.floor(
+        Math.random() *
+        events.length
+      )
+    ];
 
-get("shopStatus").textContent =
-"Your shop is closed.";
+  game.cash += event.money;
 
-announce(
-"The shop is closed."
-);
+  setTimeout(() => {
 
+    speak(event.text);
+
+    saveGame();
+    updateScreen();
+
+  }, 1500);
 }
 
-saveGame();
+function upgrade(type) {
 
-});
+  const names = {
+    oven: "Oven",
+    recipes: "Recipes",
+    helper: "Helper",
+    display: "Display Case",
+    coffee: "Coffee Station"
+  };
 
-document
-.querySelectorAll("[data-donut]")
-.forEach(function (button) {
+  const basePrices = {
+    oven: 30,
+    recipes: 45,
+    helper: 80,
+    display: 100,
+    coffee: 150
+  };
 
-button.addEventListener(
-"click",
-function () {
+  const current =
+    game.upgrades[type];
 
-if (!shopOpen) {
+  if (current >= 3) {
 
-announce(
-"Your shop is closed. Open the shop first."
-);
+    speak(
+      names[type] +
+      " is already fully upgraded."
+    );
 
-return;
+    return;
+  }
 
+  const price =
+    basePrices[type] *
+    (current + 1);
+
+  if (game.cash < price) {
+
+    speak(
+      "You need $" +
+      price +
+      " to upgrade your " +
+      names[type] +
+      "."
+    );
+
+    return;
+  }
+
+  game.cash -= price;
+  game.upgrades[type]++;
+
+  speak(
+    names[type] +
+    " upgraded to level " +
+    game.upgrades[type] +
+    "."
+  );
+
+  saveGame();
+  updateScreen();
 }
 
-const name =
-this.getAttribute("data-donut");
+function updateScreen() {
 
-const basePrice =
-Number(
-this.getAttribute("data-price")
-);
+  document.getElementById("cash")
+    .textContent =
+    Math.floor(game.cash);
 
-let requiredSales = 0;
+  document.getElementById("sold")
+    .textContent =
+    game.sold;
 
-if (name === "Cinnamon Sugar")
-requiredSales = 10;
+  document.getElementById("level")
+    .textContent =
+    game.level;
 
-if (name === "Maple Bacon")
-requiredSales = 25;
+  document.getElementById("levelName")
+    .textContent =
+    levelNames[game.level] ||
+    "Donut Empire";
 
-if (name === "Boston Cream")
-requiredSales = 50;
+  const next =
+    milestones.find(
+      m => m.sales > game.sold
+    );
 
-if (name === "Rainbow Sprinkle")
-requiredSales = 100;
+  document.getElementById("nextGoal")
+    .textContent =
+    next ? next.sales : "MAX";
 
-if (name === "Desmond's Dream")
-requiredSales = 200;
+  const takeButton =
+    document.getElementById(
+      "takeOrderButton"
+    );
 
-if (sold < requiredSales) {
+  takeButton.disabled =
+    !!game.currentOrder;
 
-announce(
-name +
-" is locked. Sell " +
-(requiredSales - sold) +
-" more donuts to unlock it."
-);
+  const serveButton =
+    document.getElementById(
+      "serveButton"
+    );
 
-return;
+  serveButton.disabled =
+    !game.currentOrder;
 
+  createDonutButtons();
+  displayOrder();
+
+  updateUpgradeStatus();
 }
 
-let bonus = 0;
+function updateUpgradeStatus() {
 
-bonus += oven * 2;
-bonus += recipes * 2;
-bonus += helper * 3;
-bonus += display * 2;
-bonus += coffee * 3;
+  const text = `
+    Oven: Level ${game.upgrades.oven}/3<br>
+    Recipes: Level ${game.upgrades.recipes}/3<br>
+    Helper: Level ${game.upgrades.helper}/3<br>
+    Display Case: Level ${game.upgrades.display}/3<br>
+    Coffee Station: Level ${game.upgrades.coffee}/3
+  `;
 
-const earned =
-basePrice +
-bonus;
-
-cash +=
-earned;
-
-sold++;
-
-checkMilestones();
-
-get("news").textContent =
-"Customer bought a " +
-name +
-" donut for $" +
-earned +
-"!";
-
-announce(
-"Sold a " +
-name +
-" donut for " +
-earned +
-" dollars."
-);
-
-updateScreen();
-
-});
-
-});
-
-function buyUpgrade(
-property,
-baseCost,
-name
-) {
-
-if (window[property] >= 3) {
-
-announce(
-name +
-" is already fully upgraded."
-);
-
-return;
-
+  document.getElementById(
+    "upgradeStatus"
+  ).innerHTML = text;
 }
 
-const cost =
-baseCost *
-(window[property] + 1);
+function shopReport() {
 
-if (cash < cost) {
+  const next =
+    milestones.find(
+      m => m.sales > game.sold
+    );
 
-announce(
-"You need $" +
-(cost - cash) +
-" more for " +
-name +
-"."
-);
+  let report =
+    "Shop report. " +
+    "You have $" +
+    Math.floor(game.cash) +
+    ". " +
+    "You have sold " +
+    game.sold +
+    " donuts. " +
+    "You are level " +
+    game.level +
+    ", " +
+    levelNames[game.level] +
+    ".";
 
-return;
+  if (next) {
 
+    report +=
+      " Your next level is at " +
+      next.sales +
+      " donuts sold.";
+  } else {
+
+    report +=
+      " You have reached the current maximum level.";
+  }
+
+  speak(report);
 }
 
-cash -=
-cost;
+function newGame() {
 
-window[property]++;
+  const confirmed =
+    confirm(
+      "Start a new game? Your current progress will be erased."
+    );
 
-announce(
-name +
-" upgraded to level " +
-window[property] +
-"."
-);
+  if (!confirmed) {
+    return;
+  }
 
-updateScreen();
+  game = {
+    cash: 50,
+    sold: 0,
+    level: 1,
 
+    upgrades: {
+      oven: 0,
+      recipes: 0,
+      helper: 0,
+      display: 0,
+      coffee: 0
+    },
+
+    currentOrder: null,
+    selected: {}
+  };
+
+  saveGame();
+  updateScreen();
+
+  speak(
+    "New game started. Welcome to Desmond's Donut Dash!"
+  );
 }
-
-get("oven").addEventListener(
-"click",
-function () {
-
-buyUpgrade(
-"oven",
-30,
-"Oven"
-);
-
-});
-
-get("recipes").addEventListener(
-"click",
-function () {
-
-buyUpgrade(
-"recipes",
-45,
-"Recipes"
-);
-
-});
-
-get("helper").addEventListener(
-"click",
-function () {
-
-buyUpgrade(
-"helper",
-80,
-"Helper"
-);
-
-});
-
-get("display").addEventListener(
-"click",
-function () {
-
-buyUpgrade(
-"display",
-100,
-"Display Case"
-);
-
-});
-
-get("coffee").addEventListener(
-"click",
-function () {
-
-buyUpgrade(
-"coffee",
-150,
-"Coffee Station"
-);
-
-});
-
-get("shopReport").addEventListener(
-"click",
-function () {
-
-const report =
-"Shop report. " +
-"Level " +
-level +
-", " +
-sold +
-" donuts sold, " +
-cash +
-" dollars in cash. " +
-"Oven level " +
-oven +
-". Recipes level " +
-recipes +
-". Helpers level " +
-helper +
-". Display level " +
-display +
-". Coffee level " +
-coffee +
-".";
-
-announce(report);
-
-});
-
-get("event").addEventListener(
-"click",
-function () {
-
-if (!shopOpen) {
-
-announce(
-"Open the shop before checking today's event."
-);
-
-return;
-
-}
-
-const events = [
-
-{
-text:
-"School bus rush! Ten customers arrived.",
-money: 20
-},
-
-{
-text:
-"A food blogger visited your shop!",
-money: 30
-},
-
-{
-text:
-"A customer left a huge tip!",
-money: 50
-},
-
-{
-text:
-"Quiet morning. Nothing special happened.",
-money: 0
-},
-
-{
-text:
-"Donut delivery arrived early!",
-money: 40
-}
-
-];
-
-const event =
-events[
-Math.floor(
-Math.random() *
-events.length
-)
-];
-
-cash +=
-event.money;
-
-get("news").textContent =
-event.text +
-(
-event.money
-?
-" You earned $" +
-event.money +
-"."
-:
-""
-);
-
-announce(
-event.text +
-(
-event.money
-?
-" You earned " +
-event.money +
-" dollars."
-:
-""
-)
-);
-
-updateScreen();
-
-});
-
-get("newGame").addEventListener(
-"click",
-function () {
-
-const confirmed =
-confirm(
-"Start a new Desmond's Donut Dash game?"
-);
-
-if (!confirmed) return;
-
-cash = 50;
-sold = 0;
-level = 1;
-shopOpen = false;
-
-oven = 0;
-recipes = 0;
-helper = 0;
-display = 0;
-coffee = 0;
-
-get("openShop").textContent =
-"Open Shop";
-
-get("shopStatus").textContent =
-"Your shop is closed.";
-
-get("news").textContent =
-"Welcome back to Desmond's Donut Dash!";
-
-announce(
-"New game started. You have 50 dollars."
-);
-
-updateScreen();
-
-});
 
 loadGame();
-
-if (shopOpen) {
-
-get("openShop").textContent =
-"Close Shop";
-
-get("shopStatus").textContent =
-"The shop is open!";
-
-}
-
-updateScreen();
-
-})();
 
 </script>
 
