@@ -2,12 +2,19 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport"
-      content="width=device-width, initial-scale=1.0,
-               maximum-scale=1.0,user-scalable=no">
+
+<meta
+  name="viewport"
+  content="width=device-width,
+  initial-scale=1.0,
+  maximum-scale=1.0,
+  user-scalable=no"
+>
+
 <title>Desmond's Donut Dash</title>
 
 <style>
+
 * {
   box-sizing: border-box;
   -webkit-tap-highlight-color: transparent;
@@ -32,273 +39,576 @@ body {
 
 #game {
   position: relative;
+
   width: min(100vw, 66.6667vh);
   height: min(150vw, 100vh);
+
   aspect-ratio: 2 / 3;
+
   overflow: hidden;
+
   background: #000;
 }
 
+/* ==========================================================
+   EXACT ORIGINAL GAME ARTWORK
+   ========================================================== */
+
 #art {
   position: absolute;
+
   inset: 0;
+
   width: 100%;
   height: 100%;
+
   object-fit: fill;
+
   display: block;
+
   user-select: none;
+
   pointer-events: none;
 }
 
-/* Invisible accessible controls */
+
+/* ==========================================================
+   INVISIBLE ACCESSIBLE GAME CONTROLS
+   ========================================================== */
+
 .hotspot {
+
   position: absolute;
+
   z-index: 20;
+
   border: 0;
+
   background: transparent;
+
   padding: 0;
   margin: 0;
+
   cursor: pointer;
+
   opacity: 0;
 }
 
 .hotspot:focus {
+
   opacity: 0.08;
+
   outline: 3px solid white;
+
   border-radius: 8px;
 }
 
+
+/* ==========================================================
+   VOICEOVER STATUS
+   ========================================================== */
+
 #status {
+
   position: absolute;
+
   width: 1px;
   height: 1px;
+
   overflow: hidden;
+
   clip: rect(0 0 0 0);
+
   white-space: nowrap;
 }
+
 </style>
 </head>
 
+
 <body>
+
 
 <div id="game">
 
-  <!-- YOUR EXACT ARTWORK -->
-  <img
-    id="art"
-    src="template.jpg"
-    alt=""
-    aria-hidden="true"
-  >
 
-  <!-- SCREEN READER STATUS -->
-  <div id="status" aria-live="polite"></div>
+<!-- ========================================================
+     EXACT ARTWORK
+     ======================================================== -->
 
-  <!-- =====================================================
-       DONUT CREATION
-       ===================================================== -->
-
-  <button
-    class="hotspot"
-    style="left:4%;top:68%;width:53%;height:8%;"
-    aria-label="Make donut"
-    onclick="makeDonut()">
-  </button>
-
-  <!-- Donut types -->
-  <button
-    class="hotspot"
-    style="left:5%;top:33%;width:9%;height:9%;"
-    aria-label="Chocolate donut"
-    onclick="chooseDonut('Chocolate')">
-  </button>
-
-  <button
-    class="hotspot"
-    style="left:16%;top:33%;width:9%;height:9%;"
-    aria-label="Strawberry donut"
-    onclick="chooseDonut('Strawberry')">
-  </button>
-
-  <button
-    class="hotspot"
-    style="left:27%;top:33%;width:9%;height:9%;"
-    aria-label="Maple donut"
-    onclick="chooseDonut('Maple')">
-  </button>
-
-  <!-- Fillings -->
-  <button
-    class="hotspot"
-    style="left:5%;top:46%;width:9%;height:9%;"
-    aria-label="Chocolate filling"
-    onclick="chooseFilling('Chocolate')">
-  </button>
-
-  <button
-    class="hotspot"
-    style="left:16%;top:46%;width:9%;height:9%;"
-    aria-label="Cream filling"
-    onclick="chooseFilling('Cream')">
-  </button>
-
-  <button
-    class="hotspot"
-    style="left:27%;top:46%;width:9%;height:9%;"
-    aria-label="Strawberry filling"
-    onclick="chooseFilling('Strawberry')">
-  </button>
-
-  <!-- Toppings -->
-  <button
-    class="hotspot"
-    style="left:5%;top:59%;width:9%;height:8.5%;"
-    aria-label="Sprinkles"
-    onclick="chooseTopping('Sprinkles')">
-  </button>
-
-  <button
-    class="hotspot"
-    style="left:16%;top:59%;width:9%;height:8.5%;"
-    aria-label="Chocolate chips"
-    onclick="chooseTopping('Chocolate Chips')">
-  </button>
-
-  <button
-    class="hotspot"
-    style="left:27%;top:59%;width:9%;height:8.5%;"
-    aria-label="Glaze"
-    onclick="chooseTopping('Glaze')">
-  </button>
+<img
+  id="art"
+  src="86B0E5F4-7273-470F-AE60-F3E555414C5C.png"
+  alt=""
+  aria-hidden="true"
+>
 
 
-  <!-- =====================================================
-       ORDERS
-       ===================================================== -->
+<!-- ========================================================
+     VOICEOVER STATUS
+     ======================================================== -->
 
-  <button
-    class="hotspot"
-    style="left:61%;top:31%;width:37%;height:7%;"
-    aria-label="Chocolate order"
-    onclick="fillOrder('Chocolate')">
-  </button>
-
-  <button
-    class="hotspot"
-    style="left:61%;top:38.5%;width:37%;height:7%;"
-    aria-label="Strawberry order"
-    onclick="fillOrder('Strawberry')">
-  </button>
-
-  <button
-    class="hotspot"
-    style="left:61%;top:46%;width:37%;height:7%;"
-    aria-label="Maple order"
-    onclick="fillOrder('Maple')">
-  </button>
+<div
+  id="status"
+  aria-live="polite">
+</div>
 
 
-  <!-- Customer -->
-  <button
-    class="hotspot"
-    style="left:61%;top:51%;width:37%;height:7%;"
-    aria-label="Customer"
-    onclick="serveCustomer()">
-  </button>
+
+<!-- ========================================================
+     MAKE DONUT
+     ======================================================== -->
+
+<button
+  class="hotspot"
+  style="
+    left:4%;
+    top:68%;
+    width:53%;
+    height:8%;
+  "
+  aria-label="Make donut"
+  onclick="makeDonut()">
+</button>
 
 
-  <!-- =====================================================
-       GALACTIC DONUT
-       ===================================================== -->
 
-  <button
-    class="hotspot"
-    style="left:61%;top:58%;width:37%;height:17%;"
-    aria-label="Galactic Donut"
-    onclick="galacticDonut()">
-  </button>
+<!-- ========================================================
+     DONUT TYPES
+     ======================================================== -->
 
-
-  <!-- =====================================================
-       BOTTOM NAVIGATION
-       ===================================================== -->
-
-  <button
-    class="hotspot"
-    style="left:1%;top:78%;width:14.5%;height:9.5%;"
-    aria-label="Upgrades"
-    onclick="openMenu('Upgrades')">
-  </button>
-
-  <button
-    class="hotspot"
-    style="left:17%;top:78%;width:14.5%;height:9.5%;"
-    aria-label="Locations"
-    onclick="openMenu('Locations')">
-  </button>
-
-  <button
-    class="hotspot"
-    style="left:33%;top:78%;width:14.5%;height:9.5%;"
-    aria-label="Seasonal"
-    onclick="openMenu('Seasonal')">
-  </button>
-
-  <button
-    class="hotspot"
-    style="left:49%;top:78%;width:14.5%;height:9.5%;"
-    aria-label="Mystery"
-    onclick="openMenu('Mystery')">
-  </button>
-
-  <button
-    class="hotspot"
-    style="left:65%;top:78%;width:14.5%;height:9.5%;"
-    aria-label="Donut Rap"
-    onclick="openMenu('Donut Rap')">
-  </button>
-
-  <button
-    class="hotspot"
-    style="left:81%;top:78%;width:14.5%;height:9.5%;"
-    aria-label="Achievements"
-    onclick="openMenu('Achievements')">
-  </button>
+<button
+  class="hotspot"
+  style="
+    left:5%;
+    top:33%;
+    width:9%;
+    height:9%;
+  "
+  aria-label="Classic donut"
+  onclick="chooseDonut('Classic')">
+</button>
 
 
-  <!-- =====================================================
-       COLLECT / COSMIC RUSH / INFO
-       ===================================================== -->
+<button
+  class="hotspot"
+  style="
+    left:16%;
+    top:33%;
+    width:9%;
+    height:9%;
+  "
+  aria-label="Chocolate donut"
+  onclick="chooseDonut('Chocolate')">
+</button>
 
-  <button
-    class="hotspot"
-    style="left:3%;top:89%;width:28%;height:8%;"
-    aria-label="Collect idle earnings"
-    onclick="collectEarnings()">
-  </button>
 
-  <button
-    class="hotspot"
-    style="left:34%;top:89%;width:38%;height:8%;"
-    aria-label="Cosmic Rush"
-    onclick="activateCosmicRush()">
-  </button>
+<button
+  class="hotspot"
+  style="
+    left:27%;
+    top:33%;
+    width:9%;
+    height:9%;
+  "
+  aria-label="Strawberry donut"
+  onclick="chooseDonut('Strawberry')">
+</button>
 
-  <button
-    class="hotspot"
-    style="left:76%;top:88%;width:22%;height:10%;"
-    aria-label="Game information"
-    onclick="showInfo()">
-  </button>
+
+<button
+  class="hotspot"
+  style="
+    left:38%;
+    top:33%;
+    width:9%;
+    height:9%;
+  "
+  aria-label="Purple donut"
+  onclick="chooseDonut('Purple')">
+</button>
+
+
+<button
+  class="hotspot"
+  style="
+    left:49%;
+    top:33%;
+    width:9%;
+    height:9%;
+  "
+  aria-label="Maple donut"
+  onclick="chooseDonut('Maple')">
+</button>
+
+
+
+<!-- ========================================================
+     FILLINGS
+     ======================================================== -->
+
+<button
+  class="hotspot"
+  style="
+    left:5%;
+    top:46%;
+    width:9%;
+    height:9%;
+  "
+  aria-label="Vanilla filling"
+  onclick="chooseFilling('Vanilla')">
+</button>
+
+
+<button
+  class="hotspot"
+  style="
+    left:16%;
+    top:46%;
+    width:9%;
+    height:9%;
+  "
+  aria-label="Chocolate filling"
+  onclick="chooseFilling('Chocolate')">
+</button>
+
+
+<button
+  class="hotspot"
+  style="
+    left:27%;
+    top:46%;
+    width:9%;
+    height:9%;
+  "
+  aria-label="Strawberry filling"
+  onclick="chooseFilling('Strawberry')">
+</button>
+
+
+<button
+  class="hotspot"
+  style="
+    left:38%;
+    top:46%;
+    width:9%;
+    height:9%;
+  "
+  aria-label="Purple filling"
+  onclick="chooseFilling('Purple')">
+</button>
+
+
+<button
+  class="hotspot"
+  style="
+    left:49%;
+    top:46%;
+    width:9%;
+    height:9%;
+  "
+  aria-label="Maple filling"
+  onclick="chooseFilling('Maple')">
+</button>
+
+
+
+<!-- ========================================================
+     TOPPINGS
+     ======================================================== -->
+
+<button
+  class="hotspot"
+  style="
+    left:5%;
+    top:59%;
+    width:9%;
+    height:8.5%;
+  "
+  aria-label="Sprinkles"
+  onclick="chooseTopping('Sprinkles')">
+</button>
+
+
+<button
+  class="hotspot"
+  style="
+    left:16%;
+    top:59%;
+    width:9%;
+    height:8.5%;
+  "
+  aria-label="Chocolate chips"
+  onclick="chooseTopping('Chocolate Chips')">
+</button>
+
+
+<button
+  class="hotspot"
+  style="
+    left:27%;
+    top:59%;
+    width:9%;
+    height:8.5%;
+  "
+  aria-label="Glaze"
+  onclick="chooseTopping('Glaze')">
+</button>
+
+
+<button
+  class="hotspot"
+  style="
+    left:38%;
+    top:59%;
+    width:9%;
+    height:8.5%;
+  "
+  aria-label="Candy"
+  onclick="chooseTopping('Candy')">
+</button>
+
+
+<button
+  class="hotspot"
+  style="
+    left:49%;
+    top:59%;
+    width:9%;
+    height:8.5%;
+  "
+  aria-label="Rainbow topping"
+  onclick="chooseTopping('Rainbow')">
+</button>
+
+
+
+<!-- ========================================================
+     ACTIVE ORDERS
+     ======================================================== -->
+
+<button
+  class="hotspot"
+  style="
+    left:61%;
+    top:31%;
+    width:37%;
+    height:7%;
+  "
+  aria-label="Complete chocolate donut order"
+  onclick="fillOrder('Chocolate')">
+</button>
+
+
+<button
+  class="hotspot"
+  style="
+    left:61%;
+    top:38.5%;
+    width:37%;
+    height:7%;
+  "
+  aria-label="Complete strawberry donut order"
+  onclick="fillOrder('Strawberry')">
+</button>
+
+
+<button
+  class="hotspot"
+  style="
+    left:61%;
+    top:46%;
+    width:37%;
+    height:7%;
+  "
+  aria-label="Complete maple donut order"
+  onclick="fillOrder('Maple')">
+</button>
+
+
+
+<!-- ========================================================
+     CUSTOMER
+     ======================================================== -->
+
+<button
+  class="hotspot"
+  style="
+    left:61%;
+    top:51%;
+    width:37%;
+    height:7%;
+  "
+  aria-label="Serve customer"
+  onclick="serveCustomer()">
+</button>
+
+
+
+<!-- ========================================================
+     GALACTIC DONUT
+     ======================================================== -->
+
+<button
+  class="hotspot"
+  style="
+    left:61%;
+    top:58%;
+    width:37%;
+    height:17%;
+  "
+  aria-label="Galactic Donut Cosmic Rush"
+  onclick="galacticDonut()">
+</button>
+
+
+
+<!-- ========================================================
+     BOTTOM NAVIGATION
+     ======================================================== -->
+
+<button
+  class="hotspot"
+  style="
+    left:1%;
+    top:78%;
+    width:14.5%;
+    height:9.5%;
+  "
+  aria-label="Upgrades"
+  onclick="openMenu('Upgrades')">
+</button>
+
+
+<button
+  class="hotspot"
+  style="
+    left:17%;
+    top:78%;
+    width:14.5%;
+    height:9.5%;
+  "
+  aria-label="Locations"
+  onclick="openMenu('Locations')">
+</button>
+
+
+<button
+  class="hotspot"
+  style="
+    left:33%;
+    top:78%;
+    width:14.5%;
+    height:9.5%;
+  "
+  aria-label="Seasonal"
+  onclick="openMenu('Seasonal')">
+</button>
+
+
+<button
+  class="hotspot"
+  style="
+    left:49%;
+    top:78%;
+    width:14.5%;
+    height:9.5%;
+  "
+  aria-label="Mystery"
+  onclick="openMenu('Mystery')">
+</button>
+
+
+<button
+  class="hotspot"
+  style="
+    left:65%;
+    top:78%;
+    width:14.5%;
+    height:9.5%;
+  "
+  aria-label="Donut Rap"
+  onclick="openMenu('Donut Rap')">
+</button>
+
+
+<button
+  class="hotspot"
+  style="
+    left:81%;
+    top:78%;
+    width:14.5%;
+    height:9.5%;
+  "
+  aria-label="Achievements"
+  onclick="openMenu('Achievements')">
+</button>
+
+
+
+<!-- ========================================================
+     COLLECT
+     ======================================================== -->
+
+<button
+  class="hotspot"
+  style="
+    left:3%;
+    top:89%;
+    width:28%;
+    height:8%;
+  "
+  aria-label="Collect idle earnings"
+  onclick="collectEarnings()">
+</button>
+
+
+
+<!-- ========================================================
+     COSMIC RUSH
+     ======================================================== -->
+
+<button
+  class="hotspot"
+  style="
+    left:34%;
+    top:89%;
+    width:38%;
+    height:8%;
+  "
+  aria-label="Activate Cosmic Rush"
+  onclick="activateCosmicRush()">
+</button>
+
+
+
+<!-- ========================================================
+     INFORMATION
+     ======================================================== -->
+
+<button
+  class="hotspot"
+  style="
+    left:76%;
+    top:88%;
+    width:22%;
+    height:10%;
+  "
+  aria-label="Game information"
+  onclick="showInfo()">
+</button>
+
 
 </div>
 
 
+
 <script>
 
-/* ============================================================
+
+/* ==========================================================
    GAME STATE
-   ============================================================ */
+   ========================================================== */
 
 let cash = 1248750;
 
@@ -318,26 +628,30 @@ let cosmicRushSeconds = 3599;
 
 let cosmicRushActive = true;
 
-let selectedDonut = "Chocolate";
+let selectedDonut = "Classic";
 
-let selectedFilling = "None";
+let selectedFilling = "Vanilla";
 
-let selectedTopping = "None";
+let selectedTopping = "Sprinkles";
 
 
-/* ============================================================
-   SCREEN READER / VOICEOVER
-   ============================================================ */
+/* ==========================================================
+   VOICEOVER / SPEECH
+   ========================================================== */
 
 function speak(message) {
 
-  const status = document.getElementById("status");
+  const status =
+    document.getElementById("status");
 
   status.textContent = "";
 
-  setTimeout(() => {
+  setTimeout(function() {
+
     status.textContent = message;
+
   }, 20);
+
 
   if ("speechSynthesis" in window) {
 
@@ -347,6 +661,7 @@ function speak(message) {
       new SpeechSynthesisUtterance(message);
 
     speech.rate = 1;
+
     speech.pitch = 1;
 
     window.speechSynthesis.speak(speech);
@@ -354,36 +669,46 @@ function speak(message) {
 }
 
 
-/* ============================================================
-   IDLE MONEY
-   ============================================================ */
+/* ==========================================================
+   IDLE EARNINGS
+   ========================================================== */
 
-setInterval(() => {
+setInterval(function() {
 
   cash += idlePerSecond;
 
+
   if (cosmicRushActive) {
+
     cosmicRushSeconds--;
 
     if (cosmicRushSeconds <= 0) {
+
       cosmicRushSeconds = 0;
+
       cosmicRushActive = false;
-      speak("Cosmic Rush has ended.");
+
+      speak(
+        "Cosmic Rush has ended."
+      );
     }
   }
 
 }, 1000);
 
 
-/* ============================================================
+/* ==========================================================
    DONUT SELECTION
-   ============================================================ */
+   ========================================================== */
 
 function chooseDonut(type) {
 
   selectedDonut = type;
 
-  speak(type + " donut selected.");
+  speak(
+    type +
+    " donut selected."
+  );
 }
 
 
@@ -391,7 +716,10 @@ function chooseFilling(type) {
 
   selectedFilling = type;
 
-  speak(type + " filling selected.");
+  speak(
+    type +
+    " filling selected."
+  );
 }
 
 
@@ -399,13 +727,16 @@ function chooseTopping(type) {
 
   selectedTopping = type;
 
-  speak(type + " topping selected.");
+  speak(
+    type +
+    " topping selected."
+  );
 }
 
 
-/* ============================================================
+/* ==========================================================
    MAKE DONUT
-   ============================================================ */
+   ========================================================== */
 
 function makeDonut() {
 
@@ -418,9 +749,12 @@ function makeDonut() {
     selectedTopping +
     " topping.";
 
+
   /*
      GOLDEN DONUT
-     Rare prize: approximately 6% chance.
+     
+     Rare prize:
+     6 percent chance.
   */
 
   if (Math.random() < 0.06) {
@@ -431,13 +765,17 @@ function makeDonut() {
 
     idlePerSecond += 50;
 
+
     message +=
-      " Golden Donut! Rare prize! " +
-      "You earned 12 Baker Bucks and " +
-      "50 dollars per second.";
+      " Golden Donut! " +
+      "Rare prize! " +
+      "You earned 12 Baker Bucks " +
+      "and 50 dollars per second.";
   }
 
+
   xp += 10;
+
 
   if (xp >= 100) {
 
@@ -445,18 +783,22 @@ function makeDonut() {
 
     level++;
 
+
     message +=
-      " Level up! You are now level " +
-      level + ".";
+      " Level up! " +
+      "You are now level " +
+      level +
+      ".";
   }
+
 
   speak(message);
 }
 
 
-/* ============================================================
-   ORDERS
-   ============================================================ */
+/* ==========================================================
+   ORDER VALUES
+   ========================================================== */
 
 const orderValues = {
 
@@ -465,20 +807,30 @@ const orderValues = {
   Strawberry: 56,
 
   Maple: 48
+
 };
 
 
+/* ==========================================================
+   COMPLETE ORDER
+   ========================================================== */
+
 function fillOrder(type) {
 
-  let payout = orderValues[type] || 25;
+  let payout =
+    orderValues[type] || 25;
+
 
   if (cosmicRushActive) {
+
     payout *= 2;
   }
+
 
   cash += payout;
 
   xp += 8;
+
 
   speak(
     type +
@@ -490,26 +842,35 @@ function fillOrder(type) {
 }
 
 
-/* ============================================================
+/* ==========================================================
    CUSTOMER
-   ============================================================ */
+   ========================================================== */
 
 function serveCustomer() {
 
-  cash += cosmicRushActive ? 100 : 50;
+  let amount =
+    cosmicRushActive
+    ? 100
+    : 50;
+
+
+  cash += amount;
 
   xp += 15;
 
+
   speak(
     "Customer served. " +
-    "Great job, donut boss!"
+    "You earned $" +
+    amount +
+    ". Great job, donut boss!"
   );
 }
 
 
-/* ============================================================
+/* ==========================================================
    GALACTIC DONUT
-   ============================================================ */
+   ========================================================== */
 
 function galacticDonut() {
 
@@ -517,28 +878,36 @@ function galacticDonut() {
 
   cosmicRushSeconds = 3599;
 
+
   speak(
     "Galactic Donut activated! " +
-    "Cosmic Rush is now active. " +
-    "Idle earnings are tripled and " +
-    "order payouts are doubled."
+    "Cosmic Rush is active. " +
+    "Idle earnings are tripled " +
+    "and order payouts are doubled."
   );
 }
 
 
-/* ============================================================
-   COLLECT
-   ============================================================ */
+/* ==========================================================
+   COLLECT IDLE EARNINGS
+   ========================================================== */
 
 function collectEarnings() {
 
   let multiplier =
-    cosmicRushActive ? 3 : 1;
+    cosmicRushActive
+    ? 3
+    : 1;
+
 
   let amount =
-    idlePerSecond * 10 * multiplier;
+    idlePerSecond *
+    10 *
+    multiplier;
+
 
   cash += amount;
+
 
   speak(
     "Collected $" +
@@ -548,9 +917,9 @@ function collectEarnings() {
 }
 
 
-/* ============================================================
+/* ==========================================================
    COSMIC RUSH
-   ============================================================ */
+   ========================================================== */
 
 function activateCosmicRush() {
 
@@ -564,97 +933,105 @@ function activateCosmicRush() {
     return;
   }
 
+
   bakerBucks -= 10;
 
   cosmicRushActive = true;
 
   cosmicRushSeconds = 600;
 
+
   speak(
-    "Cosmic Rush activated for " +
-    "10 minutes!"
+    "Cosmic Rush activated " +
+    "for 10 minutes!"
   );
 }
 
 
-/* ============================================================
+/* ==========================================================
    BOTTOM MENUS
-   ============================================================ */
+   ========================================================== */
 
 function openMenu(menu) {
 
-  switch(menu) {
 
-    case "Upgrades":
+  if (menu === "Upgrades") {
 
-      idlePerSecond += 25;
-
-      speak(
-        "Upgrades opened. " +
-        "Your earnings increased by " +
-        "25 dollars per second."
-      );
-
-      break;
+    idlePerSecond += 25;
 
 
-    case "Locations":
+    speak(
+      "Upgrades opened. " +
+      "Your earnings increased by " +
+      "25 dollars per second."
+    );
 
-      speak(
-        "Locations opened. " +
-        "New donut shops are coming soon."
-      );
-
-      break;
-
-
-    case "Seasonal":
-
-      speak(
-        "Seasonal shop opened. " +
-        "Limited time donuts coming soon."
-      );
-
-      break;
-
-
-    case "Mystery":
-
-      speak(
-        "Mystery shop opened. " +
-        "You never know what you'll find."
-      );
-
-      break;
-
-
-    case "Donut Rap":
-
-      speak(
-        "Donut Rap activated! " +
-        "Drop that donut beat!"
-      );
-
-      break;
-
-
-    case "Achievements":
-
-      speak(
-        "Achievements opened. " +
-        "You have earned " +
-        goldenDonuts +
-        " Golden Donuts."
-      );
-
-      break;
+    return;
   }
+
+
+  if (menu === "Locations") {
+
+    speak(
+      "Locations opened. " +
+      "New donut shops are coming soon."
+    );
+
+    return;
+  }
+
+
+  if (menu === "Seasonal") {
+
+    speak(
+      "Seasonal shop opened. " +
+      "Limited time donuts are coming soon."
+    );
+
+    return;
+  }
+
+
+  if (menu === "Mystery") {
+
+    speak(
+      "Mystery shop opened. " +
+      "You never know what you will find."
+    );
+
+    return;
+  }
+
+
+  if (menu === "Donut Rap") {
+
+    speak(
+      "Donut Rap activated! " +
+      "Drop that donut beat!"
+    );
+
+    return;
+  }
+
+
+  if (menu === "Achievements") {
+
+    speak(
+      "Achievements opened. " +
+      "You have earned " +
+      goldenDonuts +
+      " Golden Donuts."
+    );
+
+    return;
+  }
+
 }
 
 
-/* ============================================================
-   INFO
-   ============================================================ */
+/* ==========================================================
+   GAME INFORMATION
+   ========================================================== */
 
 function showInfo() {
 
@@ -667,16 +1044,17 @@ function showInfo() {
     bakerBucks +
     " Baker Bucks, " +
     goldenDonuts +
-    " Golden Donuts, and are level " +
+    " Golden Donuts, " +
+    "and you are level " +
     level +
     "."
   );
 }
 
 
-/* ============================================================
+/* ==========================================================
    KEYBOARD ACCESSIBILITY
-   ============================================================ */
+   ========================================================== */
 
 document.addEventListener(
   "keydown",
