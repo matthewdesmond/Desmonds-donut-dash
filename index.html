@@ -2,12 +2,25 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+
 <meta name="viewport"
-      content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+content="width=device-width,
+initial-scale=1,
+maximum-scale=1,
+user-scalable=no,
+viewport-fit=cover">
+
+<meta name="theme-color" content="#070714">
 
 <title>Desmond's Donut Dash</title>
 
 <style>
+
+/* =========================================================
+   DESMOND'S DONUT DASH
+   PACKAGE-HERO-STYLE IDLE GAME
+   ========================================================= */
+
 *{
   box-sizing:border-box;
   -webkit-tap-highlight-color:transparent;
@@ -15,996 +28,1063 @@
 
 html,
 body{
-  margin:0;
   width:100%;
   height:100%;
+  margin:0;
+  padding:0;
+
   overflow:hidden;
-  position:fixed;
-  inset:0;
-  background:#050714;
-  color:white;
+
+  background:#060611;
+
+  color:#fff;
+
   font-family:
     Arial,
     Helvetica,
     sans-serif;
 }
 
-button{
-  font-family:inherit;
-  color:white;
-  border:0;
-  cursor:pointer;
+body{
+  position:fixed;
+  inset:0;
 }
 
-/* =========================
-   BACKGROUND
-========================= */
+button{
+  font-family:inherit;
+  border:0;
+  color:white;
+}
+
+
+/* =========================================================
+   GAME
+   ========================================================= */
 
 #game{
-  width:100vw;
-  height:100vh;
-  height:100dvh;
+  position:fixed;
+  inset:0;
+
+  width:100%;
+  height:100%;
+
   overflow:hidden;
-  position:relative;
 
   background:
+
     radial-gradient(
-      circle at 50% 30%,
-      #25205b 0%,
-      #11183b 28%,
-      #080d20 62%,
-      #03050e 100%
+      circle at 50% 15%,
+      #39205c 0%,
+      #17152f 30%,
+      #090b19 65%,
+      #03040b 100%
     );
 }
 
-/* decorative sprinkles */
 
-.sprinkles{
+/* =========================================================
+   CARTOON BACKGROUND
+   ========================================================= */
+
+.background{
   position:absolute;
   inset:0;
-  pointer-events:none;
   overflow:hidden;
-  opacity:.8;
+  pointer-events:none;
 }
 
-.sprinkles span{
+
+/* stars */
+
+.star{
   position:absolute;
-  width:12px;
+  color:#fff;
+  font-size:12px;
+  opacity:.7;
+  text-shadow:0 0 8px currentColor;
+}
+
+.star:nth-child(1){left:7%;top:13%;color:#ff5dcc}
+.star:nth-child(2){left:18%;top:28%;color:#62eaff}
+.star:nth-child(3){left:82%;top:12%;color:#ffd63f}
+.star:nth-child(4){left:91%;top:32%;color:#ff65d5}
+.star:nth-child(5){left:12%;top:67%;color:#ffd63f}
+.star:nth-child(6){left:88%;top:69%;color:#63f5ff}
+
+
+/* sprinkles */
+
+.sprinkle{
+  position:absolute;
+  width:13px;
   height:4px;
   border-radius:5px;
   transform:rotate(35deg);
   box-shadow:0 0 7px currentColor;
 }
 
-.s1{left:3%;top:17%;color:#ff55c8}
-.s2{left:10%;top:72%;color:#5eeaff;transform:rotate(80deg)!important}
-.s3{left:18%;top:9%;color:#ffd83d}
-.s4{left:28%;top:78%;color:#ff6c5c;transform:rotate(120deg)!important}
-.s5{left:39%;top:13%;color:#62ff91}
-.s6{left:51%;top:89%;color:#ff4ed0}
-.s7{left:63%;top:8%;color:#58ddff}
-.s8{left:72%;top:77%;color:#ffd83d}
-.s9{left:84%;top:17%;color:#ff6b6b}
-.s10{left:94%;top:69%;color:#63ff9b}
-.s11{left:7%;top:45%;color:#ffd83d}
-.s12{left:91%;top:40%;color:#d978ff}
-.s13{left:45%;top:4%;color:#ff5cbf}
-.s14{left:57%;top:52%;color:#62eaff}
-.s15{left:30%;top:40%;color:#ffd83d}
+.sp1{left:5%;top:42%;color:#ff4fc9}
+.sp2{left:14%;top:82%;color:#59eaff}
+.sp3{left:28%;top:16%;color:#ffd63c}
+.sp4{left:71%;top:21%;color:#62ff92}
+.sp5{left:94%;top:48%;color:#ff6d62}
+.sp6{left:77%;top:81%;color:#d36cff}
+.sp7{left:42%;top:92%;color:#ffd63c}
 
-/* decorative donuts */
 
-.bg-donut{
+/* background donut */
+
+.background-donut{
   position:absolute;
-  pointer-events:none;
-  opacity:.18;
-  filter:drop-shadow(0 0 12px #ff42c8);
+  width:115px;
+  height:115px;
+
+  border-radius:50%;
+
+  background:
+    radial-gradient(
+      circle,
+      #0b0c1d 0 25%,
+      transparent 26%
+    ),
+    linear-gradient(
+      135deg,
+      #ff5acb,
+      #7839e9
+    );
+
+  border:16px solid #ffb53e;
+
+  opacity:.11;
 }
 
-.bg-donut.one{
-  width:95px;
-  height:95px;
-  left:-25px;
-  top:25%;
+.background-donut.one{
+  left:-55px;
+  top:31%;
   transform:rotate(-20deg);
 }
 
-.bg-donut.two{
-  width:75px;
-  height:75px;
-  right:-20px;
-  bottom:23%;
-  transform:rotate(20deg);
-}
-
-.donut-shape{
-  width:100%;
-  height:100%;
-  border-radius:50%;
-  background:
-    radial-gradient(circle at center,#080d20 0 27%,transparent 28%),
-    linear-gradient(135deg,#ff65ce,#7639ff);
-  border:14px solid #ffb83e;
+.background-donut.two{
+  right:-65px;
+  bottom:24%;
+  transform:rotate(18deg);
 }
 
 
-/* =========================
-   MAIN SCREEN
-========================= */
+/* =========================================================
+   MAIN APP
+   ========================================================= */
 
-.screen{
+.app{
   position:absolute;
   inset:0;
+
+  display:flex;
+  flex-direction:column;
+
   padding:
     max(7px,env(safe-area-inset-top))
-    max(7px,env(safe-area-inset-right))
-    max(72px,calc(68px + env(safe-area-inset-bottom)))
-    max(7px,env(safe-area-inset-left));
+    8px
+    calc(67px + env(safe-area-inset-bottom))
+    8px;
 
-  display:grid;
-
-  /*
-    Three rows.
-    Nothing can create page scrolling.
-  */
-  grid-template-rows:
-    auto
-    minmax(0,1fr)
-    minmax(0,1fr);
-
-  gap:7px;
-
-  max-width:1200px;
-  margin:auto;
+  overflow:hidden;
 }
 
 
-/* =========================
+/* =========================================================
    HEADER
-========================= */
+   ========================================================= */
 
 .header{
+  flex:none;
+
+  height:58px;
+
   display:grid;
+
   grid-template-columns:
-    minmax(170px,1.5fr)
-    minmax(100px,.8fr)
-    minmax(100px,.8fr)
+    minmax(0,1fr)
+    auto
     auto;
 
-  gap:7px;
-  min-height:0;
+  gap:6px;
+
+  align-items:center;
 }
 
 .logo{
-  display:flex;
-  align-items:center;
-  padding:4px 10px;
+  min-width:0;
 
   font-weight:1000;
-  font-size:clamp(20px,3.4vw,38px);
-  line-height:.85;
+
+  font-size:clamp(20px,7vw,31px);
+
+  line-height:.82;
 
   color:#ffd33d;
 
   text-shadow:
-    2px 2px 0 #ff37bd,
-    4px 4px 0 #4b1b99,
-    0 0 13px #ff37bd;
+    2px 2px 0 #ff39bd,
+    4px 4px 0 #55209e,
+    0 0 12px #ff42c8;
 }
 
-.logo small{
+.logo span{
   display:block;
-  color:#49ddff;
-  font-size:.56em;
-  margin-top:4px;
-  text-shadow:
-    2px 2px 0 #48219c;
+
+  color:#4bdfff;
+
+  font-size:.53em;
+
+  margin-top:5px;
 }
 
 .stat{
-  min-width:0;
-  background:
-    linear-gradient(
-      145deg,
-      #142751,
-      #080f25
-    );
+  min-width:72px;
 
-  border:2px solid #315b99;
-  border-radius:13px;
+  padding:5px 7px;
 
-  padding:5px 9px;
-
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-
-  box-shadow:
-    inset 0 0 15px #0008,
-    0 3px 10px #0009;
-}
-
-.stat-label{
-  color:#91a7cc;
-  font-size:9px;
-  font-weight:900;
-  text-transform:uppercase;
-}
-
-.stat-value{
-  font-size:clamp(15px,2.4vw,25px);
-  font-weight:1000;
-  color:#fff;
-}
-
-.stat-value.green{
-  color:#50f38b;
-}
-
-.settings{
-  width:45px;
-  height:45px;
-  align-self:center;
-
-  border-radius:13px;
-
-  background:#111f40;
-  border:2px solid #4269a5;
-
-  font-size:23px;
-}
-
-
-/* =========================
-   PANELS
-========================= */
-
-.panel{
-  min-height:0;
-  overflow:hidden;
-
-  background:
-    linear-gradient(
-      150deg,
-      rgba(20,37,75,.96),
-      rgba(5,12,29,.98)
-    );
-
-  border:2px solid #315488;
-  border-radius:16px;
-
-  box-shadow:
-    inset 0 0 20px #0007,
-    0 4px 15px #000b;
-}
-
-.panel-title{
-  color:#f4f7ff;
-  font-size:clamp(13px,2vw,19px);
-  font-weight:1000;
-  text-transform:uppercase;
-
-  text-shadow:0 2px 0 #000;
-
-  padding-bottom:5px;
-}
-
-
-/* =========================
-   TOP GAME AREA
-========================= */
-
-.top-area{
-  min-height:0;
-
-  display:grid;
-  grid-template-columns:
-    minmax(0,1.35fr)
-    minmax(180px,.75fr);
-
-  gap:7px;
-}
-
-
-/* CUSTOMER */
-
-.customer-panel{
-  padding:9px;
-  min-width:0;
-  display:grid;
-
-  grid-template-rows:auto minmax(0,1fr) auto;
-}
-
-.customer-content{
-  min-height:0;
-
-  display:grid;
-  grid-template-columns:
-    minmax(75px,.45fr)
-    minmax(0,1.55fr);
-
-  gap:7px;
-}
-
-.character{
-  min-width:0;
-  border-radius:12px;
-
-  background:
-    radial-gradient(
-      circle at 50% 40%,
-      #273f72,
-      #09142e 72%
-    );
-
-  border:1px solid #365d97;
-
-  display:flex;
-  align-items:center;
-  justify-content:center;
-
-  font-size:clamp(48px,8vw,88px);
-}
-
-.order-box{
-  min-width:0;
-
-  background:#071126;
-  border:1px solid #345a92;
-  border-radius:12px;
-
-  padding:9px;
-
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-
-  overflow:hidden;
-}
-
-.customer-label{
-  color:#56e8ff;
-  font-size:9px;
-  font-weight:1000;
-  text-transform:uppercase;
-}
-
-.order-title{
-  font-size:clamp(15px,2.4vw,25px);
-  font-weight:1000;
-  margin:3px 0;
-
-  white-space:nowrap;
-  overflow:hidden;
-  text-overflow:ellipsis;
-}
-
-.order-details{
-  color:#c4d1e9;
-  font-size:clamp(10px,1.7vw,14px);
-  line-height:1.25;
-}
-
-.reward{
-  margin-top:5px;
-  color:#ffd83d;
-  font-weight:1000;
-  font-size:12px;
-}
-
-.customer-actions{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:6px;
-  margin-top:6px;
-}
-
-
-/* BUTTONS */
-
-.big-button{
-  min-height:38px;
   border-radius:11px;
 
   background:
-    linear-gradient(#42ef79,#13a94c);
-
-  color:#03120a;
-
-  font-size:clamp(11px,1.8vw,16px);
-  font-weight:1000;
-
-  box-shadow:
-    0 3px 0 #087435,
-    0 0 12px #25eb7240;
-}
-
-.big-button.purple{
-  background:
-    linear-gradient(#d26aff,#7135d9);
-  color:white;
-  box-shadow:
-    0 3px 0 #3d197e,
-    0 0 13px #b040ff44;
-}
-
-
-/* =========================
-   GALACTIC
-========================= */
-
-.galactic-panel{
-  min-width:0;
-  position:relative;
-  padding:9px;
-
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-
-  background:
-    radial-gradient(
-      circle at 50% 40%,
-      #421678,
-      #130d34 48%,
-      #071027 90%
-    );
-
-  border-color:#8b45d8;
-}
-
-.galactic-stars{
-  position:absolute;
-  inset:0;
-  pointer-events:none;
-
-  background:
-    radial-gradient(circle at 15% 20%,#fff 0 1px,transparent 2px),
-    radial-gradient(circle at 80% 25%,#fff 0 1px,transparent 2px),
-    radial-gradient(circle at 30% 75%,#fff 0 1px,transparent 2px),
-    radial-gradient(circle at 72% 72%,#fff 0 1px,transparent 2px),
-    radial-gradient(circle at 50% 12%,#fff 0 1px,transparent 2px);
-}
-
-.galactic-title{
-  position:relative;
-  color:#d879ff;
-  font-size:clamp(15px,2.5vw,24px);
-  font-weight:1000;
-  text-shadow:
-    0 0 8px #9f2dff,
-    0 0 16px #9f2dff;
-  text-align:center;
-}
-
-.galactic-donut{
-  position:relative;
-
-  width:clamp(80px,12vw,130px);
-  aspect-ratio:1;
-
-  border-radius:50%;
-
-  background:
-    radial-gradient(
-      circle at 50% 50%,
-      #080c22 0 25%,
-      transparent 26%
-    ),
-    radial-gradient(
-      circle at 30% 30%,
-      #56eaff 0 4%,
-      transparent 5%
-    ),
-    radial-gradient(
-      circle at 65% 30%,
-      #ff54d4 0 5%,
-      transparent 6%
-    ),
-    radial-gradient(
-      circle at 45% 70%,
-      #ffd63c 0 4%,
-      transparent 5%
-    ),
     linear-gradient(
-      135deg,
-      #2464ff,
-      #7826e8 50%,
-      #ff3cc7
+      145deg,
+      #17284b,
+      #080e20
     );
 
-  border:10px solid #ffab3f;
+  border:2px solid #35588d;
 
   box-shadow:
-    0 0 14px #8e3cff,
-    0 0 30px #d43cff;
+    inset 0 0 12px #0008;
 }
 
-.galactic-message{
-  position:relative;
+.stat small{
+  display:block;
 
-  width:100%;
-  text-align:center;
+  color:#8fa4c8;
 
-  border:1px solid #a344d5;
-  background:#210b48;
-  border-radius:10px;
+  font-size:7px;
 
-  padding:5px;
-
-  color:#ffe65a;
-
-  font-size:clamp(9px,1.5vw,13px);
   font-weight:1000;
-}
 
-
-/* =========================
-   BOTTOM GAME AREA
-========================= */
-
-.bottom-area{
-  min-height:0;
-
-  display:grid;
-
-  grid-template-columns:
-    minmax(0,1.35fr)
-    minmax(0,.65fr);
-
-  gap:7px;
-}
-
-
-/* =========================
-   BUILD ORDER
-========================= */
-
-.builder{
-  padding:8px;
-  min-height:0;
-
-  display:grid;
-
-  grid-template-rows:auto auto 1fr auto;
-
-  overflow:hidden;
-}
-
-.category-label{
-  color:#65ddff;
-  font-size:9px;
-  font-weight:1000;
-  margin:2px 0;
   text-transform:uppercase;
 }
 
-.options{
-  display:flex;
-  gap:5px;
-  min-width:0;
-  overflow:hidden;
-}
-
-.option{
-  flex:1;
-  min-width:0;
-
-  background:#09162e;
-
-  border:1px solid #31598e;
-  border-radius:9px;
-
-  padding:4px 2px;
-
-  text-align:center;
-
-  font-size:clamp(8px,1.35vw,12px);
-  font-weight:900;
-}
-
-.option .icon{
+.stat strong{
   display:block;
-  font-size:clamp(20px,3.4vw,34px);
-  line-height:1;
-  margin-bottom:2px;
+
+  font-size:13px;
+
+  white-space:nowrap;
 }
 
-.option.selected{
-  border-color:#ffd63d;
-
-  box-shadow:
-    0 0 10px #ffd63d55;
-
-  background:#15284b;
+.stat.earnings strong{
+  color:#48ef84;
 }
 
 
-/* =========================
-   RIGHT LOWER
-========================= */
+/* =========================================================
+   HOME SCREEN
+   ========================================================= */
 
-.right-lower{
-  min-height:0;
-
-  display:grid;
-  grid-template-rows:
-    minmax(0,1fr)
-    minmax(0,1fr);
-
-  gap:7px;
-}
-
-.mini-panel{
-  min-height:0;
-  padding:8px;
-  overflow:hidden;
-}
-
-
-/* ACTIVE ORDERS */
-
-.active-orders{
-  display:flex;
-  gap:5px;
-  height:calc(100% - 24px);
-}
-
-.active-order{
+.home{
   flex:1;
-  min-width:0;
 
-  border-radius:9px;
-  background:#09162e;
-  border:1px solid #31598e;
+  min-height:0;
 
   display:flex;
   flex-direction:column;
-  align-items:center;
-  justify-content:center;
 
-  font-size:clamp(9px,1.4vw,12px);
-  font-weight:900;
-}
+  gap:7px;
 
-.active-order .donut{
-  font-size:clamp(25px,4vw,40px);
-}
-
-.bar{
-  width:75%;
-  height:5px;
-  margin-top:5px;
-
-  border-radius:5px;
-  background:#02050e;
   overflow:hidden;
 }
 
-.bar span{
-  display:block;
-  width:55%;
-  height:100%;
-  background:#39dfff;
+
+/* =========================================================
+   DONUT SHOP
+   ========================================================= */
+
+.shop{
+  flex:1;
+
+  min-height:0;
+
+  position:relative;
+
+  overflow:hidden;
+
+  border-radius:20px;
+
+  border:2px solid #395889;
+
+  background:
+
+    linear-gradient(
+      180deg,
+      #17264a 0%,
+      #0d1832 48%,
+      #080e20 100%
+    );
+
+  box-shadow:
+    inset 0 0 30px #0008,
+    0 5px 18px #000c;
 }
 
 
-/* UPGRADES */
+/* awning */
 
-.upgrade-row{
-  height:calc(100% - 24px);
+.awning{
+  height:35px;
 
   display:flex;
-  align-items:center;
-  gap:7px;
 
-  background:#09162e;
-  border:1px solid #31598e;
-  border-radius:9px;
+  overflow:hidden;
 
-  padding:7px;
+  border-bottom:3px solid #5a2d75;
 }
 
-.upgrade-icon{
-  font-size:35px;
-}
-
-.upgrade-info{
-  min-width:0;
+.awning span{
   flex:1;
+
+  background:
+    linear-gradient(
+      90deg,
+      #ff4fbc,
+      #ff79d0
+    );
+
+  border-right:2px solid #b93286;
 }
 
-.upgrade-name{
-  font-weight:1000;
-  font-size:clamp(10px,1.5vw,14px);
-}
-
-.upgrade-desc{
-  color:#9eafd0;
-  font-size:9px;
-}
-
-.upgrade-button{
-  background:#31df68;
-  color:#04120a;
-  border-radius:8px;
-  padding:8px 9px;
-  font-size:9px;
-  font-weight:1000;
+.awning span:nth-child(even){
+  background:
+    linear-gradient(
+      90deg,
+      #fff,
+      #e7eaff
+    );
 }
 
 
-/* =========================
-   MYSTERY
-========================= */
+/* shop sign */
 
-.mystery-strip{
+.shop-sign{
   position:absolute;
+
+  top:13px;
   left:50%;
+
   transform:translateX(-50%);
 
-  bottom:
-    calc(68px + env(safe-area-inset-bottom));
+  z-index:4;
 
-  z-index:5;
+  width:70%;
 
-  width:min(250px,55vw);
-
-  background:#100d21;
-  border:2px solid #9d58ff;
-  border-radius:12px;
-
-  padding:5px 9px;
-
-  display:none;
+  padding:6px 10px;
 
   text-align:center;
 
+  border-radius:12px;
+
+  background:#10152b;
+
+  border:2px solid #ff56ca;
+
   box-shadow:
-    0 0 15px #9d58ff44;
+    0 0 12px #ff42c877;
 }
 
-.mystery-strip strong{
-  color:#d77aff;
-  font-size:11px;
-}
-
-.mystery-strip small{
+.shop-sign strong{
   display:block;
-  color:#aeb9d0;
+
+  color:#ffd53e;
+
+  font-size:15px;
+
+  text-shadow:
+    2px 2px #8b287c;
+}
+
+.shop-sign small{
+  color:#5de6ff;
+
+  font-weight:1000;
+
   font-size:8px;
 }
 
 
-/* =========================
-   NAVIGATION
-========================= */
+/* =========================================================
+   DONUT DISPLAY
+   ========================================================= */
 
-.bottom-nav{
+.donut-area{
+  position:absolute;
+
+  left:5%;
+  right:5%;
+  top:29%;
+  bottom:31%;
+
+  display:flex;
+
+  justify-content:center;
+  align-items:center;
+
+  gap:10px;
+}
+
+
+/* giant donut */
+
+.main-donut{
+  width:min(43vw,155px);
+  aspect-ratio:1;
+
+  position:relative;
+
+  border-radius:50%;
+
+  background:
+
+    radial-gradient(
+      circle at 50% 50%,
+      #0b0d20 0 24%,
+      transparent 25%
+    ),
+
+    radial-gradient(
+      circle at 30% 25%,
+      #fff 0 2px,
+      transparent 3px
+    ),
+
+    radial-gradient(
+      circle at 68% 33%,
+      #ffd43c 0 3px,
+      transparent 4px
+    ),
+
+    radial-gradient(
+      circle at 38% 70%,
+      #59eaff 0 3px,
+      transparent 4px
+    ),
+
+    linear-gradient(
+      135deg,
+      #ff5dcb,
+      #9b43f1 48%,
+      #4034d9
+    );
+
+  border:15px solid #eaa23a;
+
+  box-shadow:
+    0 8px 0 #8b4d22,
+    0 0 22px #d43bff88;
+}
+
+
+/* frosting */
+
+.main-donut:before{
+  content:"";
+
+  position:absolute;
+
+  inset:-7px;
+
+  border-radius:50%;
+
+  border-top:12px solid #ff51c8;
+
+  border-left:9px solid transparent;
+  border-right:14px solid transparent;
+
+  transform:rotate(-15deg);
+}
+
+
+/* sprinkles on donut */
+
+.main-donut:after{
+  content:"✦  •  ★  •  ✦";
+
+  position:absolute;
+
+  left:0;
+  right:0;
+
+  top:43%;
+
+  text-align:center;
+
+  color:white;
+
+  font-size:17px;
+
+  text-shadow:
+    0 0 8px #fff;
+}
+
+
+/* =========================================================
+   CUSTOMER CARD
+   ========================================================= */
+
+.customer-card{
+  position:absolute;
+
+  left:8px;
+  right:8px;
+  bottom:8px;
+
+  height:26%;
+
+  min-height:92px;
+
+  padding:8px;
+
+  border-radius:14px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #101f40,
+      #071126
+    );
+
+  border:2px solid #365a91;
+
+  display:grid;
+
+  grid-template-columns:48px minmax(0,1fr) auto;
+
+  gap:7px;
+
+  align-items:center;
+}
+
+.customer-face{
+  width:48px;
+  height:48px;
+
+  border-radius:50%;
+
+  display:flex;
+
+  align-items:center;
+  justify-content:center;
+
+  background:
+    radial-gradient(
+      circle at 35% 30%,
+      #ffdfbd,
+      #d7884e
+    );
+
+  border:3px solid #70442e;
+
+  font-size:28px;
+}
+
+.customer-info{
+  min-width:0;
+}
+
+.customer-info small{
+  color:#55e4ff;
+
+  font-size:8px;
+
+  font-weight:1000;
+}
+
+.customer-info strong{
+  display:block;
+
+  font-size:14px;
+
+  white-space:nowrap;
+
+  overflow:hidden;
+
+  text-overflow:ellipsis;
+}
+
+.customer-info span{
+  color:#aebcd5;
+
+  font-size:9px;
+}
+
+.reward{
+  text-align:right;
+
+  color:#ffd53c;
+
+  font-size:10px;
+
+  font-weight:1000;
+}
+
+
+/* =========================================================
+   ACTION BAR
+   ========================================================= */
+
+.actions{
+  position:absolute;
+
+  left:8px;
+  right:8px;
+
+  bottom:calc(26% + 15px);
+
+  display:grid;
+
+  grid-template-columns:1fr 1fr;
+
+  gap:7px;
+}
+
+.action{
+  min-height:40px;
+
+  border-radius:12px;
+
+  font-weight:1000;
+
+  font-size:11px;
+
+  box-shadow:
+    0 4px 0 #075e2e;
+}
+
+.action.start{
+  background:
+    linear-gradient(
+      #49ef80,
+      #16b650
+    );
+
+  color:#041309;
+}
+
+.action.galactic{
+  background:
+    linear-gradient(
+      #d56cff,
+      #7436d6
+    );
+
+  box-shadow:
+    0 4px 0 #3c1879;
+}
+
+
+/* =========================================================
+   HOME STATS
+   ========================================================= */
+
+.home-stats{
+  flex:none;
+
+  height:56px;
+
+  display:grid;
+
+  grid-template-columns:
+    repeat(3,1fr);
+
+  gap:6px;
+}
+
+.home-stat{
+  border-radius:12px;
+
+  background:#0c1730;
+
+  border:1px solid #2d4e81;
+
+  display:flex;
+
+  flex-direction:column;
+
+  justify-content:center;
+
+  align-items:center;
+}
+
+.home-stat small{
+  color:#899ec0;
+
+  font-size:7px;
+
+  font-weight:1000;
+}
+
+.home-stat strong{
+  font-size:14px;
+
+  margin-top:2px;
+}
+
+
+/* =========================================================
+   CONTENT SCREENS
+   ========================================================= */
+
+.page{
+  position:absolute;
+
+  inset:0;
+
+  padding:
+    max(70px,calc(62px + env(safe-area-inset-top)))
+    10px
+    calc(70px + env(safe-area-inset-bottom))
+    10px;
+
+  display:none;
+
+  overflow:hidden;
+
+  background:
+    radial-gradient(
+      circle at 50% 15%,
+      #281c4e,
+      #080b18 70%
+    );
+}
+
+.page.active{
+  display:block;
+}
+
+.page-title{
+  font-size:23px;
+
+  font-weight:1000;
+
+  color:#ffd43d;
+
+  margin-bottom:10px;
+
+  text-shadow:
+    2px 2px #78256d;
+}
+
+.card{
+  background:
+    linear-gradient(
+      145deg,
+      #14254a,
+      #080f22
+    );
+
+  border:2px solid #345789;
+
+  border-radius:15px;
+
+  padding:12px;
+
+  margin-bottom:8px;
+}
+
+.card h3{
+  margin:0 0 4px;
+
+  font-size:15px;
+}
+
+.card p{
+  margin:0;
+
+  color:#aab9d2;
+
+  font-size:10px;
+
+  line-height:1.4;
+}
+
+.green{
+  color:#4df38a;
+}
+
+.pink{
+  color:#ff63d0;
+}
+
+.gold{
+  color:#ffd53d;
+}
+
+
+/* =========================================================
+   UPGRADE BUTTONS
+   ========================================================= */
+
+.upgrade{
+  width:100%;
+
+  display:grid;
+
+  grid-template-columns:45px 1fr auto;
+
+  gap:8px;
+
+  align-items:center;
+
+  text-align:left;
+
+  padding:9px;
+
+  margin-bottom:7px;
+
+  border-radius:13px;
+
+  background:#0c1730;
+
+  border:2px solid #2d4f82;
+}
+
+.upgrade-icon{
+  width:45px;
+  height:45px;
+
+  display:flex;
+
+  align-items:center;
+  justify-content:center;
+
+  border-radius:11px;
+
+  background:#182b51;
+
+  font-size:27px;
+}
+
+.upgrade-name{
+  font-size:13px;
+  font-weight:1000;
+}
+
+.upgrade-desc{
+  color:#8fa3c2;
+  font-size:9px;
+  margin-top:2px;
+}
+
+.upgrade-buy{
+  padding:8px;
+
+  border-radius:9px;
+
+  background:#35e873;
+
+  color:#031109;
+
+  font-weight:1000;
+
+  font-size:9px;
+}
+
+
+/* =========================================================
+   MYSTERY
+   ========================================================= */
+
+.mystery-card{
+  text-align:center;
+
+  padding:25px 15px;
+}
+
+.mystery-icon{
+  font-size:75px;
+
+  filter:
+    drop-shadow(0 0 15px #9e48ff);
+}
+
+.locked{
+  color:#d477ff;
+
+  font-size:18px;
+
+  font-weight:1000;
+}
+
+
+/* =========================================================
+   BOTTOM NAV
+   ========================================================= */
+
+.nav{
   position:fixed;
+
+  z-index:50;
 
   left:0;
   right:0;
   bottom:0;
 
   height:
-    calc(63px + env(safe-area-inset-bottom));
+    calc(62px + env(safe-area-inset-bottom));
 
   padding:
+    3px
     4px
-    max(4px,env(safe-area-inset-right))
     env(safe-area-inset-bottom)
-    max(4px,env(safe-area-inset-left));
+    4px;
 
-  z-index:30;
+  display:grid;
+
+  grid-template-columns:
+    repeat(6,1fr);
 
   background:
     linear-gradient(
-      #0b1731f5,
-      #040914fa
+      #101b35f5,
+      #050912fa
     );
 
-  border-top:2px solid #294b82;
+  border-top:2px solid #2b4c80;
 
-  display:grid;
-  grid-template-columns:repeat(6,1fr);
-
-  backdrop-filter:blur(12px);
+  backdrop-filter:blur(10px);
 }
 
-.nav{
+.nav button{
   min-width:0;
+
+  border-radius:10px;
 
   background:transparent;
 
-  color:#aebdd7;
+  color:#9daecc;
 
-  border-radius:9px;
+  font-size:7px;
 
-  font-size:clamp(7px,1.4vw,10px);
   font-weight:1000;
 }
 
-.nav-icon{
+.nav button span{
   display:block;
-  font-size:clamp(18px,4vw,28px);
+
+  font-size:22px;
+
   line-height:1;
-  margin-bottom:2px;
+
+  margin-bottom:3px;
 }
 
-.nav.active{
+.nav button.active{
   color:white;
-  background:#13284c;
-  border:1px solid #3b62a0;
+
+  background:#162b50;
+
+  border:1px solid #3e65a0;
 }
 
 
-/* =========================
-   TABLET / SMALL SCREEN
-========================= */
+/* =========================================================
+   PHONE
+========================================================= */
 
-@media(max-width:600px){
-
-  .screen{
-    padding:4px 4px 70px;
-    gap:4px;
-
-    grid-template-rows:
-      48px
-      minmax(0,1fr)
-      minmax(0,1fr);
-  }
+@media(max-width:500px){
 
   .header{
-    gap:4px;
+    height:54px;
   }
 
   .logo{
-    font-size:18px;
-    padding:2px;
-  }
-
-  .logo small{
-    font-size:10px;
+    font-size:20px;
   }
 
   .stat{
-    padding:3px 5px;
-    border-radius:9px;
+    min-width:66px;
   }
 
-  .stat-label{
-    font-size:6px;
-  }
-
-  .stat-value{
+  .stat strong{
     font-size:12px;
   }
 
-  .settings{
-    width:35px;
-    height:35px;
-    font-size:18px;
+  .shop{
+    border-radius:16px;
   }
 
-  .top-area{
-    gap:4px;
+  .shop-sign{
+    top:10px;
   }
 
-  .bottom-area{
-    gap:4px;
+  .customer-card{
+    height:27%;
   }
 
-  .panel{
-    border-radius:11px;
+  .actions{
+    bottom:calc(27% + 15px);
   }
 
-  .customer-panel,
-  .builder,
-  .mini-panel,
-  .galactic-panel{
-    padding:5px;
+  .main-donut{
+    width:105px;
+    border-width:11px;
   }
 
-  .customer-content{
-    gap:4px;
+  .customer-face{
+    width:42px;
+    height:42px;
+    font-size:24px;
   }
 
-  .character{
-    font-size:48px;
+  .customer-card{
+    grid-template-columns:42px minmax(0,1fr) auto;
   }
 
-  .order-box{
-    padding:5px;
-  }
-
-  .customer-actions{
-    gap:4px;
-  }
-
-  .big-button{
-    min-height:30px;
-    font-size:9px;
-  }
-
-  .galactic-donut{
-    width:70px;
-    border-width:7px;
-  }
-
-  .galactic-message{
-    padding:3px;
-  }
-
-  .option{
-    padding:2px 1px;
-    border-radius:6px;
-  }
-
-  .option .icon{
-    font-size:21px;
-  }
-
-  .upgrade-icon{
-    font-size:25px;
-  }
-
-  .upgrade-button{
-    padding:5px;
-    font-size:7px;
-  }
-
-  .upgrade-desc{
-    display:none;
+  .nav button span{
+    font-size:20px;
   }
 }
 
 
-/* VERY SHORT SCREENS */
+/* =========================================================
+   VERY SHORT PHONES
+========================================================= */
 
-@media(max-height:600px){
+@media(max-height:650px){
 
-  .screen{
-    grid-template-rows:
-      42px
-      minmax(0,1fr)
-      minmax(0,1fr);
+  .header{
+    height:48px;
   }
 
-  .bottom-nav{
-    height:
-      calc(52px + env(safe-area-inset-bottom));
+  .main-donut{
+    width:85px;
+    border-width:9px;
   }
 
-  .nav-icon{
-    font-size:19px;
+  .customer-card{
+    min-height:78px;
+    height:24%;
   }
 
-  .nav{
-    font-size:7px;
+  .actions{
+    bottom:calc(24% + 13px);
   }
 
-  .mystery-strip{
-    bottom:
-      calc(55px + env(safe-area-inset-bottom));
-  }
-}
-
-
-/* DESKTOP */
-
-@media(min-width:1000px){
-
-  .screen{
-    padding-bottom:78px;
+  .home-stats{
+    height:45px;
   }
 
-  .bottom-nav{
-    height:70px;
+  .shop-sign{
+    padding:4px;
   }
 }
+
 </style>
 </head>
 
@@ -1013,527 +1093,754 @@ button{
 
 <div id="game">
 
-  <!-- decorative background -->
-  <div class="sprinkles" aria-hidden="true">
-    <span class="s1"></span>
-    <span class="s2"></span>
-    <span class="s3"></span>
-    <span class="s4"></span>
-    <span class="s5"></span>
-    <span class="s6"></span>
-    <span class="s7"></span>
-    <span class="s8"></span>
-    <span class="s9"></span>
-    <span class="s10"></span>
-    <span class="s11"></span>
-    <span class="s12"></span>
-    <span class="s13"></span>
-    <span class="s14"></span>
-    <span class="s15"></span>
+
+<!-- =====================================================
+     BACKGROUND
+===================================================== -->
+
+<div class="background">
+
+  <span class="star">✦</span>
+  <span class="star">★</span>
+  <span class="star">✦</span>
+  <span class="star">★</span>
+  <span class="star">✦</span>
+  <span class="star">★</span>
+
+  <span class="sprinkle sp1"></span>
+  <span class="sprinkle sp2"></span>
+  <span class="sprinkle sp3"></span>
+  <span class="sprinkle sp4"></span>
+  <span class="sprinkle sp5"></span>
+  <span class="sprinkle sp6"></span>
+  <span class="sprinkle sp7"></span>
+
+  <div class="background-donut one"></div>
+  <div class="background-donut two"></div>
+
+</div>
+
+
+<!-- =====================================================
+     HEADER
+===================================================== -->
+
+<header class="header">
+
+  <div class="logo">
+    DESMOND'S
+    <span>🍩 DONUT DASH</span>
   </div>
 
-  <div class="bg-donut one">
-    <div class="donut-shape"></div>
+  <div class="stat">
+
+    <small>BAKER BUCKS</small>
+
+    <strong id="money">
+      $0
+    </strong>
+
   </div>
 
-  <div class="bg-donut two">
-    <div class="donut-shape"></div>
+  <div class="stat earnings">
+
+    <small>EARNINGS / SEC</small>
+
+    <strong id="eps">
+      $0.05
+    </strong>
+
   </div>
 
+</header>
 
-  <!-- EVERYTHING FITS INSIDE THIS SCREEN -->
-  <main class="screen">
 
-    <!-- HEADER -->
+<!-- =====================================================
+     HOME
+===================================================== -->
 
-    <header class="header">
+<section
+  class="page active"
+  id="homePage">
 
-      <div class="logo">
-        DESMOND'S
-        <small>🍩 DONUT DASH</small>
+  <div class="home">
+
+
+    <!-- DONUT SHOP -->
+
+    <div class="shop">
+
+      <div class="awning">
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
       </div>
 
-      <div class="stat">
-        <div class="stat-label">
-          Baker Bucks
-        </div>
+
+      <div class="shop-sign">
+
+        <strong>
+          🍩 DESMOND'S DONUTS 🍩
+        </strong>
+
+        <small>
+          FRESH • FUN • FANTASTIC
+        </small>
+
+      </div>
+
+
+      <!-- MAIN DONUT -->
+
+      <div class="donut-area">
 
         <div
-          class="stat-value"
-          id="money">
-          $0
+          class="main-donut"
+          aria-label="Giant cartoon frosted donut">
         </div>
+
       </div>
 
-      <div class="stat">
-        <div class="stat-label">
-          Earnings / Sec
-        </div>
 
-        <div
-          class="stat-value green"
-          id="eps">
-          $0.05
-        </div>
+      <!-- ACTIONS -->
+
+      <div class="actions">
+
+        <button
+          class="action start"
+          onclick="takeOrder()"
+          aria-label="Take customer order">
+
+          🍩 TAKE ORDER
+
+        </button>
+
+        <button
+          class="action galactic"
+          onclick="serveGalactic()"
+          aria-label="Serve Galactic Donut">
+
+          🌌 GALACTIC
+
+        </button>
+
       </div>
 
-      <button
-        class="settings"
-        aria-label="Settings"
-        onclick="announce('Settings')">
-        ⚙️
-      </button>
-
-    </header>
-
-
-    <!-- TOP AREA -->
-
-    <section class="top-area">
 
       <!-- CUSTOMER -->
 
-      <section class="panel customer-panel">
+      <div class="customer-card">
 
-        <div class="panel-title">
-          👤 Customer Order
+        <div class="customer-face">
+          😎
         </div>
 
-        <div class="customer-content">
+        <div class="customer-info">
 
-          <div
-            class="character"
-            aria-label="Customer">
-            😎
-          </div>
+          <small>
+            CUSTOMER ORDER
+          </small>
 
-          <div class="order-box">
+          <strong id="orderTitle">
+            Ready for a customer!
+          </strong>
 
-            <div class="customer-label">
-              Today's Customer
-            </div>
-
-            <div
-              class="order-title"
-              id="orderTitle">
-              Ready for an order!
-            </div>
-
-            <div
-              class="order-details"
-              id="orderDetails">
-              Tap Take Order to get started.
-            </div>
-
-            <div
-              class="reward"
-              id="reward">
-              Reward: $0
-            </div>
-
-          </div>
+          <span id="orderDetails">
+            Tap Take Order to begin.
+          </span>
 
         </div>
 
-        <div class="customer-actions">
-
-          <button
-            class="big-button"
-            onclick="takeOrder()"
-            aria-label="Take customer order">
-            🍩 TAKE ORDER
-          </button>
-
-          <button
-            class="big-button purple"
-            onclick="nextCustomer()"
-            aria-label="Next customer">
-            NEXT CUSTOMER ➜
-          </button>
-
-        </div>
-
-      </section>
-
-
-      <!-- GALACTIC DONUT -->
-
-      <section
-        class="panel galactic-panel"
-        aria-label="Galactic Donut">
-
-        <div class="galactic-stars"></div>
-
-        <div class="galactic-title">
-          🌌 GALACTIC DONUT
-        </div>
-
-        <div
-          class="galactic-donut"
-          aria-label="Galactic Donut"></div>
-
-        <div class="galactic-message">
-          <span id="cosmic">
-            ⚡ COSMIC RUSH
+        <div class="reward">
+          <span id="reward">
+            $0
           </span>
           <br>
-          Rare donut — huge rewards!
+          REWARD
         </div>
 
-        <button
-          class="big-button"
-          style="position:relative;margin-top:6px;width:100%"
-          onclick="galacticDonut()"
-          aria-label="Serve Galactic Donut">
-          🌌 SERVE
-        </button>
+      </div>
 
-      </section>
+    </div>
 
-    </section>
 
+    <!-- QUICK STATS -->
 
-    <!-- LOWER AREA -->
+    <div class="home-stats">
 
-    <section class="bottom-area">
+      <div class="home-stat">
 
-      <!-- BUILD ORDER -->
+        <small>DONUTS SOLD</small>
 
-      <section class="panel builder">
+        <strong id="sold">
+          0
+        </strong>
 
-        <div class="panel-title">
-          🛠️ Build The Order
-        </div>
+      </div>
 
+      <div class="home-stat">
 
-        <div>
+        <small>LEVEL</small>
 
-          <div class="category-label">
-            Donuts
-          </div>
+        <strong id="level">
+          1
+        </strong>
 
-          <div class="options">
+      </div>
 
-            <button class="option"
-                    onclick="choose('donut','plain')">
-              <span class="icon">🍩</span>
-              Plain
-            </button>
+      <div class="home-stat">
 
-            <button class="option"
-                    onclick="choose('donut','chocolate')">
-              <span class="icon">🍫</span>
-              Chocolate
-            </button>
+        <small>GALACTIC</small>
 
-            <button class="option"
-                    onclick="choose('donut','glazed')">
-              <span class="icon">🍩</span>
-              Glazed
-            </button>
+        <strong id="galacticCount">
+          0
+        </strong>
 
-            <button class="option"
-                    onclick="choose('donut','strawberry')">
-              <span class="icon">🍓</span>
-              Strawberry
-            </button>
+      </div>
 
-            <button class="option"
-                    onclick="choose('donut','blueberry')">
-              <span class="icon">🫐</span>
-              Blueberry
-            </button>
+    </div>
 
-            <button class="option"
-                    onclick="choose('donut','galactic')">
-              <span class="icon">🌌</span>
-              Galactic
-            </button>
+  </div>
 
-          </div>
+</section>
 
-        </div>
 
+<!-- =====================================================
+     UPGRADES
+===================================================== -->
 
-        <div>
+<section
+  class="page"
+  id="upgradesPage">
 
-          <div class="category-label">
-            Fillings
-          </div>
+  <div class="page-title">
+    ⬆️ Bakery Upgrades
+  </div>
 
-          <div class="options">
 
-            <button class="option"
-                    onclick="choose('filling','none')">
-              <span class="icon">—</span>
-              None
-            </button>
+  <button
+    class="upgrade"
+    onclick="buyUpgrade('oven')">
 
-            <button class="option"
-                    onclick="choose('filling','cream')">
-              <span class="icon">🍦</span>
-              Cream
-            </button>
+    <div class="upgrade-icon">
+      🔥
+    </div>
 
-            <button class="option"
-                    onclick="choose('filling','chocolate')">
-              <span class="icon">🍫</span>
-              Chocolate
-            </button>
+    <div>
 
-          </div>
+      <div class="upgrade-name">
+        Faster Ovens
+      </div>
 
-        </div>
+      <div class="upgrade-desc">
+        Increase your earnings per second.
+      </div>
 
+    </div>
 
-        <div>
+    <div class="upgrade-buy">
+      $100
+    </div>
 
-          <div class="category-label">
-            Toppings
-          </div>
+  </button>
 
-          <div class="options">
 
-            <button class="option"
-                    onclick="choose('topping','sprinkles')">
-              <span class="icon">🌈</span>
-              Sprinkles
-            </button>
+  <button
+    class="upgrade"
+    onclick="buyUpgrade('staff')">
 
-            <button class="option"
-                    onclick="choose('topping','oreo')">
-              <span class="icon">⚫</span>
-              Oreo
-            </button>
+    <div class="upgrade-icon">
+      👨‍🍳
+    </div>
 
-            <button class="option"
-                    onclick="choose('topping','mm')">
-              <span class="icon">🔴</span>
-              M&M's
-            </button>
+    <div>
 
-            <button class="option"
-                    onclick="choose('topping','bacon')">
-              <span class="icon">🥓</span>
-              Bacon
-            </button>
+      <div class="upgrade-name">
+        Hire A Baker
+      </div>
 
-            <button class="option"
-                    onclick="choose('topping','cookie')">
-              <span class="icon">🍪</span>
-              Cookie
-            </button>
+      <div class="upgrade-desc">
+        Automatically produces more donuts.
+      </div>
 
-          </div>
+    </div>
 
-        </div>
+    <div class="upgrade-buy">
+      $250
+    </div>
 
-      </section>
+  </button>
 
 
-      <!-- RIGHT SIDE -->
+  <button
+    class="upgrade"
+    onclick="buyUpgrade('shop')">
 
-      <section class="right-lower">
+    <div class="upgrade-icon">
+      🏪
+    </div>
 
-        <!-- ACTIVE ORDERS -->
+    <div>
 
-        <section class="panel mini-panel">
+      <div class="upgrade-name">
+        Bigger Donut Shop
+      </div>
 
-          <div class="panel-title">
-            📋 Active Orders
-          </div>
+      <div class="upgrade-desc">
+        Increase your bakery's production.
+      </div>
 
-          <div class="active-orders">
+    </div>
 
-            <div class="active-order">
-              <span class="donut">🍓</span>
-              <span>Strawberry</span>
-              <div class="bar">
-                <span></span>
-              </div>
-            </div>
+    <div class="upgrade-buy">
+      $500
+    </div>
 
-            <div class="active-order">
-              <span class="donut">🍫</span>
-              <span>Chocolate</span>
-              <div class="bar">
-                <span style="width:70%"></span>
-              </div>
-            </div>
+  </button>
 
-            <div class="active-order">
-              <span class="donut">🍩</span>
-              <span>Glazed</span>
-              <div class="bar">
-                <span style="width:30%"></span>
-              </div>
-            </div>
 
-          </div>
+  <div class="card">
 
-        </section>
+    <h3>
+      💰 Idle Bakery
+    </h3>
 
+    <p>
+      Desmond's Donuts keeps earning while
+      you're away. Come back later to collect
+      your offline earnings.
+    </p>
 
-        <!-- UPGRADES -->
+    <br>
 
-        <section class="panel mini-panel">
-
-          <div class="panel-title">
-            ⬆️ Shop Upgrades
-          </div>
-
-          <div class="upgrade-row">
-
-            <div class="upgrade-icon">
-              🔥
-            </div>
-
-            <div class="upgrade-info">
-
-              <div class="upgrade-name">
-                Faster Ovens
-              </div>
-
-              <div class="upgrade-desc">
-                Increase idle earnings
-              </div>
-
-            </div>
-
-            <button
-              class="upgrade-button"
-              onclick="upgrade()">
-              UPGRADE<br>
-              $100
-            </button>
-
-          </div>
-
-        </section>
-
-      </section>
-
-    </section>
-
-  </main>
-
-
-  <!-- MYSTERY FLAVORS -->
-
-  <div
-    class="mystery-strip"
-    id="mystery">
-
-    <strong>
-      ❓ MYSTERY FLAVORS
+    <strong
+      class="green"
+      id="offline">
+      $0.00 waiting
     </strong>
 
-    <small>
-      🔒 Locked — unlock through progression
-    </small>
+  </div>
+
+</section>
+
+
+<!-- =====================================================
+     LOCATIONS
+===================================================== -->
+
+<section
+  class="page"
+  id="locationsPage">
+
+  <div class="page-title">
+    📍 Donut Locations
+  </div>
+
+
+  <div class="card">
+
+    <h3>
+      🏪 Windham Donut Shop
+    </h3>
+
+    <p>
+      Your original Desmond's Donut Dash
+      location.
+    </p>
+
+    <br>
+
+    <strong class="green">
+      ACTIVE
+    </strong>
 
   </div>
 
 
-  <!-- FIXED NAVIGATION -->
+  <div class="card">
 
-  <nav
-    class="bottom-nav"
-    aria-label="Game navigation">
+    <h3>
+      🌴 Tropical Donut Shack
+    </h3>
+
+    <p>
+      Unlock a new location as your bakery
+      grows.
+    </p>
+
+    <br>
+
+    <strong class="pink">
+      🔒 LOCKED
+    </strong>
+
+  </div>
+
+
+  <div class="card">
+
+    <h3>
+      🌌 Galactic Donut Station
+    </h3>
+
+    <p>
+      A mysterious location connected to the
+      Galactic Donut.
+    </p>
+
+    <br>
+
+    <strong class="pink">
+      🔒 LOCKED
+    </strong>
+
+  </div>
+
+</section>
+
+
+<!-- =====================================================
+     MYSTERY
+===================================================== -->
+
+<section
+  class="page"
+  id="mysteryPage">
+
+  <div class="page-title">
+    ❓ Mystery Flavors
+  </div>
+
+
+  <div class="card mystery-card">
+
+    <div class="mystery-icon">
+      🍩
+    </div>
+
+    <br>
+
+    <div class="locked">
+      🔒 LOCKED
+    </div>
+
+    <br>
+
+    <p>
+      Strange and delicious donut flavors
+      are hiding in the bakery.
+    </p>
+
+    <br>
+
+    <strong class="gold">
+      KEEP PLAYING TO UNLOCK THEM
+    </strong>
+
+  </div>
+
+</section>
+
+
+<!-- =====================================================
+     DONUT SONG
+===================================================== -->
+
+<section
+  class="page"
+  id="songPage">
+
+  <div class="page-title">
+    🎵 Donut Song
+  </div>
+
+
+  <div class="card mystery-card">
+
+    <div style="font-size:65px">
+      🍩🎵🍩
+    </div>
+
+    <h3>
+      Desmond's Donut Song
+    </h3>
+
+    <p>
+      Make the dough,<br>
+      serve the show,<br>
+      watch those Baker Bucks grow!
+    </p>
+
+    <br>
 
     <button
-      class="nav active"
-      onclick="announce('Shop')"
-      aria-label="Shop">
-      <span class="nav-icon">🏪</span>
-      SHOP
+      class="action start"
+      style="width:100%;padding:13px"
+      onclick="playSong()">
+
+      ▶️ PLAY DONUT SONG
+
     </button>
 
-    <button
-      class="nav"
-      onclick="announce('Upgrades')"
-      aria-label="Upgrades">
-      <span class="nav-icon">⬆️</span>
-      UPGRADES
-    </button>
+  </div>
 
-    <button
-      class="nav"
-      onclick="announce('Locations')"
-      aria-label="Locations">
-      <span class="nav-icon">📍</span>
-      LOCATIONS
-    </button>
+</section>
 
-    <button
-      class="nav"
-      onclick="announce('Mystery flavors are locked')"
-      aria-label="Mystery flavors">
-      <span class="nav-icon">❓</span>
-      MYSTERY
-    </button>
 
-    <button
-      class="nav"
-      onclick="announce('Donut Song')"
-      aria-label="Donut Song">
-      <span class="nav-icon">🎵</span>
-      DONUT SONG
-    </button>
+<!-- =====================================================
+     MORE
+===================================================== -->
 
-    <button
-      class="nav"
-      onclick="announce('More options')"
-      aria-label="More">
-      <span class="nav-icon">•••</span>
-      MORE
-    </button>
+<section
+  class="page"
+  id="morePage">
 
-  </nav>
+  <div class="page-title">
+    ••• More
+  </div>
+
+
+  <div class="card">
+
+    <h3>
+      💾 Game Progress
+    </h3>
+
+    <p>
+      Your progress is automatically saved.
+    </p>
+
+  </div>
+
+
+  <button
+    class="upgrade"
+    onclick="collectOffline()">
+
+    <div class="upgrade-icon">
+      💵
+    </div>
+
+    <div>
+
+      <div class="upgrade-name">
+        Collect Offline Earnings
+      </div>
+
+      <div class="upgrade-desc">
+        Collect Baker Bucks earned while away.
+      </div>
+
+    </div>
+
+    <div class="upgrade-buy">
+      COLLECT
+    </div>
+
+  </button>
+
+
+  <button
+    class="upgrade"
+    onclick="resetGame()">
+
+    <div class="upgrade-icon">
+      ⚠️
+    </div>
+
+    <div>
+
+      <div class="upgrade-name">
+        Reset Bakery
+      </div>
+
+      <div class="upgrade-desc">
+        Start the bakery over from the beginning.
+      </div>
+
+    </div>
+
+    <div class="upgrade-buy">
+      RESET
+    </div>
+
+  </button>
+
+</section>
+
+
+<!-- =====================================================
+     BOTTOM NAV
+===================================================== -->
+
+<nav class="nav">
+
+  <button
+    class="active"
+    onclick="showPage('homePage',this)"
+    aria-label="Shop">
+
+    <span>🏪</span>
+    SHOP
+
+  </button>
+
+
+  <button
+    onclick="showPage('upgradesPage',this)"
+    aria-label="Upgrades">
+
+    <span>⬆️</span>
+    UPGRADES
+
+  </button>
+
+
+  <button
+    onclick="showPage('locationsPage',this)"
+    aria-label="Locations">
+
+    <span>📍</span>
+    LOCATIONS
+
+  </button>
+
+
+  <button
+    onclick="showPage('mysteryPage',this)"
+    aria-label="Mystery flavors">
+
+    <span>❓</span>
+    MYSTERY
+
+  </button>
+
+
+  <button
+    onclick="showPage('songPage',this)"
+    aria-label="Donut Song">
+
+    <span>🎵</span>
+    SONG
+
+  </button>
+
+
+  <button
+    onclick="showPage('morePage',this)"
+    aria-label="More">
+
+    <span>•••</span>
+    MORE
+
+  </button>
+
+</nav>
 
 </div>
 
 
 <script>
 
-/* ==========================================
-   GAME STATE
-========================================== */
+/* =========================================================
+   GAME DATA
+========================================================= */
 
-let money = 0;
-let earnings = .05;
-let level = 1;
+const SAVE_KEY =
+  "desmondsDonutDashPackageStyle";
 
-let order = null;
+let game = {
 
-let selectedDonut = "";
-let selectedFilling = "";
-let selectedToppings = [];
+  money:0,
+
+  eps:.05,
+
+  sold:0,
+
+  level:1,
+
+  galactic:0,
+
+  oven:0,
+
+  staff:0,
+
+  shop:0,
+
+  lastSave:Date.now(),
+
+  order:null
+
+};
 
 
-/* ==========================================
-   ACCESSIBILITY
-========================================== */
+/* =========================================================
+   SAVE
+========================================================= */
 
-function announce(text){
+function save(){
 
-  if("speechSynthesis" in window){
+  game.lastSave=Date.now();
 
-    speechSynthesis.cancel();
-
-    const speech =
-      new SpeechSynthesisUtterance(text);
-
-    speech.rate=.9;
-
-    speechSynthesis.speak(speech);
-  }
+  localStorage.setItem(
+    SAVE_KEY,
+    JSON.stringify(game)
+  );
 }
 
 
-/* ==========================================
-   TAKE ORDER
-========================================== */
+function load(){
+
+  const saved=
+    localStorage.getItem(SAVE_KEY);
+
+  if(!saved)return;
+
+  try{
+
+    game={
+      ...game,
+      ...JSON.parse(saved)
+    };
+
+  }catch(e){
+
+    console.log(
+      "Save unavailable"
+    );
+
+  }
+
+}
+
+
+/* =========================================================
+   EPS
+========================================================= */
+
+function calculateEPS(){
+
+  game.eps=
+
+    .05
+
+    +(game.oven*.05)
+
+    +(game.staff*.15)
+
+    +(game.shop*.30);
+
+}
+
+
+/* =========================================================
+   ORDER
+========================================================= */
 
 function takeOrder(){
 
@@ -1547,161 +1854,103 @@ function takeOrder(){
 
   const donut=
     donuts[
-      Math.floor(Math.random()*donuts.length)
+      Math.floor(
+        Math.random()*donuts.length
+      )
     ];
 
-  order={
-    donut:donut,
-    reward:Math.floor(
-      10+Math.random()*30
-    )
+  const reward=
+    Math.floor(
+      10+
+      Math.random()*35
+    );
+
+  game.order={
+    donut,
+    reward
   };
 
-  document.getElementById(
-    "orderTitle"
-  ).textContent=
+  document
+    .getElementById("orderTitle")
+    .textContent=
     donut+" Donut";
 
-  document.getElementById(
-    "orderDetails"
-  ).textContent=
-    "Freshly made with your selected toppings.";
+  document
+    .getElementById("orderDetails")
+    .textContent=
+    "Build the order and complete it.";
 
-  document.getElementById(
-    "reward"
-  ).textContent=
-    "Reward: $"+order.reward;
+  document
+    .getElementById("reward")
+    .textContent=
+    "$"+reward;
 
-  announce(
+  speak(
     "New customer order. "+
     donut+
     " donut. Reward "+
-    order.reward+
-    " dollars."
+    reward+
+    " Baker Bucks."
   );
+
 }
 
 
-/* ==========================================
-   NEXT CUSTOMER
-========================================== */
-
-function nextCustomer(){
-
-  takeOrder();
-}
-
-
-/* ==========================================
-   CHOOSE INGREDIENT
-========================================== */
-
-function choose(type,value){
-
-  if(type==="donut"){
-
-    selectedDonut=value;
-
-    announce(
-      value+" donut selected."
-    );
-
-  }
-
-  if(type==="filling"){
-
-    selectedFilling=value;
-
-    announce(
-      value+" filling selected."
-    );
-
-  }
-
-  if(type==="topping"){
-
-    if(selectedToppings.includes(value)){
-
-      selectedToppings=
-        selectedToppings.filter(
-          x=>x!==value
-        );
-
-      announce(
-        value+" removed."
-      );
-
-    }else{
-
-      if(selectedToppings.length>=2){
-
-        announce(
-          "You can choose two toppings."
-        );
-
-        return;
-      }
-
-      selectedToppings.push(value);
-
-      announce(
-        value+" topping selected."
-      );
-    }
-  }
-}
-
-
-/* ==========================================
+/* =========================================================
    GALACTIC DONUT
-========================================== */
+========================================================= */
 
-function galacticDonut(){
+function serveGalactic(){
 
-  if(level<8){
+  if(game.level<8){
 
-    announce(
-      "Galactic Donut unlocks at level 8."
+    speak(
+      "The Galactic Donut unlocks at level eight."
     );
 
     return;
   }
 
-  money+=50;
-  earnings+=.25;
+  game.galactic++;
 
-  document.getElementById(
-    "money"
-  ).textContent=
-    "$"+money.toFixed(2);
+  game.money+=50;
 
-  document.getElementById(
-    "eps"
-  ).textContent=
-    "$"+earnings.toFixed(2);
+  game.eps+=.25;
 
-  document.getElementById(
-    "cosmic"
-  ).textContent=
+  document
+    .getElementById("cosmic")
+    .textContent=
     "⚡ COSMIC RUSH ACTIVE!";
 
-  announce(
-    "Galactic Donut served! Cosmic Rush activated."
+  speak(
+    "Galactic Donut served. "+
+    "Fifty Baker Bucks earned."
   );
+
+  update();
+
+  save();
+
 }
 
 
-/* ==========================================
-   UPGRADE
-========================================== */
+/* =========================================================
+   UPGRADES
+========================================================= */
 
-function upgrade(){
+function buyUpgrade(type){
 
-  const cost=100;
+  let cost=100;
 
-  if(money<cost){
+  if(type==="staff")
+    cost=250;
 
-    announce(
+  if(type==="shop")
+    cost=500;
+
+  if(game.money<cost){
+
+    speak(
       "You need "+
       cost+
       " Baker Bucks."
@@ -1710,80 +1959,255 @@ function upgrade(){
     return;
   }
 
-  money-=cost;
-  earnings+=.10;
+  game.money-=cost;
 
-  document.getElementById(
-    "money"
-  ).textContent=
-    "$"+money.toFixed(2);
+  if(type==="oven")
+    game.oven++;
 
-  document.getElementById(
-    "eps"
-  ).textContent=
-    "$"+earnings.toFixed(2);
+  if(type==="staff")
+    game.staff++;
 
-  announce(
-    "Faster ovens upgraded."
+  if(type==="shop")
+    game.shop++;
+
+  calculateEPS();
+
+  speak(
+    "Upgrade purchased."
   );
+
+  update();
+
+  save();
+
 }
 
 
-/* ==========================================
-   IDLE EARNINGS
-========================================== */
+/* =========================================================
+   IDLE MONEY
+========================================================= */
 
 setInterval(()=>{
 
-  money+=earnings;
+  game.money+=game.eps;
 
-  document.getElementById(
-    "money"
-  ).textContent=
-    "$"+money.toFixed(2);
+  update();
 
 },1000);
 
 
-/* ==========================================
-   PREVENT ANY SCROLLING
-========================================== */
+/* =========================================================
+   OFFLINE
+========================================================= */
 
-document.addEventListener(
-  "touchmove",
-  function(event){
+function offlineMoney(){
 
-    if(
-      event.target.closest(
-        "button"
-      )
-    ){
-      return;
-    }
+  const elapsed=
+    Math.min(
+      Date.now()-game.lastSave,
+      8*60*60*1000
+    );
 
-    event.preventDefault();
+  return(
+    Math.max(
+      0,
+      elapsed/1000
+    )*
+    game.eps
+  );
 
-  },
-  {passive:false}
-);
-
-document.addEventListener(
-  "wheel",
-  function(event){
-    event.preventDefault();
-  },
-  {passive:false}
-);
+}
 
 
-/* ==========================================
+function collectOffline(){
+
+  const amount=
+    offlineMoney();
+
+  if(amount<=0){
+
+    speak(
+      "There are no offline earnings yet."
+    );
+
+    return;
+  }
+
+  game.money+=amount;
+
+  game.lastSave=
+    Date.now();
+
+  update();
+
+  save();
+
+  speak(
+    "Collected "+
+    amount.toFixed(2)+
+    " Baker Bucks."
+  );
+
+}
+
+
+/* =========================================================
+   SCREEN
+========================================================= */
+
+function update(){
+
+  calculateEPS();
+
+  document
+    .getElementById("money")
+    .textContent=
+    "$"+
+    game.money.toFixed(2);
+
+  document
+    .getElementById("eps")
+    .textContent=
+    "$"+
+    game.eps.toFixed(2);
+
+  document
+    .getElementById("sold")
+    .textContent=
+    game.sold;
+
+  document
+    .getElementById("level")
+    .textContent=
+    game.level;
+
+  document
+    .getElementById("galacticCount")
+    .textContent=
+    game.galactic;
+
+  document
+    .getElementById("offline")
+    .textContent=
+    "$"+
+    offlineMoney().toFixed(2)+
+    " waiting";
+
+}
+
+
+/* =========================================================
+   NAVIGATION
+========================================================= */
+
+function showPage(id,button){
+
+  document
+    .querySelectorAll(".page")
+    .forEach(page=>{
+      page.classList.remove("active");
+    });
+
+  document
+    .getElementById(id)
+    .classList.add("active");
+
+  document
+    .querySelectorAll(".nav button")
+    .forEach(b=>{
+      b.classList.remove("active");
+    });
+
+  button.classList.add("active");
+
+  speak(
+    button.getAttribute("aria-label")
+  );
+
+}
+
+
+/* =========================================================
+   VOICEOVER
+========================================================= */
+
+function speak(text){
+
+  if(
+    "speechSynthesis"
+    in window
+  ){
+
+    speechSynthesis.cancel();
+
+    const utterance=
+      new SpeechSynthesisUtterance(
+        text
+      );
+
+    utterance.rate=.9;
+
+    speechSynthesis.speak(
+      utterance
+    );
+
+  }
+
+}
+
+
+/* =========================================================
+   SONG
+========================================================= */
+
+function playSong(){
+
+  speak(
+    "Desmond's Donut Dash! "+
+    "Make the dough, serve the show, "+
+    "watch those Baker Bucks grow!"
+  );
+
+}
+
+
+/* =========================================================
+   RESET
+========================================================= */
+
+function resetGame(){
+
+  if(
+    !confirm(
+      "Reset all Donut Dash progress?"
+    )
+  ){
+    return;
+  }
+
+  localStorage.removeItem(
+    SAVE_KEY
+  );
+
+  location.reload();
+
+}
+
+
+/* =========================================================
    START
-========================================== */
+========================================================= */
 
-document.getElementById(
-  "money"
-).textContent=
-  "$"+money.toFixed(2);
+load();
+
+calculateEPS();
+
+update();
+
+window.addEventListener(
+  "beforeunload",
+  save
+);
 
 </script>
 
