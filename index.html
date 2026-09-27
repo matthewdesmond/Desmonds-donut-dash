@@ -613,8 +613,9 @@ function activePower(type){
  return total;
 }
 
+/* SLOWED ECONOMY ONLY */
 function getEPS(){
- let base=1+s.level*.65;
+ let base=0.05+s.level*.05;
 
  base*=1+totalLocationBonus()/100;
  base*=1+upgradeBonus()/100;
@@ -795,11 +796,6 @@ function randomRecipe(){
 
 function randomOrder(){
 
- /*
-  35% chance of an assorted order.
-  Assorted orders contain 2–4 different recipes.
-  Normal orders remain exactly like the original game.
- */
  const assorted=Math.random()<.35;
 
  if(!assorted){
@@ -865,10 +861,6 @@ function randomOrder(){
   };
  }
 
- /*
-  Assorted order.
-  Each group has its own recipe and quantity.
- */
  const groupCount=
   2+Math.floor(Math.random()*3);
 
@@ -896,10 +888,6 @@ function randomOrder(){
   groups.push(recipe);
  }
 
- /*
-  Rare special effects are attached to one
-  recipe in the assorted order.
- */
  const special=
   s.level>=35&&Math.random()<.03;
 
@@ -912,9 +900,6 @@ function randomOrder(){
  if(golden)
   groups[0].golden=true;
 
- /*
-  Mystery flavor chance.
- */
  if(s.level>=35&&Math.random()<.10){
 
   const mysteryName=
@@ -1081,10 +1066,6 @@ function takeOrder(){
 
  s.order=randomOrder();
 
- /*
-  Assorted orders get one blank builder slot
-  for each requested recipe.
- */
  const groups=getOrderGroups();
 
  s.build={
@@ -1610,10 +1591,6 @@ function serveOrder(){
    0
   );
 
- /*
-  Same basic economy as the good version,
-  but assorted orders reward based on total donuts.
- */
  let reward=
   12+
   totalQty*8+
@@ -2661,6 +2638,7 @@ function tick(){
    s.shift=null;
    save();
   }
+
  }
 
  setTimeout(tick,1000);
