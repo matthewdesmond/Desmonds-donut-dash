@@ -2,602 +2,544 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#19c9d8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#ff9f43">
 <title>Desmond's Donut Dash</title>
 
 <style>
+:root{
+  --pink:#ff7eb3;
+  --pink2:#ffb6d5;
+  --cream:#fff8ed;
+  --brown:#6b351d;
+  --brown2:#8d4d2e;
+  --gold:#ffd166;
+  --green:#55c271;
+  --blue:#5ca9ff;
+  --purple:#9b6cff;
+  --red:#ff6464;
+  --shadow:0 6px 18px rgba(70,35,20,.16);
+}
+
 *{box-sizing:border-box}
 
 body{
   margin:0;
-  font-family:Arial,Helvetica,sans-serif;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
   background:
-    radial-gradient(circle at 10% 10%,#ffdf55 0 3px,transparent 4px),
-    radial-gradient(circle at 80% 20%,#ff67a9 0 3px,transparent 4px),
-    radial-gradient(circle at 30% 80%,#8e6cff 0 3px,transparent 4px),
-    linear-gradient(135deg,#16c9d8,#54dfcf);
-  background-size:110px 110px,140px 140px,180px 180px,100% 100%;
-  color:#173b63;
+    radial-gradient(circle at 10% 10%,rgba(255,255,255,.8) 0 18px,transparent 19px),
+    radial-gradient(circle at 90% 30%,rgba(255,255,255,.65) 0 14px,transparent 15px),
+    linear-gradient(135deg,#ffe8f1,#fff5d8 50%,#e7f7ff);
+  color:#422718;
+  min-height:100vh;
 }
 
 button{
-  font-family:inherit;
+  font:inherit;
+  border:0;
   cursor:pointer;
   -webkit-tap-highlight-color:transparent;
 }
 
 button:focus-visible{
-  outline:4px solid white;
+  outline:4px solid #1769aa;
   outline-offset:2px;
 }
 
-#game{
-  width:min(1100px,100%);
+.app{
+  max-width:560px;
   margin:auto;
-  padding:9px;
+  min-height:100vh;
+  padding-bottom:92px;
 }
 
-/* HEADER */
+header{
+  position:sticky;
+  top:0;
+  z-index:20;
+  padding:12px;
+  background:rgba(255,248,237,.96);
+  backdrop-filter:blur(12px);
+  border-bottom:2px solid #ffd7e7;
+}
 
-.header{
+.headerTop{
   display:flex;
-  gap:8px;
+  align-items:center;
   justify-content:space-between;
-  align-items:stretch;
-  margin-bottom:8px;
+  gap:8px;
 }
 
 .logo{
-  flex:1;
-  background:#ff5ca8;
-  color:white;
-  border:4px solid #173b63;
-  border-radius:17px;
-  padding:9px 12px;
-  box-shadow:0 5px 0 rgba(23,59,99,.25);
-}
-
-.logo h1{
-  margin:0;
-  font-size:clamp(21px,5vw,34px);
-  font-weight:1000;
-  line-height:1;
-  text-shadow:2px 2px #173b63;
-}
-
-.logo small{
-  display:block;
-  margin-top:5px;
-  font-weight:900;
-}
-
-.money{
-  min-width:120px;
-  background:#ffdb42;
-  border:4px solid #173b63;
-  border-radius:17px;
-  padding:8px;
-  text-align:center;
-  box-shadow:0 5px 0 rgba(23,59,99,.25);
-}
-
-.money strong{
-  display:block;
-  font-size:21px;
-}
-
-.money span{
-  font-size:11px;
-  font-weight:900;
-}
-
-/* STATUS */
-
-.status{
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:7px;
-  margin-bottom:8px;
-}
-
-.status-card{
-  background:#fff7e5;
-  border:3px solid #173b63;
-  border-radius:13px;
-  padding:7px;
-  min-height:67px;
-  text-align:center;
-  box-shadow:0 4px 0 rgba(23,59,99,.2);
-}
-
-.status-card small{
-  display:block;
-  font-size:10px;
-  font-weight:1000;
-  text-transform:uppercase;
-}
-
-.status-card strong{
-  display:block;
-  margin-top:3px;
-  font-size:18px;
-}
-
-.shift-button{
-  width:100%;
-  margin-top:3px;
-  border:3px solid #173b63;
-  border-radius:9px;
-  padding:6px 3px;
-  background:#ff8428;
-  color:white;
-  font-size:10px;
-  font-weight:1000;
-  box-shadow:0 2px 0 #173b63;
-}
-
-.shift-button.active{
-  background:#39d29e;
-}
-
-/* MAIN */
-
-.main-grid{
-  display:grid;
-  grid-template-columns:minmax(0,1.35fr) minmax(280px,.85fr);
-  gap:8px;
-}
-
-/* WINDOWS */
-
-.window{
-  background:#fff7e5;
-  border:4px solid #173b63;
-  border-radius:17px;
-  overflow:hidden;
-  box-shadow:0 5px 0 rgba(23,59,99,.24);
-}
-
-.window-title{
-  background:#8c5cff;
-  color:white;
-  padding:8px 11px;
-  border-bottom:4px solid #173b63;
-  font-weight:1000;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  text-shadow:1px 1px #173b63;
-}
-
-.window-body{
-  padding:9px;
-}
-
-/* DONUT STATION */
-
-.donut-stage{
-  text-align:center;
-  background:#eec8ff;
-  border:3px dashed #173b63;
-  border-radius:14px;
-  padding:8px;
-  margin-bottom:8px;
-}
-
-.big-donut{
-  font-size:66px;
-  line-height:1;
-}
-
-.selected-name{
-  font-size:19px;
-  font-weight:1000;
-}
-
-.selected-details{
-  font-size:11px;
-  font-weight:800;
-  min-height:15px;
-}
-
-.choice-section{
-  margin-top:7px;
-}
-
-.choice-title{
-  font-size:11px;
-  font-weight:1000;
-  text-transform:uppercase;
-  margin-bottom:4px;
-}
-
-.choice-grid{
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:5px;
-}
-
-.choice{
-  min-height:43px;
-  padding:5px 2px;
-  border:3px solid #173b63;
-  border-radius:10px;
-  background:white;
-  font-size:10px;
-  font-weight:900;
-  box-shadow:0 3px 0 rgba(23,59,99,.18);
-}
-
-.choice.selected{
-  background:#ffda3e;
-}
-
-.choice.locked{
-  background:#d2d2d2;
-  color:#666;
-  opacity:.75;
-}
-
-.quantity-row{
-  display:grid;
-  grid-template-columns:50px 1fr 50px;
-  gap:5px;
-}
-
-.qty-btn{
-  border:3px solid #173b63;
-  border-radius:10px;
-  background:#ff8628;
-  color:white;
-  font-size:21px;
-  font-weight:1000;
-}
-
-.qty-display{
-  border:3px solid #173b63;
-  border-radius:10px;
-  background:white;
   display:flex;
   align-items:center;
-  justify-content:center;
-  font-size:18px;
-  font-weight:1000;
-}
-
-.serve-button{
-  width:100%;
-  margin-top:7px;
-  padding:12px;
-  border:4px solid #173b63;
-  border-radius:13px;
-  background:#38d39f;
-  color:white;
-  font-size:18px;
-  font-weight:1000;
-  box-shadow:0 4px 0 #173b63;
-}
-
-/* RIGHT */
-
-.right-stack{
-  display:flex;
-  flex-direction:column;
-  gap:8px;
-}
-
-.order-window .window-title{
-  background:#ff5ca8;
-}
-
-.order-box{
-  min-height:105px;
-  padding:9px;
-  background:white;
-  border:3px dashed #173b63;
-  border-radius:12px;
-}
-
-.order-text{
-  font-size:15px;
-  font-weight:1000;
-  line-height:1.4;
-}
-
-.take-order{
-  width:100%;
-  margin-top:7px;
-  padding:12px;
-  border:4px solid #173b63;
-  border-radius:12px;
-  background:#ff8428;
-  color:white;
-  font-size:17px;
-  font-weight:1000;
-  box-shadow:0 4px 0 #173b63;
-}
-
-.hear-order{
-  width:100%;
-  margin-top:6px;
-  padding:8px;
-  border:3px solid #173b63;
-  border-radius:10px;
-  background:#ffda3e;
-  font-weight:1000;
-}
-
-.mini-window .window-title{
-  background:#16abc4;
-}
-
-.next-customer{
-  padding:5px;
+  gap:9px;
   font-weight:900;
-  line-height:1.4;
+  color:var(--brown);
 }
 
-.cosmic .window-title{
-  background:#6f45db;
+.logoDonut{
+  width:44px;
+  height:44px;
+  border-radius:50%;
+  background:
+    radial-gradient(circle at center,#fff0d0 0 7px,#7b391f 8px 12px,transparent 13px),
+    #f7a34b;
+  border:4px solid #e87935;
+  box-shadow:inset 0 5px 0 rgba(255,255,255,.4);
+  position:relative;
 }
 
-.cosmic-info{
-  font-size:12px;
-  font-weight:800;
-  line-height:1.4;
+.logoDonut:after{
+  content:"••••";
+  position:absolute;
+  color:#ff4f81;
+  font-size:13px;
+  left:5px;
+  top:2px;
+  letter-spacing:3px;
+  transform:rotate(-15deg);
 }
 
-.cosmic-button{
-  width:100%;
-  margin-top:6px;
-  padding:8px;
-  border:3px solid #173b63;
-  border-radius:10px;
-  background:#ffda3e;
-  font-weight:1000;
+.logoText{
+  line-height:1.05;
 }
 
-/* BOTTOM */
+.logoText strong{
+  display:block;
+  font-size:18px;
+}
 
-.bottom-menu{
-  display:grid;
-  grid-template-columns:repeat(5,1fr);
+.logoText span{
+  font-size:11px;
+  color:#95644c;
+}
+
+.currencyBar{
+  display:flex;
   gap:6px;
-  margin-top:8px;
+  flex-wrap:wrap;
+  justify-content:flex-end;
 }
 
-.menu-btn{
-  min-height:62px;
-  border:4px solid #173b63;
+.currency{
+  background:white;
   border-radius:14px;
-  background:#ffda3e;
-  color:#173b63;
-  font-size:10px;
-  font-weight:1000;
-  box-shadow:0 4px 0 rgba(23,59,99,.23);
+  padding:7px 9px;
+  box-shadow:var(--shadow);
+  font-weight:800;
+  font-size:12px;
 }
 
-.menu-btn:nth-child(2){background:#ff963b}
-.menu-btn:nth-child(3){background:#9360ef;color:white}
-.menu-btn:nth-child(4){background:#ff5ca8;color:white}
-.menu-btn:nth-child(5){background:#39d39f}
-
-.menu-btn span{
-  display:block;
-  font-size:21px;
-  margin-bottom:2px;
-}
-
-/* MODALS */
-
-.modal{
-  display:none;
-  position:fixed;
-  inset:0;
-  z-index:100;
-  background:rgba(12,43,70,.68);
+main{
   padding:12px;
-  align-items:center;
-  justify-content:center;
 }
 
-.modal.open{
-  display:flex;
+.screen{
+  display:none;
 }
 
-.modal-card{
-  width:min(680px,100%);
-  max-height:90vh;
-  overflow:auto;
-  background:#fff7e5;
-  border:5px solid #173b63;
-  border-radius:18px;
-  box-shadow:0 8px 0 rgba(0,0,0,.25);
+.screen.active{
+  display:block;
 }
 
-.modal-header{
-  background:#8c5cff;
-  color:white;
+h1,h2,h3,p{
+  margin-top:0;
+}
+
+h2{
+  font-size:22px;
+  margin-bottom:10px;
+}
+
+.card{
+  background:rgba(255,255,255,.94);
+  border-radius:20px;
+  padding:14px;
+  margin-bottom:12px;
+  box-shadow:var(--shadow);
+  border:2px solid rgba(255,190,210,.45);
+}
+
+.hero{
+  background:linear-gradient(135deg,#fff,#fff1f7);
+}
+
+.heroTitle{
+  font-size:25px;
+  font-weight:950;
+  color:#71371f;
+}
+
+.sub{
+  color:#805c4b;
+  font-size:13px;
+}
+
+.statsGrid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+}
+
+.stat{
+  background:#fff8ed;
+  border-radius:15px;
   padding:10px;
-  border-bottom:4px solid #173b63;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
+  border:1px solid #f3d9bc;
 }
 
-.modal-header h2{
-  margin:0;
+.stat strong{
+  display:block;
   font-size:20px;
 }
 
-.close{
-  border:3px solid #173b63;
-  border-radius:9px;
-  background:white;
-  padding:5px 8px;
-  font-weight:1000;
+.stat span{
+  font-size:11px;
+  color:#805c4b;
 }
 
-.modal-body{
-  padding:10px;
+.shiftCard{
+  background:linear-gradient(135deg,#ffe4a8,#fff1c8);
 }
 
-.modal-grid{
+.shiftLine{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:8px;
+}
+
+.bigMoney{
+  font-size:28px;
+  font-weight:950;
+}
+
+.earnRate{
+  color:#237a45;
+  font-weight:900;
+  font-size:17px;
+}
+
+.progress{
+  height:12px;
+  background:#eadfd5;
+  border-radius:20px;
+  overflow:hidden;
+  margin:9px 0;
+}
+
+.progress div{
+  height:100%;
+  width:0%;
+  background:linear-gradient(90deg,#ff8fb7,#ffbd59);
+  border-radius:20px;
+  transition:width .4s;
+}
+
+.primary{
+  width:100%;
+  padding:14px;
+  border-radius:15px;
+  background:linear-gradient(135deg,#ff7eb3,#ff9b55);
+  color:white;
+  font-weight:950;
+  box-shadow:0 5px 12px rgba(255,110,150,.3);
+}
+
+.secondary{
+  width:100%;
+  padding:12px;
+  border-radius:14px;
+  background:#fff;
+  color:#6b351d;
+  font-weight:850;
+  border:2px solid #ffd5e5;
+}
+
+.smallBtn{
+  padding:9px 11px;
+  border-radius:12px;
+  background:#fff;
+  font-weight:850;
+  border:2px solid #f1d8c5;
+}
+
+.green{
+  background:#dff8e6;
+  border-color:#9fe2b2;
+}
+
+.blue{
+  background:#e5f2ff;
+  border-color:#abd4ff;
+}
+
+.gold{
+  background:#fff1b8;
+  border-color:#f3cf62;
+}
+
+.purple{
+  background:#eee5ff;
+  border-color:#c9b1ff;
+}
+
+.danger{
+  background:#ffe4e4;
+  border-color:#ffaaaa;
+}
+
+.orderBox{
+  background:linear-gradient(135deg,#fff,#fff5d8);
+}
+
+.orderStatus{
+  min-height:30px;
+  font-weight:800;
+  color:#70402c;
+}
+
+.optionGrid{
   display:grid;
   grid-template-columns:repeat(2,1fr);
   gap:7px;
-}
-
-.item-card{
-  background:white;
-  border:3px solid #173b63;
-  border-radius:11px;
-  padding:8px;
-}
-
-.item-card strong{
-  display:block;
-}
-
-.item-card small{
-  display:block;
-  margin-top:4px;
-  font-weight:800;
-}
-
-.buy{
-  width:100%;
-  margin-top:7px;
-  padding:7px;
-  border:3px solid #173b63;
-  border-radius:9px;
-  background:#39d39f;
-  color:white;
-  font-weight:1000;
-}
-
-.buy.locked{
-  background:#bbb;
-  color:#555;
-}
-
-.mystery-list{
-  display:grid;
-  grid-template-columns:repeat(2,1fr);
-  gap:6px;
-}
-
-.mystery-item{
-  border:3px solid #173b63;
-  border-radius:9px;
-  padding:8px;
-  background:#fff;
-  font-weight:900;
-}
-
-.mystery-item.locked{
-  background:#d4d4d4;
-  color:#666;
-}
-
-.mystery-item.unlocked{
-  background:#ffeb89;
-}
-
-.rap{
-  background:#edc7ff;
-  border:3px dashed #173b63;
-  border-radius:12px;
-  padding:12px;
-  font-size:16px;
-  font-weight:900;
-  line-height:1.5;
-}
-
-.rap-button{
-  width:100%;
   margin-top:8px;
-  padding:12px;
-  border:4px solid #173b63;
-  border-radius:12px;
-  background:#ff5ca8;
+}
+
+.option{
+  padding:11px 8px;
+  border-radius:13px;
+  background:#fff;
+  border:2px solid #ead7c7;
+  text-align:left;
+  font-weight:800;
+  min-height:50px;
+}
+
+.option.selected{
+  border-color:#ff72a9;
+  background:#fff0f6;
+  box-shadow:0 0 0 2px #ffd0e2 inset;
+}
+
+.option.locked{
+  opacity:.55;
+}
+
+.donutEmoji{
+  font-size:22px;
+  margin-right:5px;
+}
+
+.choiceLabel{
+  font-weight:900;
+  font-size:13px;
+  margin-top:12px;
+  margin-bottom:4px;
+}
+
+.qtyRow{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:14px;
+  margin:10px 0;
+}
+
+.qtyNum{
+  min-width:50px;
+  text-align:center;
+  font-size:25px;
+  font-weight:950;
+}
+
+.qtyBtn{
+  width:48px;
+  height:48px;
+  border-radius:50%;
+  background:#ffe1ec;
+  font-size:25px;
+  font-weight:950;
+}
+
+.tabTitle{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:8px;
+}
+
+.itemRow{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+  background:#fff;
+  border:1px solid #ead9cc;
+  border-radius:13px;
+  padding:9px;
+  margin-bottom:6px;
+}
+
+.itemInfo{
+  min-width:0;
+}
+
+.itemInfo strong{
+  display:block;
+  font-size:14px;
+}
+
+.itemInfo small{
+  color:#8a6857;
+  font-size:11px;
+}
+
+.itemActions{
+  display:flex;
+  align-items:center;
+  gap:5px;
+  flex-shrink:0;
+}
+
+.unlock{
+  color:#7c5b4a;
+  font-size:11px;
+  font-weight:700;
+}
+
+.badge{
+  display:inline-block;
+  border-radius:10px;
+  padding:3px 6px;
+  background:#fff0bd;
+  font-size:10px;
+  font-weight:900;
+}
+
+.section{
+  margin-bottom:15px;
+}
+
+.nav{
+  position:fixed;
+  bottom:0;
+  left:0;
+  right:0;
+  z-index:30;
+  display:flex;
+  justify-content:center;
+  background:rgba(255,248,237,.97);
+  backdrop-filter:blur(12px);
+  border-top:2px solid #f0d5df;
+  padding:8px max(8px,env(safe-area-inset-left)) calc(8px + env(safe-area-inset-bottom));
+}
+
+.navInner{
+  width:min(560px,100%);
+  display:grid;
+  grid-template-columns:repeat(5,1fr);
+  gap:5px;
+}
+
+.nav button{
+  background:transparent;
+  padding:7px 2px;
+  border-radius:13px;
+  color:#76594c;
+  font-size:11px;
+  font-weight:850;
+}
+
+.nav button.active{
+  background:#ffe0eb;
+  color:#a62e63;
+}
+
+.navIcon{
+  display:block;
+  font-size:21px;
+  line-height:22px;
+}
+
+.notice{
+  padding:10px;
+  border-radius:13px;
+  background:#eef8ff;
+  border:1px solid #bfe2ff;
+  font-size:12px;
+  margin-top:8px;
+}
+
+.rapCard{
+  background:linear-gradient(135deg,#eee4ff,#fff);
+}
+
+.event{
+  background:linear-gradient(135deg,#fff0a9,#ffe3a0);
+  border-color:#f0c64e;
+}
+
+.lockedBig{
+  text-align:center;
+  padding:18px;
+  color:#80695b;
+}
+
+.achievement{
+  background:#fff;
+  border:1px solid #ead8ca;
+  border-radius:13px;
+  padding:10px;
+  margin-bottom:6px;
+}
+
+.achievement.done{
+  background:#eaffef;
+  border-color:#9be0ad;
+}
+
+.decor{
+  position:fixed;
+  pointer-events:none;
+  opacity:.22;
+  font-size:34px;
+  z-index:-1;
+}
+
+.d1{left:5%;top:23%}
+.d2{right:5%;top:48%}
+.d3{left:8%;bottom:25%}
+.d4{right:8%;bottom:35%}
+
+.toast{
+  position:fixed;
+  left:50%;
+  bottom:86px;
+  transform:translateX(-50%) translateY(20px);
+  background:#3c2419;
   color:white;
-  font-weight:1000;
+  padding:11px 15px;
+  border-radius:14px;
+  font-weight:850;
+  opacity:0;
+  pointer-events:none;
+  transition:.25s;
+  z-index:50;
+  max-width:90%;
+  text-align:center;
 }
 
-#liveRegion{
-  position:absolute;
-  width:1px;
-  height:1px;
-  overflow:hidden;
-  clip:rect(0,0,0,0);
+.toast.show{
+  opacity:1;
+  transform:translateX(-50%) translateY(0);
 }
 
-/* MOBILE */
-
-@media(max-width:760px){
-
-  #game{
-    padding:6px;
-  }
-
-  .status{
-    grid-template-columns:repeat(2,1fr);
-  }
-
-  .main-grid{
-    grid-template-columns:1fr;
-  }
-
-  .right-stack{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-  }
-
-  .order-window{
-    grid-column:1/-1;
-  }
-
-  .choice-grid{
-    grid-template-columns:repeat(3,1fr);
-  }
-
-  .bottom-menu{
-    grid-template-columns:repeat(5,1fr);
-  }
-
-  .menu-btn{
-    font-size:8px;
-    min-height:57px;
-  }
-}
-
-@media(max-width:460px){
-
-  .logo h1{
-    font-size:19px;
-  }
-
-  .money{
-    min-width:94px;
-  }
-
-  .money strong{
-    font-size:16px;
-  }
-
-  .right-stack{
-    grid-template-columns:1fr;
-  }
-
-  .modal-grid,
-  .mystery-list{
-    grid-template-columns:1fr;
-  }
-
-  .choice-grid{
-    grid-template-columns:repeat(2,1fr);
+@media(min-width:600px){
+  .app{
+    border-left:1px solid #f0d9df;
+    border-right:1px solid #f0d9df;
   }
 }
 </style>
@@ -605,2123 +547,2562 @@ button:focus-visible{
 
 <body>
 
-<div id="liveRegion" aria-live="polite" aria-atomic="true"></div>
+<div class="decor d1" aria-hidden="true">🍩</div>
+<div class="decor d2" aria-hidden="true">🧁</div>
+<div class="decor d3" aria-hidden="true">🍩</div>
+<div class="decor d4" aria-hidden="true">🍪</div>
 
-<main id="game">
+<div class="app">
 
-<header class="header">
+<header>
+  <div class="headerTop">
+    <div class="logo" aria-label="Desmond's Donut Dash">
+      <div class="logoDonut" aria-hidden="true"></div>
+      <div class="logoText">
+        <strong>Desmond's Donuts</strong>
+        <span>Donut Dash</span>
+      </div>
+    </div>
 
-  <div class="logo">
-    <h1>🍩 DESMOND'S DONUT DASH</h1>
-    <small>THE SWEETEST BAKERY IN TOWN!</small>
+    <div class="currencyBar">
+      <div class="currency" aria-label="Cash">
+        💵 <span id="cash">$0.00</span>
+      </div>
+      <div class="currency" aria-label="Baker Bucks">
+        🪙 <span id="bucks">0</span>
+      </div>
+      <div class="currency" aria-label="Bakery Crowns">
+        👑 <span id="crowns">0</span>
+      </div>
+    </div>
   </div>
-
-  <div class="money">
-    <strong id="cash">$0</strong>
-    <span>BAKERY CASH</span>
-  </div>
-
 </header>
 
-<section class="status">
+<main>
 
-  <div class="status-card">
-    <small>Earnings / Second</small>
-    <strong id="eps">$0/s</strong>
+<!-- HOME -->
+<section id="home" class="screen active">
+
+  <div class="card hero">
+    <div class="heroTitle">🍩 Welcome to Desmond's Donuts!</div>
+    <p class="sub">Make dough. Sell donuts. Build the ultimate donut empire.</p>
+
+    <div class="statsGrid">
+      <div class="stat">
+        <strong id="level">1</strong>
+        <span>Bakery Level</span>
+      </div>
+      <div class="stat">
+        <strong id="sold">0</strong>
+        <span>Donuts Sold</span>
+      </div>
+      <div class="stat">
+        <strong id="eps">$0.05/s</strong>
+        <span>Idle Earnings</span>
+      </div>
+      <div class="stat">
+        <strong id="unlockedCount">6</strong>
+        <span>Donuts Unlocked</span>
+      </div>
+    </div>
   </div>
 
-  <div class="status-card">
-    <small>Level</small>
-    <strong id="level">1</strong>
+  <div class="card shiftCard">
+    <div class="shiftLine">
+      <div>
+        <strong>⏱️ Current Shift</strong>
+        <div id="shiftLength" class="sub">10 minutes</div>
+      </div>
+      <div class="bigMoney" id="shiftEarned">$0.00</div>
+    </div>
+
+    <div class="progress">
+      <div id="shiftProgress"></div>
+    </div>
+
+    <div class="shiftLine">
+      <span id="shiftStatus">Ready to open!</span>
+      <button id="shiftBtn" class="smallBtn green" onclick="toggleShift()">Start Shift</button>
+    </div>
+
+    <div class="notice">
+      💰 Your bakery earns money automatically. Customer orders give you extra active income.
+    </div>
   </div>
 
-  <div class="status-card">
-    <small>Shift</small>
-    <strong id="shiftStatus">READY</strong>
-    <button class="shift-button" id="startShiftBtn">
-      START 10-MINUTE SHIFT
-    </button>
-  </div>
-
-  <div class="status-card">
-    <small>Orders Served</small>
-    <strong id="orders">0</strong>
-  </div>
-
-</section>
-
-<section class="main-grid">
-
-<!-- DONUT STATION -->
-
-<section class="window">
-
-  <div class="window-title">
-    <span>🍩 DONUT STATION</span>
-    <span id="xpText">0 XP</span>
-  </div>
-
-  <div class="window-body">
-
-    <div class="donut-stage">
-      <div class="big-donut" id="bigDonut">🍩</div>
-      <div class="selected-name" id="selectedName">Glazed</div>
-      <div class="selected-details" id="selectedDetails">
-        No filling
+  <div class="card">
+    <div class="tabTitle">
+      <div>
+        <strong>💰 Idle Bakery</strong>
+        <div class="sub">Your bakery keeps earning even when you're not playing.</div>
       </div>
     </div>
 
-    <div class="choice-section">
-      <div class="choice-title">🍩 DONUT</div>
-      <div class="choice-grid" id="donutChoices"></div>
-    </div>
-
-    <div class="choice-section">
-      <div class="choice-title">🍓 FILLING</div>
-      <div class="choice-grid" id="fillingChoices"></div>
-    </div>
-
-    <div class="choice-section">
-      <div class="choice-title">✨ TOPPINGS</div>
-      <div class="choice-grid" id="toppingChoices"></div>
-    </div>
-
-    <div class="choice-section">
-      <div class="choice-title">📦 QUANTITY</div>
-
-      <div class="quantity-row">
-        <button class="qty-btn" id="minusBtn">−</button>
-        <div class="qty-display" id="quantity">1</div>
-        <button class="qty-btn" id="plusBtn">+</button>
+    <div class="statsGrid" style="margin-top:10px">
+      <div class="stat">
+        <strong id="offlineEarned">$0.00</strong>
+        <span>Last Offline Earnings</span>
       </div>
-
-    </div>
-
-    <button class="serve-button" id="serveBtn">
-      🍩 SERVE ORDER
-    </button>
-
-  </div>
-
-</section>
-
-<!-- RIGHT -->
-
-<div class="right-stack">
-
-<section class="window order-window">
-
-  <div class="window-title">
-    <span>👤 CUSTOMER ORDER</span>
-    <span id="customerNumber">#1</span>
-  </div>
-
-  <div class="window-body">
-
-    <div class="order-box">
-      <div class="order-text" id="orderText">
-        Press TAKE ORDER to hear what the customer wants.
+      <div class="stat">
+        <strong id="milestone">$0</strong>
+        <span>Lifetime Cash Earned</span>
       </div>
     </div>
-
-    <button class="take-order" id="takeOrderBtn">
-      🎤 TAKE ORDER
-    </button>
-
-    <button class="hear-order" id="hearOrderBtn">
-      🔊 HEAR ORDER AGAIN
-    </button>
-
   </div>
 
-</section>
+  <div class="card orderBox">
+    <div class="tabTitle">
+      <div>
+        <h2>🍩 Customer Order</h2>
+        <div id="orderStatus" class="orderStatus">Ready for a customer!</div>
+      </div>
+      <span id="orderReward" class="badge">$0</span>
+    </div>
 
-<section class="window mini-window">
+    <button id="takeOrderBtn" class="primary" onclick="takeOrder()">
+      Take Order
+    </button>
 
-  <div class="window-title">
-    <span>👤 NEXT CUSTOMER</span>
-  </div>
+    <div id="orderBuilder" style="display:none">
 
-  <div class="window-body">
-    <div class="next-customer" id="nextCustomer">
-      Your next customer is waiting!
+      <div class="choiceLabel">🍩 Donut</div>
+      <div id="donutChoices" class="optionGrid"></div>
+
+      <div class="choiceLabel">🥯 Filling</div>
+      <div id="fillingChoices" class="optionGrid"></div>
+
+      <div class="choiceLabel">✨ Toppings — choose up to 2</div>
+      <div id="toppingChoices" class="optionGrid"></div>
+
+      <div class="choiceLabel">🔮 Mystery Flavor</div>
+      <div id="flavorChoices" class="optionGrid"></div>
+
+      <div class="choiceLabel">🔢 Quantity</div>
+      <div class="qtyRow">
+        <button class="qtyBtn" onclick="changeQuantity(-1)" aria-label="Decrease quantity">−</button>
+        <div class="qtyNum" id="quantity">1</div>
+        <button class="qtyBtn" onclick="changeQuantity(1)" aria-label="Increase quantity">+</button>
+      </div>
+
+      <button class="secondary" onclick="readOrderBack()">
+        🔊 Read Order Back
+      </button>
+
+      <button class="primary" style="margin-top:8px" onclick="serveOrder()">
+        🍩 Serve Order
+      </button>
+
+      <button class="secondary" style="margin-top:8px" onclick="cancelOrder()">
+        Cancel Order
+      </button>
     </div>
   </div>
 
 </section>
 
-<section class="window cosmic">
 
-  <div class="window-title">
-    <span>🌌 GALACTIC DONUT</span>
-  </div>
+<!-- BUSINESS -->
+<section id="business" class="screen">
 
-  <div class="window-body">
-
-    <div class="cosmic-info" id="cosmicInfo">
-      Unlock the Galactic Donut at Level 18.
-      Serve it to activate Cosmic Rush.
+  <div class="card">
+    <h2>🏭 Bakery Business</h2>
+    <p class="sub">
+      Upgrade your bakery to make your idle income grow.
+    </p>
+    <div class="statsGrid">
+      <div class="stat">
+        <strong id="businessLevel">1</strong>
+        <span>Level</span>
+      </div>
+      <div class="stat">
+        <strong id="businessIncome">$0.05/s</strong>
+        <span>Current Income</span>
+      </div>
     </div>
+  </div>
 
-    <button class="cosmic-button" id="cosmicButton">
-      🌌 GALACTIC INFO
-    </button>
+  <div id="equipmentList"></div>
 
+</section>
+
+
+<!-- LOCATIONS -->
+<section id="locations" class="screen">
+
+  <div class="card">
+    <h2>📍 Bakery Locations</h2>
+    <p class="sub">
+      Open new locations to multiply your entire bakery.
+    </p>
+  </div>
+
+  <div id="locationList"></div>
+
+  <div class="card">
+    <h2>👑 Royal Bakery</h2>
+    <p class="sub">A permanent late-game income boost.</p>
+    <div id="royalBakery"></div>
+  </div>
+
+  <div class="card">
+    <h2>🔥 Prestige</h2>
+    <p class="sub">
+      Reset normal progress later in exchange for permanent Bakery Crowns.
+    </p>
+    <div id="prestigeBox"></div>
   </div>
 
 </section>
 
-</div>
+
+<!-- DONUTS -->
+<section id="donuts" class="screen">
+
+  <div class="card">
+    <h2>🍩 Donut Collection</h2>
+    <p class="sub">
+      Build your collection. Seasonal donuts and mystery flavors can appear as you progress.
+    </p>
+    <div class="statsGrid">
+      <div class="stat">
+        <strong id="collectionCount">6</strong>
+        <span>Unlocked</span>
+      </div>
+      <div class="stat">
+        <strong id="mysteryCount">0</strong>
+        <span>Mystery Found</span>
+      </div>
+    </div>
+  </div>
+
+  <div id="donutCollection"></div>
 
 </section>
 
-<!-- BOTTOM NAV -->
 
-<nav class="bottom-menu">
+<!-- MORE -->
+<section id="more" class="screen">
 
-  <button class="menu-btn" id="upgradesBtn">
-    <span>⚙️</span>
-    Upgrades
-  </button>
+  <div class="card rapCard">
+    <h2>🎤 Donut Rap</h2>
+    <p class="sub">
+      Want to hear the Desmond's Donuts anthem?
+    </p>
+    <button class="primary" onclick="playDonutRap()">
+      🎤 Play the Donut Rap
+    </button>
+  </div>
 
-  <button class="menu-btn" id="locationsBtn">
-    <span>🏪</span>
-    Locations
-  </button>
+  <div class="card">
+    <h2>🪙 Baker Bucks</h2>
+    <p class="sub">
+      Rare currency for powerful permanent upgrades.
+    </p>
+    <div id="bucksShop"></div>
+  </div>
 
-  <button class="menu-btn" id="mysteryBtn">
-    <span>❓</span>
-    Mystery Flavors
-  </button>
+  <div class="card">
+    <h2>🏆 Achievements</h2>
+    <div id="achievements"></div>
+  </div>
 
-  <button class="menu-btn" id="songBtn">
-    <span>🎵</span>
-    Donut Song
-  </button>
+  <div class="card">
+    <h2>📖 How to Play</h2>
+    <div class="notice">
+      <strong>Idle:</strong> Your bakery automatically earns money every second.
+    </div>
+    <div class="notice">
+      <strong>Play:</strong> Take customer orders and earn extra cash by making what customers request.
+    </div>
+    <div class="notice">
+      <strong>Upgrade:</strong> Improve equipment to make your idle bakery stronger.
+    </div>
+    <div class="notice">
+      <strong>Discover:</strong> Unlock donuts, fillings, toppings and mystery flavors.
+    </div>
+  </div>
 
-  <button class="menu-btn" id="moreBtn">
-    <span>➕</span>
-    More
-  </button>
+  <div class="card">
+    <button class="secondary" onclick="saveGame();speak('Your bakery has been saved.')">
+      💾 Save Game
+    </button>
+    <button class="secondary" style="margin-top:8px" onclick="resetGameConfirm()">
+      ⚠️ Reset Game
+    </button>
+  </div>
 
-</nav>
+</section>
 
 </main>
 
-<!-- UPGRADES MODAL -->
 
-<div class="modal" id="upgradesModal">
+<nav class="nav" aria-label="Main navigation">
+  <div class="navInner">
+    <button class="active" onclick="showScreen('home',this)">
+      <span class="navIcon">🏠</span>Home
+    </button>
+    <button onclick="showScreen('business',this)">
+      <span class="navIcon">🏭</span>Business
+    </button>
+    <button onclick="showScreen('locations',this)">
+      <span class="navIcon">📍</span>Locations
+    </button>
+    <button onclick="showScreen('donuts',this)">
+      <span class="navIcon">🍩</span>Donuts
+    </button>
+    <button onclick="showScreen('more',this)">
+      <span class="navIcon">⭐</span>More
+    </button>
+  </div>
+</nav>
 
-<div class="modal-card">
-
-<div class="modal-header">
-<h2>⚙️ Bakery Upgrades</h2>
-<button class="close" data-close="upgradesModal">CLOSE</button>
-</div>
-
-<div class="modal-body">
-<div class="modal-grid" id="upgradeList"></div>
-</div>
-
-</div>
-</div>
-
-<!-- LOCATIONS MODAL -->
-
-<div class="modal" id="locationsModal">
-
-<div class="modal-card">
-
-<div class="modal-header">
-<h2>🏪 Bakery Locations</h2>
-<button class="close" data-close="locationsModal">CLOSE</button>
-</div>
-
-<div class="modal-body">
-<div class="modal-grid" id="locationList"></div>
-</div>
-
-</div>
-</div>
-
-<!-- MYSTERY MODAL -->
-
-<div class="modal" id="mysteryModal">
-
-<div class="modal-card">
-
-<div class="modal-header">
-<h2>❓ Mystery Flavors</h2>
-<button class="close" data-close="mysteryModal">CLOSE</button>
-</div>
-
-<div class="modal-body">
-
-<p>
-Discover new flavors as your bakery grows.
-Locked flavors must be earned before they enter your donut collection.
-</p>
-
-<div class="mystery-list" id="mysteryList"></div>
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
 
 </div>
 
-</div>
-</div>
-
-<!-- SONG MODAL -->
-
-<div class="modal" id="songModal">
-
-<div class="modal-card">
-
-<div class="modal-header">
-<h2>🎵 Donut Song</h2>
-<button class="close" data-close="songModal">CLOSE</button>
-</div>
-
-<div class="modal-body">
-
-<div class="rap">
-Yo yo yo! Desmond's Donuts in the house!<br><br>
-Glaze on the left,<br>
-Sprinkles on the right!<br>
-Fry it up hot,<br>
-Make that donut bite!<br><br>
-Jelly in the middle,<br>
-Chocolate on top,<br>
-Desmond's Donut Dash<br>
-Never gonna stop!
-</div>
-
-<button class="rap-button" id="rapBtn">
-🎤 PLAY DONUT RAP
-</button>
-
-</div>
-
-</div>
-</div>
-
-<!-- MORE MODAL -->
-
-<div class="modal" id="moreModal">
-
-<div class="modal-card">
-
-<div class="modal-header">
-<h2>➕ More Bakery Features</h2>
-<button class="close" data-close="moreModal">CLOSE</button>
-</div>
-
-<div class="modal-body">
-
-<div class="modal-grid">
-
-<div class="item-card">
-<strong>👑 Royal Bakery</strong>
-<small>Build your ultimate donut empire.</small>
-<button class="buy" id="royalBtn">OPEN</button>
-</div>
-
-<div class="item-card">
-<strong>🏆 Prestige</strong>
-<small>Prestige your bakery for permanent crowns.</small>
-<button class="buy" id="prestigeBtn">PRESTIGE</button>
-</div>
-
-<div class="item-card">
-<strong>💎 Baker Bucks</strong>
-<small id="bucksText">Baker Bucks: 0</small>
-<button class="buy" id="bucksBtn">COLLECT</button>
-</div>
-
-<div class="item-card">
-<strong>📊 Bakery Stats</strong>
-<small id="statsText">View your bakery stats.</small>
-<button class="buy" id="statsBtn">READ STATS</button>
-</div>
-
-<div class="item-card">
-<strong>🤖 Donut Robot</strong>
-<small>Check your automatic bakery assistant.</small>
-<button class="buy" id="robotBtn">CHECK ROBOT</button>
-</div>
-
-<div class="item-card">
-<strong>💾 Bakery Save</strong>
-<small>Your game saves automatically.</small>
-<button class="buy" id="saveBtn">SAVE NOW</button>
-</div>
-
-</div>
-
-</div>
-
-</div>
-</div>
 
 <script>
 
-/* =====================================================
-   GAME DATA
-===================================================== */
+/* =========================================================
+   DESMOND'S DONUT DASH
+   ========================================================= */
 
-const baseDonuts=[
+const SAVE_KEY = "desmondDonutDashMobile";
 
-["Glazed",0],
-["Chocolate",0],
-["Sprinkle",0],
-["Jelly",0],
-["Cinnamon",0],
-["Blueberry",0],
-
-["Maple",1],
-["Boston Cream",1],
-["Powdered Sugar",1],
-["Strawberry Frosted",1],
-["Vanilla Swirl",1],
-["Caramel Crunch",1],
-
-["Cookies & Cream",2],
-["Peanut Butter",2],
-["Lemon Burst",2],
-["Raspberry Rush",2],
-
-["S'mores",3],
-["Birthday Cake",3],
-["Red Velvet",3],
-
-["Salted Caramel",4],
-["Apple Pie",4],
-["Key Lime",4],
-
-["Blue Raspberry",5],
-["Cotton Candy",5],
-["French Toast",5],
-
-["Churro",6],
-["Coconut Cream",6],
-["Pistachio",7],
-["Orange Cream",7],
-["Banana Split",8],
-
-["Pumpkin Spice",5],
-["Ghost Glaze",7],
-["Witch's Brew",8],
-["Candy Corn",9],
-["Monster Sprinkle",10],
-["Haunted Cocoa",11],
-["Vampire Velvet",12],
-["Jack-O-Lantern",13],
-
-["Galactic Donut",18],
-["Dragon's Fire",20],
-["Rainbow Galaxy",22],
-["Midnight Crunch",24],
-["Royal Raspberry",26]
-
+const STARTING_DONUTS = [
+  "glazed",
+  "chocolate",
+  "sprinkle",
+  "jelly",
+  "cinnamon",
+  "blueberry"
 ];
 
-const fillings=[
-["Strawberry",0],
-["Chocolate Cream",0],
-["Blueberry Cream",5],
-["Vanilla Cream",8],
-["Lemon Cream",12],
-["Raspberry Cream",16],
-["Cosmic Cream",18]
+const donuts = [
+
+  /* STARTING */
+  {id:"glazed",name:"Glazed",emoji:"🍩",level:1,value:1.25},
+  {id:"chocolate",name:"Chocolate",emoji:"🍫",level:1,value:1.5},
+  {id:"sprinkle",name:"Sprinkle",emoji:"🌈",level:1,value:1.65},
+  {id:"jelly",name:"Jelly",emoji:"🍓",level:1,value:1.8},
+  {id:"cinnamon",name:"Cinnamon",emoji:"🥨",level:1,value:1.7},
+  {id:"blueberry",name:"Blueberry",emoji:"🫐",level:1,value:1.9},
+
+  /* REGULAR UNLOCKS */
+  {id:"maple",name:"Maple",emoji:"🍁",level:2,value:2.1},
+  {id:"cookie",name:"Cookie Crunch",emoji:"🍪",level:3,value:2.3},
+  {id:"cream",name:"Cream Filled",emoji:"🥛",level:4,value:2.5},
+  {id:"lemon",name:"Lemon",emoji:"🍋",level:5,value:2.7},
+  {id:"caramel",name:"Caramel",emoji:"🍮",level:6,value:3},
+  {id:"sundae",name:"Donut Sundae",emoji:"🍨",level:7,value:3.4},
+  {id:"birthday",name:"Birthday Cake",emoji:"🎂",level:8,value:3.8},
+  {id:"rainbow",name:"Rainbow",emoji:"🌈",level:9,value:4.1},
+  {id:"firecracker",name:"Firecracker",emoji:"🎆",level:10,value:4.5},
+  {id:"boston",name:"Boston Cream",emoji:"🍫",level:11,value:5},
+  {id:"apple",name:"Apple Pie",emoji:"🍎",level:12,value:5.4},
+  {id:"oreo",name:"Oreo Blast",emoji:"🍪",level:13,value:5.8},
+  {id:"peanut",name:"Peanut Butter",emoji:"🥜",level:14,value:6.2},
+  {id:"strawberry",name:"Strawberry Shortcake",emoji:"🍓",level:15,value:6.7},
+  {id:"s'mores",name:"S'mores",emoji:"🔥",level:16,value:7.2},
+
+  /* HALLOWEEN */
+  {id:"pumpkin",name:"Pumpkin Spice",emoji:"🎃",level:5,value:3.8,season:"Halloween"},
+  {id:"monster",name:"Monster Donut",emoji:"👹",level:8,value:5.2,season:"Halloween"},
+  {id:"witch",name:"Witch's Brew",emoji:"🧙",level:12,value:7.5,season:"Halloween"},
+  {id:"ghost",name:"Ghost Glaze",emoji:"👻",level:16,value:9,season:"Halloween"},
+  {id:"bat",name:"Bat Bite",emoji:"🦇",level:20,value:12,season:"Halloween"},
+  {id:"candycorn",name:"Candy Corn Crunch",emoji:"🍬",level:24,value:16,season:"Halloween"},
+
+  /* WINTER */
+  {id:"snowflake",name:"Snowflake",emoji:"❄️",level:8,value:5,season:"Winter"},
+  {id:"reindeer",name:"Reindeer Crunch",emoji:"🦌",level:14,value:8,season:"Winter"},
+  {id:"peppermint",name:"Peppermint Swirl",emoji:"🍭",level:18,value:11,season:"Winter"},
+  {id:"gingerbread",name:"Gingerbread",emoji:"🍪",level:22,value:15,season:"Winter"},
+  {id:"santa",name:"Santa's Favorite",emoji:"🎅",level:28,value:22,season:"Winter"},
+
+  /* VALENTINE */
+  {id:"valentine",name:"Valentine Heart",emoji:"❤️",level:10,value:6,season:"Valentine"},
+  {id:"lovebug",name:"Love Bug",emoji:"💗",level:18,value:11,season:"Valentine"},
+  {id:"chocolateheart",name:"Chocolate Heart",emoji:"💝",level:25,value:18,season:"Valentine"},
+
+  /* ST PATRICK */
+  {id:"lucky",name:"Lucky Green",emoji:"☘️",level:12,value:7,season:"St. Patrick's"},
+  {id:"shamrock",name:"Shamrock Cream",emoji:"☘️",level:20,value:13,season:"St. Patrick's"},
+  {id:"goldpot",name:"Pot of Gold",emoji:"🪙",level:30,value:25,season:"St. Patrick's"},
+
+  /* SUMMER */
+  {id:"watermelon",name:"Watermelon Splash",emoji:"🍉",level:18,value:10,season:"Summer"},
+  {id:"lemonade",name:"Lemonade Twist",emoji:"🍋",level:23,value:15,season:"Summer"},
+  {id:"tropical",name:"Tropical Paradise",emoji:"🌴",level:30,value:24,season:"Summer"},
+
+  /* LATE GAME */
+  {id:"diamond",name:"Diamond Glaze",emoji:"💎",level:40,value:45},
+  {id:"galaxy",name:"Galaxy Donut",emoji:"🌌",level:50,value:70},
+  {id:"royal",name:"Royal Donut",emoji:"👑",level:60,value:110},
+  {id:"emperor",name:"Emperor's Donut",emoji:"👑",level:75,value:175},
+  {id:"legendary",name:"Legendary Donut",emoji:"✨",level:90,value:300},
+  {id:"impossible",name:"The Impossible Donut",emoji:"🌟",level:110,value:750}
 ];
 
-const toppings=[
-["Rainbow Sprinkles",0],
-["Chocolate Sprinkles",0],
-["Powdered Sugar",0],
-["Cinnamon Sugar",0],
-["Chocolate Drizzle",0],
-["Caramel Drizzle",4],
-["Cookie Crumbs",6],
-["Peanut Butter Drizzle",9],
-["Marshmallow Bits",12],
-["Galaxy Sprinkles",18]
-];
 
-const mysteryNames=[
+/* =========================================================
+   MYSTERY FLAVORS
+   ========================================================= */
 
-"Cosmic Cookie",
-"Meteor Munch",
-"Neon Jelly",
-"Thunder Glaze",
-"Bubblegum Blast",
-"Firework Frosting",
-"Lucky Clover",
-"Magic Maple",
-"Dragonfruit Dream",
-"Cherry Comet",
-"Blue Moon",
-"Disco Sprinkle",
-"Golden Cookie",
-"Rocket Fuel",
-"Frosted Thunder",
-"Rainbow Reactor",
-"Candy Castle",
-"Starry Night",
-"Moon Pie",
-"Galaxy Goo",
-"Electric Lemon",
-"Supernova Strawberry",
-"Secret S'more",
-"Meteor Mint",
-"Pink Nebula",
-"Chocolate Volcano",
-"Vanilla Meteor",
-"Cosmic Caramel",
-"Mystery Mochi",
-"Glitter Glaze",
-"Doughnut Dimension",
-"Turbo Tart",
-"Frostbite",
-"Sunshine Swirl",
-"Alien Apple",
-"Rocket Raspberry",
-"Cloud Nine",
-"Diamond Donut",
-"Royal Cosmic",
-"Ultimate Dough"
+const mysteryFlavors = [
+  ["m01","Blue Raspberry Blast",3,1.5],
+  ["m02","Cotton Candy",4,1.75],
+  ["m03","Sour Apple",5,2],
+  ["m04","Birthday Explosion",6,2.25],
+  ["m05","Strawberry Cheesecake",7,2.5],
+  ["m06","Chocolate Peanut Butter",8,2.75],
+  ["m07","Maple Bacon",9,3],
+  ["m08","S'mores Supreme",10,3.25],
+  ["m09","Root Beer Float",11,3.5],
+  ["m10","Cinnamon Roll",12,3.75],
+  ["m11","Cookies & Cream",13,4],
+  ["m12","Blueberry Muffin",14,4.25],
+  ["m13","Strawberry Shortcake Supreme",15,4.5],
+  ["m14","Salted Caramel Pretzel",16,4.75],
+  ["m15","Chocolate Lava",17,5],
+  ["m16","Apple Pie Supreme",18,5.25],
+  ["m17","Peanut Butter Cup",19,5.5],
+  ["m18","Triple Chocolate",20,6],
+  ["m19","Rainbow Unicorn",22,7],
+  ["m20","Monster Cookie",24,8],
+  ["m21","Golden Vanilla",26,10],
+  ["m22","Royal Raspberry",28,12],
+  ["m23","Diamond Chocolate",30,15],
+  ["m24","Legendary Donut",35,25],
+  ["m25","Caramel Apple Pie",37,27],
+  ["m26","Triple Berry Cheesecake",40,30],
+  ["m27","Midnight Chocolate",43,35],
+  ["m28","Strawberry Milkshake",46,40],
+  ["m29","Blue Moon",50,45],
+  ["m30","Galaxy Glaze",55,55],
+  ["m31","Fireball Cinnamon",60,65],
+  ["m32","Ultimate Cookie",65,80],
+  ["m33","Royal Chocolate",70,100],
+  ["m34","Diamond Raspberry",75,125],
+  ["m35","Golden Birthday",80,150],
+  ["m36","Millionaire's Caramel",85,200],
+  ["m37","Cosmic Sprinkle",90,275],
+  ["m38","Rainbow Royal",95,350],
+  ["m39","Emperor's Chocolate",100,500],
+  ["m40","The Impossible Flavor",110,750]
+].map(x=>({
+  id:x[0],
+  name:x[1],
+  level:x[2],
+  value:x[3]
+}));
 
-];
 
-const upgrades=[
+/* =========================================================
+   FILLINGS
+   ========================================================= */
 
-["Dough-namic Oven",100,1],
-["Sprinkle Storm Station",250,2],
-["Jelly Jukebox",600,3],
-["Choco-Matic 3000",1200,4],
-["Frosting Fountain",2500,5],
-["Golden Glaze Machine",5000,6],
-["Customer Charm-O-Matic",10000,7],
-["Dash Delivery Engine",20000,8],
-["Mega Mixer X",40000,10],
-["Royal Dough Press",80000,12],
-["Turbo Proofing Chamber",150000,14],
-["Triple Rack Oven",300000,16],
-["Donut Conveyor Pro",600000,18],
-["Smart Fry Station",1200000,20],
-["Flavor Fusion Lab",2500000,22],
-["Grand Bakery Computer",5000000,25],
-["Hyper Glazer",10000000,28],
-["Cosmic Dough Lab",25000000,32],
-["Quantum Fryer",60000000,36],
-["Desmond's Mega Bakery",150000000,40]
+const fillings = [
+  ["none","No Filling",1,0],
+  ["strawberry","Strawberry",2,1.5],
+  ["grape","Grape",3,1.25],
+  ["apple","Apple",4,1.5],
+  ["lemon","Lemon",5,1.5],
+  ["blueberry","Blueberry",6,1.75],
+  ["raspberry","Raspberry",7,1.75],
+  ["vanilla","Vanilla Cream",8,1.75],
+  ["boston","Boston Cream",9,2.25],
+  ["chocolateCream","Chocolate Cream",10,2.25],
+  ["caramel","Caramel",11,2],
+  ["peanutButter","Peanut Butter",12,2.25],
+  ["marshmallow","Marshmallow",13,2],
+  ["cookieButter","Cookie Butter",15,2.5],
+  ["saltedCaramel","Salted Caramel",17,2.75],
+  ["birthdayCream","Birthday Cream",20,3]
+].map(x=>({
+  id:x[0],name:x[1],level:x[2],value:x[3]
+}));
 
-];
 
-const locations=[
+/* =========================================================
+   TOPPINGS
+   ========================================================= */
 
-["Glaze & Go Drive-Thru",15000,3],
-["Sprinkle Shack",40000,5],
-["Donut Dash Depot",90000,8],
-["Rainbow Road Bakery",200000,12],
-["Donut Castle",500000,18],
-["Donut City",1500000,25],
-["Donut Empire",5000000,35]
+const toppings = [
+  ["rainbowSprinkles","Rainbow Sprinkles",1,.5],
+  ["chocolateSprinkles","Chocolate Sprinkles",1,.5],
+  ["powderedSugar","Powdered Sugar",1,.25],
+  ["cinnamonSugar","Cinnamon Sugar",2,.5],
+  ["chocolateDrizzle","Chocolate Drizzle",3,.75],
+  ["strawberryDrizzle","Strawberry Drizzle",4,.75],
+  ["caramelDrizzle","Caramel Drizzle",5,.75],
+  ["coconut","Coconut",6,.75],
+  ["crushedPeanuts","Crushed Peanuts",7,.85],
+  ["cookieCrumbs","Cookie Crumbs",8,1],
+  ["whiteChocolate","White Chocolate",9,1],
+  ["candyPieces","Candy Pieces",10,1.15],
+  ["miniMarshmallows","Mini Marshmallows",11,.9],
+  ["bacon","Bacon",12,1.5],
+  ["oreoCrumbs","Oreo Crumbs",13,1.25],
+  ["peanutButterChips","Peanut Butter Chips",14,1.25],
+  ["toffee","Toffee",15,1.5],
+  ["pretzel","Pretzel Pieces",16,1.4],
+  ["marshmallowBits","Marshmallow Bits",17,1.25],
+  ["fudgePieces","Fudge Pieces",18,1.75],
+  ["goldSprinkles","Gold Sprinkles",19,2],
+  ["crushedCandy","Crushed Candy",20,2.25]
+].map(x=>({
+  id:x[0],name:x[1],level:x[2],value:x[3]
+}));
 
-];
 
-const shifts=[
+/* =========================================================
+   EQUIPMENT
+   ========================================================= */
 
-["10 minutes",1,0,0],
-["20 minutes",3,150,750],
-["30 minutes",5,400,2500],
-["1 hour",8,900,7500],
-["2 hours",12,1800,20000],
-["3 hours",16,3000,50000],
-["4 hours",20,5000,100000],
-["6 hours",25,9000,300000],
-["8 hours",30,15000,750000]
+const equipment = [
+  ["oven","Industrial Oven",25,1.42,"flat",.015],
+  ["mixer","Industrial Mixer",35,1.43,"flat",.02],
+  ["fryer","Turbo Fryer",45,1.44,"flat",.025],
+  ["glazer","Automated Glazer",70,1.45,"percent",.025],
+  ["filling","Filling Machine",85,1.46,"percent",.03],
+  ["topping","Topping Station",100,1.47,"ingredient",.06],
+  ["packaging","Packaging Machine",130,1.48,"percent",.035],
+  ["conveyor","Magic Conveyor",180,1.49,"percent",.04],
+  ["quality","Quality Control Lab",250,1.50,"active",.04],
+  ["robot","Robot Baker",400,1.52,"percent",.05],
+  ["freezer","Mega Freezer",650,1.54,"percent",.055],
+  ["factory","Mini Donut Factory",1000,1.56,"percent",.07]
+].map(x=>({
+  id:x[0],name:x[1],base:x[2],growth:x[3],type:x[4],effect:x[5],max:20
+}));
 
-];
 
-/* =====================================================
+/* =========================================================
+   LOCATIONS
+   ========================================================= */
+
+const locations = [
+  ["main","Main Bakery",0,0,1],
+  ["drive","Drive-Thru",1000,150,1.15],
+  ["delivery","Delivery Depot",4000,500,1.35],
+  ["truck","Donut Truck",12000,1000,1.65],
+  ["second","Second Bakery",35000,2000,2],
+  ["rainbow","Rainbow Shop",100000,4000,2.5],
+  ["factory","Donut Factory",350000,8000,3.25],
+  ["city","Donut City",1500000,15000,4.5],
+  ["empire","Donut Empire",7500000,30000,7]
+].map(x=>({
+  id:x[0],name:x[1],cost:x[2],sold:x[3],mult:x[4]
+}));
+
+
+/* =========================================================
+   BAKER BUCK UPGRADES
+   ========================================================= */
+
+const buckUpgrades = [
+  ["mega","Mega Donut Machine",60,5,150,"Active orders +20%"],
+  ["chocolateFactory","Chocolate Factory",110,8,400,"Active orders +30%"],
+  ["superVan","Super Delivery Van",175,12,750,"Idle income +35%"],
+  ["castle","Donut Castle",275,16,1500,"Idle income +60%"],
+  ["robot","Donut Robot",425,20,2500,"Generates Baker Bucks while idle"],
+  ["rainbow","Rainbow Bakery",700,25,5000,"Total bakery income +20%"]
+].map(x=>({
+  id:x[0],name:x[1],cost:x[2],level:x[3],sold:x[4],desc:x[5]
+}));
+
+
+/* =========================================================
    STATE
-===================================================== */
+   ========================================================= */
 
-let state={
+function newState(){
+  const eq={};
+  equipment.forEach(e=>eq[e.id]=0);
 
-cash:0,
-donuts:0,
+  return {
+    cash:5,
+    bucks:0,
+    crowns:0,
 
-level:1,
-xp:0,
+    sold:0,
+    lifetimeCash:0,
 
-selectedDonut:"Glazed",
-selectedFilling:"",
-selectedToppings:[],
-quantity:1,
+    level:1,
 
-order:null,
-nextOrder:null,
+    unlockedDonuts:[...STARTING_DONUTS],
+    discoveredMystery:[],
 
-upgrades:0,
-locations:0,
+    fillingsUnlocked:["none"],
+    toppingsUnlocked:["rainbowSprinkles","chocolateSprinkles","powderedSugar"],
 
-bakerBucks:0,
-crowns:0,
+    equipment:eq,
+    locations:["main"],
+    buckOwned:[],
+    royal:false,
 
-cosmicConveyor:false,
-cosmicRushUntil:0,
+    prestigeCount:0,
 
-shiftStarted:false,
-shiftEnds:0,
+    shift:{
+      active:false,
+      startedAt:0,
+      duration:600,
+      earned:0
+    },
 
-mysteryUnlocked:0,
+    selectedDonut:null,
+    selectedFilling:"none",
+    selectedToppings:[],
+    selectedFlavor:null,
+    selectedQuantity:1,
 
-lifetimeOrders:0,
-lifetimeCash:0,
+    customer:null,
 
-lastSeen:Date.now()
+    perfectStreak:0,
 
-};
+    lastOfflineTime:Date.now(),
+    lastSaveTime:Date.now(),
 
-/* =====================================================
-   HELPERS
-===================================================== */
-
-const $=id=>document.getElementById(id);
-
-function money(n){
-return "$"+Math.floor(n).toLocaleString();
+    achievements:{}
+  };
 }
+
+let state=loadGame();
+
+
+/* =========================================================
+   SAVE / LOAD
+   ========================================================= */
+
+function loadGame(){
+
+  try{
+    const raw=localStorage.getItem(SAVE_KEY);
+
+    if(!raw) return newState();
+
+    const saved=JSON.parse(raw);
+    const fresh=newState();
+
+    const merged={
+      ...fresh,
+      ...saved,
+      shift:{...fresh.shift,...(saved.shift||{})}
+    };
+
+    merged.equipment={
+      ...fresh.equipment,
+      ...(saved.equipment||{})
+    };
+
+    /*
+      Important:
+      lastOfflineTime is NOT tied to the normal autosave timer.
+      This allows offline earnings to correctly measure time
+      between leaving and reopening the game.
+    */
+
+    const awaySeconds=Math.max(
+      0,
+      Math.min(
+        8*60*60,
+        (Date.now()-Number(saved.lastOfflineTime||Date.now()))/1000
+      )
+    );
+
+    state=merged;
+
+    const offlineRate=calculateEPS();
+    const offlineMoney=awaySeconds*offlineRate;
+
+    if(offlineMoney>0.01){
+      state.cash+=offlineMoney;
+      state.lifetimeCash+=offlineMoney;
+      state.offlineEarned=offlineMoney;
+      showOfflineNotice(offlineMoney,awaySeconds);
+    }else{
+      state.offlineEarned=0;
+    }
+
+    state.lastOfflineTime=Date.now();
+    state.lastSaveTime=Date.now();
+
+    return state;
+
+  }catch(e){
+    console.log(e);
+    return newState();
+  }
+}
+
+
+function saveGame(){
+
+  state.lastSaveTime=Date.now();
+
+  /*
+    Do NOT change lastOfflineTime here.
+    Autosaves happen frequently, but lastOfflineTime represents
+    the last time the game was actually closed/hidden.
+  */
+
+  localStorage.setItem(SAVE_KEY,JSON.stringify(state));
+}
+
+
+function markLeaving(){
+
+  /*
+    Record the actual time the player leaves the game.
+    This is intentionally separate from autosave.
+  */
+
+  state.lastOfflineTime=Date.now();
+  localStorage.setItem(SAVE_KEY,JSON.stringify(state));
+}
+
+
+document.addEventListener("visibilitychange",()=>{
+  if(document.hidden){
+    markLeaving();
+  }else{
+    const before=state.lastOfflineTime;
+    const now=Date.now();
+
+    const seconds=Math.max(
+      0,
+      Math.min(8*60*60,(now-before)/1000)
+    );
+
+    if(seconds>5){
+      const money=seconds*calculateEPS();
+
+      state.cash+=money;
+      state.lifetimeCash+=money;
+      state.offlineEarned=money;
+
+      if(money>0.01){
+        showOfflineNotice(money,seconds);
+      }
+    }
+
+    state.lastOfflineTime=now;
+    saveGame();
+    updateUI();
+  }
+});
+
+
+window.addEventListener("pagehide",markLeaving);
+
+
+/* =========================================================
+   SPEECH
+   ========================================================= */
+
+let welcomeSpoken=false;
+
+const welcomeLines=[
+  "Welcome to Desmond's Donuts! Let's make some dough!",
+  "Welcome to Desmond's Donuts! The bakery is open!",
+  "Hey donut boss! Welcome to Desmond's Donuts!",
+  "Welcome back to Desmond's Donuts! Time to make some dough!",
+  "The donuts are ready! Welcome to Desmond's Donuts!"
+];
 
 function speak(text){
 
-$("liveRegion").textContent="";
+  if(!("speechSynthesis" in window)) return;
 
-setTimeout(()=>{
-$("liveRegion").textContent=text;
-},20);
+  try{
+    window.speechSynthesis.cancel();
 
-if(!("speechSynthesis" in window))return;
+    const utterance=new SpeechSynthesisUtterance(text);
+    utterance.rate=.95;
+    utterance.pitch=1.08;
+    utterance.volume=1;
 
-speechSynthesis.cancel();
-
-const u=new SpeechSynthesisUtterance(text);
-
-u.rate=.94;
-u.pitch=1.05;
-u.volume=1;
-
-speechSynthesis.speak(u);
-
-}
-
-/* =====================================================
-   SAVE / LOAD
-===================================================== */
-
-function save(){
-
-state.lastSeen=Date.now();
-
-localStorage.setItem(
-"desmondDonutDashSave",
-JSON.stringify(state)
-);
-
-}
-
-function load(){
-
-try{
-
-const saved=
-localStorage.getItem("desmondDonutDashSave");
-
-if(saved){
-
-state={
-...state,
-...JSON.parse(saved)
-};
-
-}
-
-}catch(e){}
-
-}
-
-/* =====================================================
-   PROGRESSION
-===================================================== */
-
-function xpNeeded(){
-
-return 100+(state.level-1)*75;
-
-}
-
-function addXP(amount){
-
-state.xp+=amount;
-
-while(state.xp>=xpNeeded()){
-
-state.xp-=xpNeeded();
-
-state.level++;
-
-speak(
-`Level up! You are now level ${state.level}.`
-);
-
-checkMystery();
-
-}
-
-}
-
-function mysteryLevel(i){
-
-return 4+i;
-
-}
-
-function checkMystery(){
-
-while(
-
-state.mysteryUnlocked<mysteryNames.length&&
-
-state.level>=
-mysteryLevel(state.mysteryUnlocked)
-
-){
-
-const name=
-mysteryNames[state.mysteryUnlocked];
-
-state.mysteryUnlocked++;
-
-speak(
-`Mystery flavor unlocked: ${name}.`
-);
-
-}
-
-}
-
-/* =====================================================
-   DONUT COLLECTION
-===================================================== */
-
-function getDonuts(){
-
-const list=[...baseDonuts];
-
-for(
-let i=0;
-i<state.mysteryUnlocked;
-i++
-){
-
-list.push([
-mysteryNames[i],
-mysteryLevel(i)
-]);
-
-}
-
-return list;
-
-}
-
-/* =====================================================
-   ECONOMY
-===================================================== */
-
-function idleRate(){
-
-return(
-
-1.5+
-state.level*.65
-
-)*
-
-(1+state.upgrades*.45)*
-
-(1+state.locations*.25)*
-
-(1+state.crowns*.1);
-
-}
-
-function currentRate(){
-
-let rate=idleRate();
-
-if(
-state.shiftStarted&&
-Date.now()<state.shiftEnds
-){
-
-rate*=2;
-
-}
-
-if(Date.now()<state.cosmicRushUntil){
-
-rate*=3;
-
-}
-
-return rate;
-
-}
-
-function orderPayout(){
-
-let value=
-8+
-state.level*2+
-state.upgrades*4+
-state.locations*8;
-
-if(Date.now()<state.cosmicRushUntil){
-
-value*=2;
-
-}
-
-if(state.selectedDonut==="Galactic Donut"){
-
-value*=2;
-
-}
-
-return value;
-
-}
-
-/* =====================================================
-   SHIFTS
-===================================================== */
-
-function currentShift(){
-
-let selected=shifts[0];
-
-for(const shift of shifts){
-
-if(
-
-state.level>=shift[1]&&
-state.donuts>=shift[2]&&
-state.cash>=shift[3]
-
-){
-
-selected=shift;
-
-}
-
-}
-
-return selected;
-
-}
-
-function shiftMinutes(name){
-
-const values={
-
-"10 minutes":10,
-"20 minutes":20,
-"30 minutes":30,
-"1 hour":60,
-"2 hours":120,
-"3 hours":180,
-"4 hours":240,
-"6 hours":360,
-"8 hours":480
-
-};
-
-return values[name]||10;
-
-}
-
-function startShift(){
-
-if(state.shiftStarted){
-
-speak("Your shift is already running.");
-
-return;
-
-}
-
-const shift=currentShift();
-
-const minutes=
-shiftMinutes(shift[0]);
-
-state.shiftStarted=true;
-
-state.shiftEnds=
-Date.now()+minutes*60*1000;
-
-speak(
-`${shift[0]} shift started. Your bakery is now earning automatically.`
-);
-
-save();
-
-update();
-
-}
-
-/* =====================================================
-   ORDERS
-===================================================== */
-
-function randomDonut(){
-
-const available=
-getDonuts().filter(d=>state.level>=d[1]);
-
-return available[
-Math.floor(Math.random()*available.length)
-][0];
-
-}
-
-function randomFilling(){
-
-const available=
-fillings.filter(f=>state.level>=f[1]);
-
-if(Math.random()<.35)return "";
-
-return available[
-Math.floor(Math.random()*available.length)
-][0];
-
-}
-
-function randomToppings(){
-
-const available=
-toppings.filter(t=>state.level>=t[1]);
-
-return available
-.filter(()=>Math.random()<.2)
-.map(x=>x[0])
-.slice(0,3);
-
-}
-
-function newOrder(){
-
-return{
-
-donut:randomDonut(),
-
-filling:randomFilling(),
-
-toppings:randomToppings(),
-
-quantity:
-1+Math.floor(
-Math.random()*
-Math.min(3,1+Math.floor(state.level/8))
-)
-
-};
-
-}
-
-function orderText(order){
-
-let text=
-`The customer wants ${order.quantity} ${order.donut}`;
-
-if(order.quantity!==1){
-
-text+="s";
-
-}
-
-if(order.filling){
-
-text+=` with ${order.filling} filling`;
-
-}
-
-if(order.toppings.length){
-
-text+=
-` and ${order.toppings.join(", ")} on top`;
-
-}
-
-return text+".";
-
-}
-
-function takeOrder(){
-
-if(!state.order){
-
-state.order=
-state.nextOrder||
-newOrder();
-
-state.nextOrder=newOrder();
-
-}
-
-const text=
-orderText(state.order);
-
-$("orderText").textContent=text;
-
-speak(text);
-
-}
-
-function hearOrder(){
-
-if(!state.order){
-
-speak(
-"Take the order first."
-);
-
-return;
-
-}
-
-speak(orderText(state.order));
-
-}
-
-/* =====================================================
-   SERVING
-===================================================== */
-
-function sameArray(a,b){
-
-return a.length===b.length&&
-a.every(x=>b.includes(x));
-
-}
-
-function serve(){
-
-if(!state.order){
-
-speak(
-"Take the customer's order first."
-);
-
-return;
-
-}
-
-const correct=
-
-state.selectedDonut===
-state.order.donut&&
-
-state.selectedFilling===
-state.order.filling&&
-
-sameArray(
-state.selectedToppings,
-state.order.toppings
-)&&
-
-state.quantity===
-state.order.quantity;
-
-if(!correct){
-
-speak(
-"That order is not correct. Hear the order again and try again."
-);
-
-return;
-
-}
-
-let payout=
-orderPayout()*
-state.quantity;
-
-if(state.selectedToppings.length){
-
-payout*=
-1+
-state.selectedToppings.length*.1;
-
-}
-
-state.cash+=payout;
-
-state.lifetimeCash+=payout;
-
-state.donuts+=state.quantity;
-
-state.lifetimeOrders++;
-
-addXP(
-12+
-state.quantity*4+
-state.level
-);
-
-if(
-state.selectedDonut===
-"Galactic Donut"
-){
-
-state.cosmicConveyor=true;
-
-state.cosmicRushUntil=
-Date.now()+60*60*1000;
-
-speak(
-`Galactic Donut served! You earned ${money(payout)}. Cosmic Rush is active for one hour and Cosmic Conveyor is permanently unlocked!`
-);
-
-}else{
-
-speak(
-`Order served! You earned ${money(payout)}.`
-);
-
-}
-
-state.order=null;
-
-state.nextOrder=newOrder();
-
-state.selectedDonut="Glazed";
-state.selectedFilling="";
-state.selectedToppings=[];
-state.quantity=1;
-
-$("orderText").textContent=
-"Press TAKE ORDER to hear what the customer wants.";
-
-save();
-
-update();
-
-}
-
-/* =====================================================
-   SELECTIONS
-===================================================== */
-
-function chooseDonut(name){
-
-const item=
-getDonuts().find(d=>d[0]===name);
-
-if(!item)return;
-
-if(state.level<item[1]){
-
-speak(
-`${name} unlocks at level ${item[1]}.`
-);
-
-return;
-
-}
-
-state.selectedDonut=name;
-
-speak(`${name} selected.`);
-
-update();
-
-}
-
-function chooseFilling(name){
-
-const item=
-fillings.find(f=>f[0]===name);
-
-if(!item)return;
-
-if(state.level<item[1]){
-
-speak(
-`${name} filling unlocks at level ${item[1]}.`
-);
-
-return;
-
-}
-
-state.selectedFilling=name;
-
-speak(`${name} filling selected.`);
-
-update();
-
-}
-
-function chooseTopping(name){
-
-const item=
-toppings.find(t=>t[0]===name);
-
-if(!item)return;
-
-if(state.level<item[1]){
-
-speak(
-`${name} unlocks at level ${item[1]}.`
-);
-
-return;
-
-}
-
-if(
-state.selectedToppings.includes(name)
-){
-
-state.selectedToppings=
-state.selectedToppings.filter(x=>x!==name);
-
-speak(`${name} removed.`);
-
-}else{
-
-if(state.selectedToppings.length>=3){
-
-speak(
-"You can choose up to three toppings."
-);
-
-return;
-
-}
-
-state.selectedToppings.push(name);
-
-speak(`${name} selected.`);
-
-}
-
-update();
-
-}
-
-/* =====================================================
-   RENDER DONUTS
-===================================================== */
-
-function renderDonuts(){
-
-const box=$("donutChoices");
-
-box.innerHTML="";
-
-getDonuts().forEach(item=>{
-
-const [name,level]=item;
-
-const button=
-document.createElement("button");
-
-button.className="choice";
-
-if(state.level<level){
-
-button.classList.add("locked");
-
-button.textContent=
-`🔒 ${name} Lv ${level}`;
-
-button.disabled=true;
-
-}else{
-
-button.textContent=
-(state.selectedDonut===name?"✓ ":"")+
-name;
-
-button.onclick=
-()=>chooseDonut(name);
-
-}
-
-box.appendChild(button);
-
-});
-
-}
-
-/* =====================================================
-   RENDER FILLINGS
-===================================================== */
-
-function renderFillings(){
-
-const box=$("fillingChoices");
-
-box.innerHTML="";
-
-fillings.forEach(item=>{
-
-const [name,level]=item;
-
-const button=
-document.createElement("button");
-
-button.className="choice";
-
-if(state.level<level){
-
-button.classList.add("locked");
-
-button.textContent=
-`🔒 ${name}`;
-
-button.disabled=true;
-
-}else{
-
-button.textContent=
-(state.selectedFilling===name?"✓ ":"")+
-name;
-
-button.onclick=
-()=>chooseFilling(name);
-
-}
-
-box.appendChild(button);
-
-});
-
-}
-
-/* =====================================================
-   RENDER TOPPINGS
-===================================================== */
-
-function renderToppings(){
-
-const box=$("toppingChoices");
-
-box.innerHTML="";
-
-toppings.forEach(item=>{
-
-const [name,level]=item;
-
-const button=
-document.createElement("button");
-
-button.className="choice";
-
-if(state.level<level){
-
-button.classList.add("locked");
-
-button.textContent=
-`🔒 ${name}`;
-
-button.disabled=true;
-
-}else{
-
-button.textContent=
-(state.selectedToppings.includes(name)?"✓ ":"")+
-name;
-
-button.onclick=
-()=>chooseTopping(name);
-
-}
-
-box.appendChild(button);
-
-});
-
-}
-
-/* =====================================================
-   UPGRADES
-===================================================== */
-
-function renderUpgrades(){
-
-const box=$("upgradeList");
-
-box.innerHTML="";
-
-upgrades.forEach((u,index)=>{
-
-const unlocked=
-state.level>=u[2];
-
-const affordable=
-state.cash>=u[1];
-
-const card=
-document.createElement("div");
-
-card.className="item-card";
-
-card.innerHTML=`
-
-<strong>⚙️ ${u[0]}</strong>
-
-<small>
-Level ${u[2]} · ${money(u[1])}
-</small>
-
-<button class="buy">
-${
-!unlocked
-?"LOCKED"
-:
-!affordable
-?"NEED CASH"
-:
-"BUY UPGRADE"
-}
-</button>
-
-`;
-
-const button=
-card.querySelector("button");
-
-if(!unlocked||!affordable){
-
-button.disabled=true;
-button.classList.add("locked");
-
-}else{
-
-button.onclick=()=>{
-
-state.cash-=u[1];
-
-state.upgrades++;
-
-speak(
-`${u[0]} purchased!`
-);
-
-save();
-
-renderUpgrades();
-
-update();
-
-};
-
-}
-
-box.appendChild(card);
-
-});
-
-}
-
-/* =====================================================
-   LOCATIONS
-===================================================== */
-
-function renderLocations(){
-
-const box=$("locationList");
-
-box.innerHTML="";
-
-locations.forEach((l,index)=>{
-
-const unlocked=
-state.level>=l[2];
-
-const affordable=
-state.cash>=l[1];
-
-const card=
-document.createElement("div");
-
-card.className="item-card";
-
-card.innerHTML=`
-
-<strong>🏪 ${l[0]}</strong>
-
-<small>
-Level ${l[2]} · ${money(l[1])}
-</small>
-
-<button class="buy">
-${
-!unlocked
-?"LOCKED"
-:
-!affordable
-?"NEED CASH"
-:
-"OPEN LOCATION"
-}
-</button>
-
-`;
-
-const button=
-card.querySelector("button");
-
-if(unlocked&&affordable){
-
-button.onclick=()=>{
-
-state.cash-=l[1];
-
-state.locations++;
-
-speak(
-`${l[0]} is now open!`
-);
-
-save();
-
-renderLocations();
-
-update();
-
-};
-
-}else{
-
-button.disabled=true;
-button.classList.add("locked");
-
-}
-
-box.appendChild(card);
-
-});
-
-}
-
-/* =====================================================
-   MYSTERY
-===================================================== */
-
-function renderMystery(){
-
-const box=$("mysteryList");
-
-box.innerHTML="";
-
-mysteryNames.forEach((name,index)=>{
-
-const unlocked=
-index<state.mysteryUnlocked;
-
-const div=
-document.createElement("div");
-
-div.className=
-"mystery-item "+
-(unlocked?"unlocked":"locked");
-
-div.textContent=
-
-unlocked
-
-?`🔓 ${name}`
-
-:`🔒 Mystery Flavor #${index+1} · Level ${mysteryLevel(index)}`;
-
-box.appendChild(div);
-
-});
-
-}
-
-/* =====================================================
-   UPDATE
-===================================================== */
-
-function formatTime(seconds){
-
-const h=
-Math.floor(seconds/3600);
-
-const m=
-Math.floor((seconds%3600)/60);
-
-const s=
-seconds%60;
-
-if(h){
-
-return `${h}h ${String(m).padStart(2,"0")}m`;
-
-}
-
-return `${m}:${String(s).padStart(2,"0")}`;
-
-}
-
-function updateShift(){
-
-const button=
-$("startShiftBtn");
-
-if(state.shiftStarted){
-
-const remaining=
-Math.max(
-0,
-Math.ceil(
-(state.shiftEnds-Date.now())/1000
-)
-);
-
-if(remaining<=0){
-
-state.shiftStarted=false;
-
-speak(
-"Your shift is complete."
-);
-
-save();
-
-return updateShift();
-
-}
-
-$("shiftStatus").textContent=
-formatTime(remaining);
-
-button.textContent=
-"SHIFT ACTIVE";
-
-button.classList.add("active");
-
-button.disabled=true;
-
-}else{
-
-const shift=currentShift();
-
-$("shiftStatus").textContent=
-"READY";
-
-button.textContent=
-`START ${shift[0].toUpperCase()} SHIFT`;
-
-button.classList.remove("active");
-
-button.disabled=false;
-
-}
-
-}
-
-function update(){
-
-checkMystery();
-
-$("cash").textContent=
-money(state.cash);
-
-$("eps").textContent=
-money(currentRate())+"/s";
-
-$("level").textContent=
-state.level;
-
-$("orders").textContent=
-state.lifetimeOrders;
-
-$("xpText").textContent=
-`${state.xp}/${xpNeeded()} XP`;
-
-$("quantity").textContent=
-state.quantity;
-
-$("selectedName").textContent=
-state.selectedDonut;
-
-let details=
-state.selectedFilling||
-"No filling";
-
-if(state.selectedToppings.length){
-
-details+=
-" · "+
-state.selectedToppings.join(", ");
-
-}
-
-$("selectedDetails").textContent=
-details;
-
-$("bigDonut").textContent=
-state.selectedDonut===
-"Galactic Donut"
-?"🌌🍩"
-:"🍩";
-
-$("customerNumber").textContent=
-"#"+
-(state.lifetimeOrders+1);
-
-$("nextCustomer").textContent=
-state.nextOrder
-?"Your next customer is waiting!"
-:"Ready for the next customer!";
-
-if(Date.now()<state.cosmicRushUntil){
-
-const minutes=
-Math.ceil(
-(state.cosmicRushUntil-Date.now())/60000
-);
-
-$("cosmicInfo").textContent=
-`🌌 COSMIC RUSH ACTIVE — ${minutes} minutes remaining! 3× idle earnings and 2× active order payouts. Cosmic Conveyor permanently unlocked.`;
-
-}else if(state.cosmicConveyor){
-
-$("cosmicInfo").textContent=
-"🌌 Cosmic Conveyor permanently unlocked. Serve Galactic Donuts to activate Cosmic Rush.";
-
-}else{
-
-$("cosmicInfo").textContent=
-"Unlock Galactic Donut at Level 18. Serving it activates a 1-hour Cosmic Rush and permanently unlocks Cosmic Conveyor.";
-
-}
-
-updateShift();
-
-renderDonuts();
-renderFillings();
-renderToppings();
-
-}
-
-/* =====================================================
-   MODALS
-===================================================== */
-
-function openModal(id){
-
-$(id).classList.add("open");
-
-const first=
-$(id).querySelector("button");
-
-if(first)first.focus();
-
-}
-
-function closeModal(id){
-
-$(id).classList.remove("open");
-
-}
-
-$("upgradesBtn").onclick=()=>{
-
-renderUpgrades();
-
-openModal("upgradesModal");
-
-};
-
-$("locationsBtn").onclick=()=>{
-
-renderLocations();
-
-openModal("locationsModal");
-
-};
-
-$("mysteryBtn").onclick=()=>{
-
-renderMystery();
-
-openModal("mysteryModal");
-
-};
-
-$("songBtn").onclick=()=>{
-
-openModal("songModal");
-
-};
-
-$("moreBtn").onclick=()=>{
-
-openModal("moreModal");
-
-};
-
-document
-.querySelectorAll("[data-close]")
-.forEach(button=>{
-
-button.onclick=()=>{
-
-closeModal(
-button.dataset.close
-);
-
-};
-
-});
-
-document
-.querySelectorAll(".modal")
-.forEach(modal=>{
-
-modal.onclick=e=>{
-
-if(e.target===modal){
-
-modal.classList.remove("open");
-
-}
-
-};
-
-});
-
-document.addEventListener(
-"keydown",
-e=>{
-
-if(e.key==="Escape"){
-
-document
-.querySelectorAll(".modal.open")
-.forEach(m=>
-m.classList.remove("open")
-);
-
-}
-
-});
-
-/* =====================================================
-   BUTTONS
-===================================================== */
-
-$("startShiftBtn").onclick=
-startShift;
-
-$("takeOrderBtn").onclick=
-takeOrder;
-
-$("hearOrderBtn").onclick=
-hearOrder;
-
-$("serveBtn").onclick=
-serve;
-
-$("minusBtn").onclick=()=>{
-
-if(state.quantity>1){
-
-state.quantity--;
-
-speak(
-`Quantity ${state.quantity}.`
-);
-
-update();
-
-}
-
-};
-
-$("plusBtn").onclick=()=>{
-
-if(state.quantity<10){
-
-state.quantity++;
-
-speak(
-`Quantity ${state.quantity}.`
-);
-
-update();
-
-}
-
-};
-
-/* =====================================================
-   DONUT SONG
-===================================================== */
-
-$("rapBtn").onclick=()=>{
-
-speak(
-"Yo yo yo! Desmond's Donuts in the house! Glaze on the left, sprinkles on the right! Fry it up hot, make that donut bite! Jelly in the middle, chocolate on top! Desmond's Donut Dash never gonna stop!"
-);
-
-};
-
-/* =====================================================
-   GALACTIC INFO
-===================================================== */
-
-$("cosmicButton").onclick=()=>{
-
-if(state.level<18){
-
-speak(
-"Galactic Donut unlocks at level 18."
-);
-
-return;
-
-}
-
-if(state.cosmicConveyor){
-
-speak(
-"Cosmic Conveyor is permanently unlocked. Serve the Galactic Donut to activate Cosmic Rush."
-);
-
-}else{
-
-speak(
-"Serve the Galactic Donut to permanently unlock Cosmic Conveyor and activate Cosmic Rush."
-);
-
-}
-
-};
-
-/* =====================================================
-   MORE
-===================================================== */
-
-$("royalBtn").onclick=()=>{
-
-speak(
-"Royal Bakery is your long-term bakery empire mode."
-);
-
-};
-
-$("prestigeBtn").onclick=()=>{
-
-if(state.level<30){
-
-speak(
-"Prestige unlocks at level 30."
-);
-
-return;
-
-}
-
-if(!confirm(
-"Prestige will reset your bakery progression in exchange for a permanent crown. Continue?"
-))return;
-
-state.cash=0;
-state.donuts=0;
-state.level=1;
-state.xp=0;
-state.upgrades=0;
-state.locations=0;
-state.mysteryUnlocked=0;
-state.crowns++;
-
-speak(
-`Prestige complete. Crown number ${state.crowns} earned.`
-);
-
-save();
-update();
-
-};
-
-$("bucksBtn").onclick=()=>{
-
-const earned=
-Math.floor(
-state.lifetimeCash/10000
-);
-
-if(earned>state.bakerBucks){
-
-state.bakerBucks=earned;
-
-speak(
-`You now have ${state.bakerBucks} Baker Bucks.`
-);
-
-save();
-
-}else{
-
-speak(
-`You have ${state.bakerBucks} Baker Bucks.`
-);
-
-}
-
-};
-
-$("statsBtn").onclick=()=>{
-
-speak(
-`You have served ${state.lifetimeOrders} orders, earned ${money(state.lifetimeCash)}, reached level ${state.level}, and own ${state.upgrades} upgrades.`
-);
-
-};
-
-$("robotBtn").onclick=()=>{
-
-if(state.cosmicConveyor){
-
-speak(
-"Donut Robot online! Cosmic Conveyor is permanently unlocked."
-);
-
-}else{
-
-speak(
-"Donut Robot is waiting for the Cosmic Conveyor."
-);
-
-}
-
-};
-
-$("saveBtn").onclick=()=>{
-
-save();
-
-speak(
-"Bakery saved successfully."
-);
-
-};
-
-/* =====================================================
-   GAME LOOP
-===================================================== */
-
-let lastTick=Date.now();
-
-function tick(){
-
-const now=Date.now();
-
-let delta=
-Math.min(
-5,
-Math.max(
-0,
-(now-lastTick)/1000
-)
-);
-
-lastTick=now;
-
-const earnings=
-currentRate()*delta;
-
-state.cash+=earnings;
-
-state.lifetimeCash+=earnings;
-
-if(
-state.shiftStarted&&
-now>=state.shiftEnds
-){
-
-state.shiftStarted=false;
-
-speak(
-"Your bakery shift is complete. Idle earnings continue."
-);
-
-save();
-
+    window.speechSynthesis.speak(utterance);
+  }catch(e){}
 }
-
-update();
-
-}
-
-setInterval(tick,1000);
-
-/* =====================================================
-   WELCOME
-===================================================== */
 
-let welcomed=false;
 
 function welcome(){
 
-if(welcomed)return;
+  if(welcomeSpoken) return;
 
-welcomed=true;
+  welcomeSpoken=true;
 
-speak(
-"Welcome to Desmond's Donut Dash! Let's make some dough!"
-);
+  const line=welcomeLines[
+    Math.floor(Math.random()*welcomeLines.length)
+  ];
+
+  speak(line);
+}
+
+
+function activateWelcome(){
+
+  if(!welcomeSpoken){
+    welcome();
+  }
+}
+
+
+/*
+  Safari/iPhone may block speech until a user gesture.
+  Capture the first real interaction anywhere in the game.
+*/
+
+document.addEventListener("pointerdown",activateWelcome,{once:true});
+document.addEventListener("touchstart",activateWelcome,{once:true,passive:true});
+
+
+setTimeout(()=>{
+  welcome();
+},500);
+
+
+/* =========================================================
+   DONUT RAP
+   ========================================================= */
+
+function playDonutRap(){
+
+  const rap=
+  "Desmond's Donuts, we're making that dough! " +
+  "Glazed, chocolate, sprinkle — let's go! " +
+  "Fill it up, top it off, serve it with style! " +
+  "Build up the bakery mile after mile! " +
+  "Cash in the register, bucks in the bank! " +
+  "Upgrade the kitchen and give it some crank! " +
+  "Mystery flavors hiding, waiting to be found! " +
+  "Desmond's Donuts is the best shop around!";
+
+  speak(rap);
+  toast("🎤 Donut Rap playing!");
 
 }
 
-window.addEventListener(
-"pointerdown",
-welcome,
-{once:true}
-);
 
-window.addEventListener(
-"keydown",
-welcome,
-{once:true}
-);
+/* =========================================================
+   SCREEN NAVIGATION
+   ========================================================= */
 
-/* =====================================================
-   START
-===================================================== */
+function showScreen(id,button){
 
-load();
+  document.querySelectorAll(".screen")
+    .forEach(s=>s.classList.remove("active"));
 
-if(!state.nextOrder){
+  document.getElementById(id)
+    .classList.add("active");
 
-state.nextOrder=
-newOrder();
+  document.querySelectorAll(".nav button")
+    .forEach(b=>b.classList.remove("active"));
+
+  if(button) button.classList.add("active");
+
+  updateUI();
+}
+
+
+/* =========================================================
+   LEVEL
+   ========================================================= */
+
+function calculateLevel(){
+
+  /*
+    Long-term progression.
+    Every 100 donuts increases the level.
+    Higher levels are intentionally slower.
+  */
+
+  return Math.max(
+    1,
+    Math.floor(state.sold/100)+1
+  );
+}
+
+
+/* =========================================================
+   PASSIVE INCOME
+   ========================================================= */
+
+function equipmentFlat(){
+
+  let total=.05;
+
+  const flatIds=["oven","mixer","fryer"];
+
+  flatIds.forEach(id=>{
+    const e=equipment.find(x=>x.id===id);
+    const level=state.equipment[id]||0;
+
+    total += level * e.effect;
+  });
+
+  return total;
+}
+
+
+function equipmentPercent(){
+
+  let percent=0;
+
+  ["glazer","filling","packaging","conveyor","robot","freezer","factory"]
+    .forEach(id=>{
+      const e=equipment.find(x=>x.id===id);
+      percent += (state.equipment[id]||0)*e.effect;
+    });
+
+  if(state.buckOwned.includes("superVan")){
+    percent+=.35;
+  }
+
+  if(state.buckOwned.includes("castle")){
+    percent+=.60;
+  }
+
+  if(state.buckOwned.includes("rainbow")){
+    percent+=.20;
+  }
+
+  if(state.royal){
+    percent+=.15;
+  }
+
+  return percent;
+}
+
+
+function locationMultiplier(){
+
+  let mult=1;
+
+  locations.forEach(l=>{
+    if(state.locations.includes(l.id)){
+      mult=Math.max(mult,l.mult);
+    }
+  });
+
+  return mult;
+}
+
+
+function crownMultiplier(){
+
+  return 1+(state.crowns*.025);
+}
+
+
+function calculateEPS(){
+
+  return equipmentFlat()
+    *(1+equipmentPercent())
+    *locationMultiplier()
+    *crownMultiplier();
+}
+
+
+/* =========================================================
+   ACTIVE ORDER MULTIPLIERS
+   ========================================================= */
+
+function activeMultiplier(){
+
+  let m=1;
+
+  m*=1+equipmentPercent();
+
+  const quality=state.equipment.quality||0;
+  m*=1+(quality*.04);
+
+  if(state.buckOwned.includes("mega")){
+    m*=1.20;
+  }
+
+  if(state.buckOwned.includes("chocolateFactory")){
+    m*=1.30;
+  }
+
+  if(state.royal){
+    m*=1.15;
+  }
+
+  m*=locationMultiplier();
+  m*=crownMultiplier();
+
+  return m;
+}
+
+
+function ingredientBonus(){
+
+  const toppingLevel=state.equipment.topping||0;
+  const fillingLevel=state.equipment.filling||0;
+
+  return 1+
+    toppingLevel*.025+
+    fillingLevel*.02;
+}
+
+
+/* =========================================================
+   CONTINUOUS IDLE EARNINGS
+   ========================================================= */
+
+let lastTick=Date.now();
+
+setInterval(()=>{
+
+  const now=Date.now();
+  const seconds=Math.min(10,(now-lastTick)/1000);
+
+  lastTick=now;
+
+  /*
+    Passive income happens whether or not a shift is active.
+    A shift simply adds a separate shift counter.
+  */
+
+  const income=calculateEPS()*seconds;
+
+  state.cash+=income;
+  state.lifetimeCash+=income;
+
+  if(state.shift.active){
+    state.shift.earned+=income;
+  }
+
+  /*
+    Donut Robot generates Baker Bucks slowly while playing.
+    Offline generation is handled separately below.
+  */
+
+  if(state.buckOwned.includes("robot")){
+    const chance=seconds*.0008;
+
+    if(Math.random()<chance){
+      state.bucks++;
+      toast("🤖 Donut Robot found a Baker Buck!");
+    }
+  }
+
+  updateUI();
+
+},1000);
+
+
+/* =========================================================
+   SHIFT SYSTEM
+   ========================================================= */
+
+const shiftOptions=[
+  {seconds:600,label:"10 minutes",level:1,sold:0,cash:0},
+  {seconds:1200,label:"20 minutes",level:3,sold:150,cash:750},
+  {seconds:1800,label:"30 minutes",level:5,sold:400,cash:2500},
+  {seconds:3600,label:"1 hour",level:8,sold:900,cash:7500},
+  {seconds:7200,label:"2 hours",level:12,sold:1800,cash:20000},
+  {seconds:10800,label:"3 hours",level:16,sold:3000,cash:50000},
+  {seconds:14400,label:"4 hours",level:20,sold:5000,cash:100000},
+  {seconds:21600,label:"6 hours",level:25,sold:9000,cash:300000},
+  {seconds:28800,label:"8 hours",level:30,sold:15000,cash:750000}
+];
+
+
+function getCurrentShift(){
+
+  const level=calculateLevel();
+
+  let available=shiftOptions[0];
+
+  for(const option of shiftOptions){
+    if(
+      level>=option.level &&
+      state.sold>=option.sold &&
+      state.lifetimeCash>=option.cash
+    ){
+      available=option;
+    }
+  }
+
+  return available;
+}
+
+
+function toggleShift(){
+
+  if(state.shift.active){
+
+    state.shift.active=false;
+    toast("Shift ended!");
+    speak("Shift ended. Nice work, donut boss!");
+
+  }else{
+
+    const option=getCurrentShift();
+
+    state.shift.active=true;
+    state.shift.startedAt=Date.now();
+    state.shift.duration=option.seconds;
+    state.shift.earned=0;
+
+    toast("🍩 Shift started!");
+    speak("Shift started. Let's make some dough!");
+  }
+
+  saveGame();
+  updateUI();
+}
+
+
+setInterval(()=>{
+
+  if(!state.shift.active) return;
+
+  const elapsed=(Date.now()-state.shift.startedAt)/1000;
+
+  if(elapsed>=state.shift.duration){
+
+    state.shift.active=false;
+
+    toast("🎉 Shift complete!");
+
+    speak(
+      "Shift complete! You earned "+
+      money(state.shift.earned)+
+      " from your bakery."
+    );
+
+    saveGame();
+  }
+
+  updateUI();
+
+},1000);
+
+
+/* =========================================================
+   CUSTOMER ORDERS
+   ========================================================= */
+
+function randomCustomerOrder(){
+
+  const available=donuts.filter(d=>
+    state.unlockedDonuts.includes(d.id)
+  );
+
+  const donut=
+    available[Math.floor(Math.random()*available.length)];
+
+  const availableFillings=fillings.filter(f=>
+    f.level<=calculateLevel() &&
+    state.fillingsUnlocked.includes(f.id)
+  );
+
+  const filling=
+    availableFillings[
+      Math.floor(Math.random()*availableFillings.length)
+    ] || fillings[0];
+
+  const availableToppings=toppings.filter(t=>
+    t.level<=calculateLevel() &&
+    state.toppingsUnlocked.includes(t.id)
+  );
+
+  let chosenToppings=[];
+
+  if(Math.random()<.65 && availableToppings.length){
+    const first=
+      availableToppings[
+        Math.floor(Math.random()*availableToppings.length)
+      ];
+
+    chosenToppings.push(first.id);
+
+    if(
+      Math.random()<.35 &&
+      availableToppings.length>1
+    ){
+      let second=
+        availableToppings[
+          Math.floor(Math.random()*availableToppings.length)
+        ];
+
+      if(second.id!==first.id){
+        chosenToppings.push(second.id);
+      }
+    }
+  }
+
+  let flavor=null;
+
+  const discovered=
+    mysteryFlavors.filter(f=>
+      state.discoveredMystery.includes(f.id)
+    );
+
+  if(discovered.length && Math.random()<.22){
+    flavor=
+      discovered[
+        Math.floor(Math.random()*discovered.length)
+      ].id;
+  }
+
+  const quantity=
+    Math.random()<.25
+      ? 2
+      : Math.random()<.12
+        ? 3
+        : 1;
+
+  return {
+    donut:donut.id,
+    filling:filling.id,
+    toppings:chosenToppings.sort(),
+    flavor:flavor,
+    quantity:quantity
+  };
+}
+
+
+function takeOrder(){
+
+  if(state.customer){
+    return;
+  }
+
+  state.customer=randomCustomerOrder();
+
+  state.selectedDonut=null;
+  state.selectedFilling="none";
+  state.selectedToppings=[];
+  state.selectedFlavor=null;
+  state.selectedQuantity=1;
+
+  document.getElementById("takeOrderBtn").style.display="none";
+  document.getElementById("orderBuilder").style.display="block";
+
+  speak(
+    "New customer order. "+
+    "Choose the donut, filling, toppings, and quantity."
+  );
+
+  renderOrderChoices();
+  updateUI();
+}
+
+
+function cancelOrder(){
+
+  state.customer=null;
+
+  document.getElementById("takeOrderBtn").style.display="block";
+  document.getElementById("orderBuilder").style.display="none";
+
+  updateUI();
+}
+
+
+function changeQuantity(amount){
+
+  if(!state.customer) return;
+
+  state.selectedQuantity=
+    Math.max(
+      1,
+      Math.min(
+        6,
+        state.selectedQuantity+amount
+      )
+    );
+
+  renderOrderChoices();
+}
+
+
+function selectDonut(id){
+
+  state.selectedDonut=id;
+  renderOrderChoices();
+
+  const donut=donuts.find(d=>d.id===id);
+
+  if(donut){
+    speak(donut.name);
+  }
+}
+
+
+function selectFilling(id){
+
+  state.selectedFilling=id;
+  renderOrderChoices();
+
+  const f=fillings.find(x=>x.id===id);
+
+  if(f) speak(f.name);
+}
+
+
+function selectTopping(id){
+
+  const index=state.selectedToppings.indexOf(id);
+
+  if(index>=0){
+    state.selectedToppings.splice(index,1);
+  }else{
+
+    if(state.selectedToppings.length>=2){
+      toast("You can choose up to 2 toppings.");
+      return;
+    }
+
+    state.selectedToppings.push(id);
+  }
+
+  state.selectedToppings.sort();
+  renderOrderChoices();
+}
+
+
+function selectFlavor(id){
+
+  state.selectedFlavor=
+    state.selectedFlavor===id
+      ? null
+      : id;
+
+  renderOrderChoices();
+}
+
+
+function ordersMatch(){
+
+  if(!state.customer) return false;
+
+  const c=state.customer;
+
+  const toppingsA=[...c.toppings].sort();
+  const toppingsB=[...state.selectedToppings].sort();
+
+  return(
+    state.selectedDonut===c.donut &&
+    state.selectedFilling===c.filling &&
+    JSON.stringify(toppingsA)===JSON.stringify(toppingsB) &&
+    state.selectedFlavor===c.flavor &&
+    state.selectedQuantity===c.quantity
+  );
+}
+
+
+function calculateOrderReward(){
+
+  if(!state.customer) return 0;
+
+  const donut=
+    donuts.find(d=>d.id===state.customer.donut);
+
+  let base=donut ? donut.value : 1;
+
+  const filling=
+    fillings.find(f=>f.id===state.customer.filling);
+
+  if(filling) base+=filling.value;
+
+  state.customer.toppings.forEach(id=>{
+    const t=toppings.find(x=>x.id===id);
+    if(t) base+=t.value;
+  });
+
+  if(state.customer.flavor){
+
+    const f=mysteryFlavors.find(
+      x=>x.id===state.customer.flavor
+    );
+
+    if(f) base+=f.value;
+  }
+
+  base*=state.customer.quantity;
+
+  base*=ingredientBonus();
+  base*=activeMultiplier();
+
+  return base;
+}
+
+
+function serveOrder(){
+
+  if(!state.customer){
+    takeOrder();
+    return;
+  }
+
+  if(!ordersMatch()){
+
+    state.cash=Math.max(0,state.cash-2);
+
+    state.perfectStreak=0;
+
+    toast("❌ Wrong order! $2 mistake fee.");
+
+    speak(
+      "Oops! That wasn't the customer's order. "+
+      "The bakery lost two dollars."
+    );
+
+    state.customer=null;
+
+    document.getElementById("takeOrderBtn").style.display="block";
+    document.getElementById("orderBuilder").style.display="none";
+
+    saveGame();
+    updateUI();
+
+    return;
+  }
+
+  const reward=calculateOrderReward();
+
+  state.cash+=reward;
+  state.lifetimeCash+=reward;
+
+  state.sold+=state.customer.quantity;
+
+  state.perfectStreak++;
+
+  let message=
+    "Perfect order! You earned "+
+    money(reward)+".";
+
+  /*
+    Perfect streak Baker Bucks.
+  */
+
+  if(state.perfectStreak%8===0){
+
+    state.bucks++;
+
+    message+=" You earned a Baker Buck for your perfect streak!";
+  }
+
+  /*
+    Random Golden Donut.
+    There is NO button to force it.
+  */
+
+  if(Math.random()<.018){
+
+    state.bucks+=12;
+
+    message+=" Golden Donut! Twelve Baker Bucks!";
+
+    toast("🌟 GOLDEN DONUT! +12 Baker Bucks");
+
+    speak(
+      "Golden Donut! You just earned twelve Baker Bucks!"
+    );
+  }
+
+  /*
+    Rare Baker Buck bonus.
+  */
+
+  if(Math.random()<.008){
+
+    state.bucks+=5;
+
+    message+=" Rare bonus: five Baker Bucks!";
+  }
+
+  discoverMystery();
+
+  unlockProgress();
+
+  state.customer=null;
+
+  document.getElementById("takeOrderBtn").style.display="block";
+  document.getElementById("orderBuilder").style.display="none";
+
+  toast("🍩 +"+money(reward));
+
+  speak(message);
+
+  saveGame();
+  updateUI();
+}
+
+
+/* =========================================================
+   READ ORDER BACK
+   ========================================================= */
+
+function readOrderBack(){
+
+  if(!state.customer) return;
+
+  const c=state.customer;
+
+  const donut=donuts.find(d=>d.id===c.donut);
+  const filling=fillings.find(f=>f.id===c.filling);
+
+  let text=
+    "Customer wants "+
+    c.quantity+
+    " "+
+    donut.name+
+    " donut";
+
+  if(c.quantity!==1) text+="s";
+
+  if(filling && filling.id!=="none"){
+    text+=" with "+filling.name+" filling";
+  }
+
+  if(c.toppings.length){
+
+    const names=c.toppings.map(id=>{
+      const t=toppings.find(x=>x.id===id);
+      return t?t.name:"";
+    });
+
+    text+=" with "+names.join(" and ");
+  }
+
+  if(c.flavor){
+
+    const f=mysteryFlavors.find(
+      x=>x.id===c.flavor
+    );
+
+    if(f){
+      text+=" and "+f.name+" mystery flavor";
+    }
+  }
+
+  speak(text);
+}
+
+
+/* =========================================================
+   MYSTERY DISCOVERY
+   ========================================================= */
+
+function discoverMystery(){
+
+  const level=calculateLevel();
+
+  const possible=
+    mysteryFlavors.filter(f=>
+      f.level<=level &&
+      !state.discoveredMystery.includes(f.id)
+    );
+
+  if(!possible.length) return;
+
+  /*
+    Small chance after successful customer orders.
+    Higher-level flavors stay rare.
+  */
+
+  let chance=.06;
+
+  if(level>=20) chance=.08;
+  if(level>=50) chance=.10;
+
+  if(Math.random()<chance){
+
+    const flavor=
+      possible[Math.floor(Math.random()*possible.length)];
+
+    state.discoveredMystery.push(flavor.id);
+
+    toast("🔮 Mystery flavor discovered!");
+
+    speak(
+      "Mystery flavor discovered: "+
+      flavor.name+
+      "!"
+    );
+  }
+}
+
+
+/* =========================================================
+   PROGRESSION UNLOCKS
+   ========================================================= */
+
+function unlockProgress(){
+
+  state.level=calculateLevel();
+
+  donuts.forEach(d=>{
+
+    if(
+      d.level<=state.level &&
+      !state.unlockedDonuts.includes(d.id)
+    ){
+
+      state.unlockedDonuts.push(d.id);
+
+      toast("🍩 New donut unlocked: "+d.name);
+
+      speak("New donut unlocked: "+d.name);
+    }
+
+  });
+
+
+  fillings.forEach(f=>{
+
+    if(
+      f.level<=state.level &&
+      !state.fillingsUnlocked.includes(f.id)
+    ){
+
+      state.fillingsUnlocked.push(f.id);
+
+      toast("🥯 New filling unlocked: "+f.name);
+    }
+
+  });
+
+
+  toppings.forEach(t=>{
+
+    if(
+      t.level<=state.level &&
+      !state.toppingsUnlocked.includes(t.id)
+    ){
+
+      state.toppingsUnlocked.push(t.id);
+
+      toast("✨ New topping unlocked: "+t.name);
+    }
+
+  });
 
 }
 
-checkMystery();
 
-update();
+/* =========================================================
+   EQUIPMENT
+   ========================================================= */
+
+function equipmentCost(item){
+
+  const level=state.equipment[item.id]||0;
+
+  return Math.floor(
+    item.base*
+    Math.pow(item.growth,level)*
+    (1+state.prestigeCount*.10)
+  );
+}
+
+
+function buyEquipment(id){
+
+  const item=equipment.find(e=>e.id===id);
+
+  if(!item) return;
+
+  const level=state.equipment[id]||0;
+
+  if(level>=item.max){
+    toast("This equipment is fully upgraded.");
+    return;
+  }
+
+  const requiredLevel=
+    Math.floor(level/2)+1;
+
+  if(calculateLevel()<requiredLevel){
+    toast(
+      "Reach bakery level "+
+      requiredLevel+
+      " first."
+    );
+    return;
+  }
+
+  const cost=equipmentCost(item);
+
+  if(state.cash<cost){
+    toast("You need "+money(cost)+" for this upgrade.");
+    return;
+  }
+
+  state.cash-=cost;
+  state.equipment[id]=level+1;
+
+  toast("🔧 "+item.name+" upgraded to level "+(level+1)+"!");
+
+  speak(
+    item.name+
+    " upgraded to level "+
+    (level+1)
+  );
+
+  unlockProgress();
+  saveGame();
+  updateUI();
+}
+
+
+/* =========================================================
+   LOCATIONS
+   ========================================================= */
+
+function buyLocation(id){
+
+  const location=locations.find(l=>l.id===id);
+
+  if(!location || state.locations.includes(id)) return;
+
+  if(state.sold<location.sold){
+    toast(
+      "Sell "+formatNumber(location.sold)+
+      " donuts first."
+    );
+    return;
+  }
+
+  if(state.cash<location.cost){
+    toast(
+      "You need "+money(location.cost)+
+      " for this location."
+    );
+    return;
+  }
+
+  state.cash-=location.cost;
+  state.locations.push(id);
+
+  toast("📍 "+location.name+" opened!");
+
+  speak(
+    location.name+
+    " is now open!"
+  );
+
+  saveGame();
+  updateUI();
+}
+
+
+/* =========================================================
+   BAKER BUCKS
+   ========================================================= */
+
+function buyBuckUpgrade(id){
+
+  const item=
+    buckUpgrades.find(x=>x.id===id);
+
+  if(!item) return;
+
+  if(state.buckOwned.includes(id)){
+    return;
+  }
+
+  if(calculateLevel()<item.level){
+    toast("Reach bakery level "+item.level+" first.");
+    return;
+  }
+
+  if(state.sold<item.sold){
+    toast(
+      "Sell "+
+      formatNumber(item.sold)+
+      " donuts first."
+    );
+    return;
+  }
+
+  if(state.bucks<item.cost){
+    toast(
+      "You need "+
+      item.cost+
+      " Baker Bucks."
+    );
+    return;
+  }
+
+  state.bucks-=item.cost;
+  state.buckOwned.push(id);
+
+  toast("🪙 "+item.name+" unlocked!");
+
+  speak(item.name+" unlocked!");
+
+  saveGame();
+  updateUI();
+}
+
+
+/* =========================================================
+   ROYAL BAKERY
+   ========================================================= */
+
+function buyRoyalBakery(){
+
+  if(state.royal) return;
+
+  if(calculateLevel()<20){
+    toast("Reach bakery level 20.");
+    return;
+  }
+
+  if(state.sold<2500){
+    toast("Sell 2,500 donuts first.");
+    return;
+  }
+
+  if(state.bucks<350){
+    toast("You need 350 Baker Bucks.");
+    return;
+  }
+
+  state.bucks-=350;
+  state.royal=true;
+
+  toast("👑 Royal Bakery unlocked!");
+
+  speak(
+    "Royal Bakery unlocked! Your bakery is now fit for royalty!"
+  );
+
+  saveGame();
+  updateUI();
+}
+
+
+/* =========================================================
+   PRESTIGE
+   ========================================================= */
+
+function prestige(){
+
+  if(calculateLevel()<25 || state.sold<5000 || state.cash<100000){
+
+    toast(
+      "Prestige requires level 25, 5,000 donuts sold, and $100,000."
+    );
+
+    return;
+  }
+
+  const crowns=
+    Math.max(1,Math.floor(state.sold/5000));
+
+  const answer=
+    confirm(
+      "Prestige will reset your normal bakery progress, "+
+      "but you will keep Bakery Crowns and permanent prestige bonuses. "+
+      "Continue?"
+    );
+
+  if(!answer) return;
+
+  const oldCrowns=state.crowns;
+
+  state=newState();
+
+  state.crowns=oldCrowns+crowns;
+  state.prestigeCount++;
+
+  /*
+    Prestige gives the 8-hour shift immediately.
+  */
+
+  state.shift.duration=28800;
+
+  toast(
+    "👑 Prestige complete! +"+
+    crowns+
+    " Bakery Crowns!"
+  );
+
+  speak(
+    "Prestige complete! You earned "+
+    crowns+
+    " Bakery Crowns."
+  );
+
+  saveGame();
+  updateUI();
+}
+
+
+/* =========================================================
+   ACHIEVEMENTS
+   ========================================================= */
+
+const achievements=[
+  ["first","First Donut",1,"Sell your first donut."],
+  ["hundred","Donut Hundred",100,"Sell 100 donuts."],
+  ["thousand","Donut Thousand",1000,"Sell 1,000 donuts."],
+  ["tenk","Donut Ten Thousand",10000,"Sell 10,000 donuts."],
+  ["bucks","Baker Buck Collector",25,"Collect 25 Baker Bucks."],
+  ["mystery","Mystery Hunter",10,"Discover 10 mystery flavors."],
+  ["equipment","Kitchen Boss",50,"Buy 50 equipment levels."],
+  ["locations","Donut Traveler",5,"Open 5 locations."],
+  ["perfect","Perfect Baker",25,"Complete 25 perfect orders."],
+  ["royal","Royal Baker",1,"Unlock the Royal Bakery."]
+];
+
+
+function achievementDone(a){
+
+  switch(a[0]){
+
+    case "first":
+      return state.sold>=1;
+
+    case "hundred":
+      return state.sold>=100;
+
+    case "thousand":
+      return state.sold>=1000;
+
+    case "tenk":
+      return state.sold>=10000;
+
+    case "bucks":
+      return state.bucks>=25;
+
+    case "mystery":
+      return state.discoveredMystery.length>=10;
+
+    case "equipment":
+      return Object.values(state.equipment)
+        .reduce((a,b)=>a+b,0)>=50;
+
+    case "locations":
+      return state.locations.length>=5;
+
+    case "perfect":
+      return state.sold>=25;
+
+    case "royal":
+      return state.royal;
+
+    default:
+      return false;
+  }
+}
+
+
+/* =========================================================
+   RENDER ORDER
+   ========================================================= */
+
+function renderOrderChoices(){
+
+  if(!state.customer) return;
+
+  const level=calculateLevel();
+
+  document.getElementById("donutChoices").innerHTML=
+    donuts
+      .filter(d=>state.unlockedDonuts.includes(d.id))
+      .map(d=>`
+        <button
+          class="option ${state.selectedDonut===d.id?"selected":""}"
+          onclick="selectDonut('${escapeJs(d.id)}')"
+          aria-label="${escapeHtml(d.name)} donut"
+        >
+          <span class="donutEmoji">${d.emoji}</span>
+          ${escapeHtml(d.name)}
+        </button>
+      `).join("");
+
+
+  document.getElementById("fillingChoices").innerHTML=
+    fillings
+      .filter(f=>state.fillingsUnlocked.includes(f.id))
+      .map(f=>`
+        <button
+          class="option ${state.selectedFilling===f.id?"selected":""}"
+          onclick="selectFilling('${escapeJs(f.id)}')"
+        >
+          ${escapeHtml(f.name)}
+        </button>
+      `).join("");
+
+
+  document.getElementById("toppingChoices").innerHTML=
+    toppings
+      .filter(t=>state.toppingsUnlocked.includes(t.id))
+      .map(t=>`
+        <button
+          class="option ${state.selectedToppings.includes(t.id)?"selected":""}"
+          onclick="selectTopping('${escapeJs(t.id)}')"
+        >
+          ✨ ${escapeHtml(t.name)}
+        </button>
+      `).join("");
+
+
+  const mystery=
+    mysteryFlavors.filter(f=>
+      state.discoveredMystery.includes(f.id)
+    );
+
+  document.getElementById("flavorChoices").innerHTML=
+    `<button
+      class="option ${state.selectedFlavor===null?"selected":""}"
+      onclick="selectFlavor(null)"
+    >
+      No Mystery Flavor
+    </button>`+
+    mystery.map(f=>`
+      <button
+        class="option ${state.selectedFlavor===f.id?"selected":""}"
+        onclick="selectFlavor('${escapeJs(f.id)}')"
+      >
+        🔮 ${escapeHtml(f.name)}
+      </button>
+    `).join("");
+
+  document.getElementById("quantity").textContent=
+    state.selectedQuantity;
+
+}
+
+
+/* =========================================================
+   RENDER EQUIPMENT
+   ========================================================= */
+
+function renderEquipment(){
+
+  document.getElementById("equipmentList").innerHTML=
+    equipment.map(e=>{
+
+      const level=state.equipment[e.id]||0;
+      const cost=equipmentCost(e);
+      const max=level>=e.max;
+
+      let effectText="";
+
+      if(e.type==="flat"){
+        effectText=
+          "+"+
+          money(e.effect*level)+
+          "/sec from this machine";
+      }
+
+      if(e.type==="percent"){
+        effectText=
+          "+"+
+          Math.round(e.effect*100*level)+
+          "% idle income";
+      }
+
+      if(e.type==="ingredient"){
+        effectText=
+          "+"+
+          Math.round(e.effect*100*level)+
+          "% ingredient value";
+      }
+
+      if(e.type==="active"){
+        effectText=
+          "+"+
+          Math.round(e.effect*100*level)+
+          "% active order value";
+      }
+
+      return `
+        <div class="card">
+          <div class="itemRow">
+            <div class="itemInfo">
+              <strong>🔧 ${escapeHtml(e.name)}</strong>
+              <small>
+                Level ${level}/${e.max} · ${effectText}
+              </small>
+            </div>
+
+            <div class="itemActions">
+              ${
+                max
+                ? `<span class="badge">MAX</span>`
+                : `<button
+                    class="smallBtn green"
+                    onclick="buyEquipment('${e.id}')"
+                    aria-label="Upgrade ${escapeHtml(e.name)} for ${money(cost)}"
+                  >
+                    ${money(cost)}
+                  </button>`
+              }
+            </div>
+          </div>
+        </div>
+      `;
+    }).join("");
+}
+
+
+/* =========================================================
+   RENDER LOCATIONS
+   ========================================================= */
+
+function renderLocations(){
+
+  document.getElementById("locationList").innerHTML=
+    locations.map(l=>{
+
+      const owned=state.locations.includes(l.id);
+
+      if(l.id==="main"){
+        return `
+          <div class="card">
+            <div class="itemRow">
+              <div class="itemInfo">
+                <strong>🏠 Main Bakery</strong>
+                <small>Multiplier: 1× · Your original bakery</small>
+              </div>
+              <span class="badge">OPEN</span>
+            </div>
+          </div>
+        `;
+      }
+
+      return `
+        <div class="card">
+          <div class="itemRow">
+            <div class="itemInfo">
+              <strong>📍 ${escapeHtml(l.name)}</strong>
+              <small>
+                ${l.mult}× bakery multiplier · Requires ${formatNumber(l.sold)} donuts sold
+              </small>
+            </div>
+
+            <div class="itemActions">
+              ${
+                owned
+                ? `<span class="badge">OPEN</span>`
+                : `<button
+                    class="smallBtn ${state.sold>=l.sold&&state.cash>=l.cost?"green":"blue"}"
+                    onclick="buyLocation('${l.id}')"
+                  >
+                    ${money(l.cost)}
+                  </button>`
+              }
+            </div>
+          </div>
+        </div>
+      `;
+
+    }).join("");
+
+
+  document.getElementById("royalBakery").innerHTML=
+    state.royal
+      ? `<div class="notice">👑 Royal Bakery active: +15% total income.</div>`
+      : `
+        <div class="itemRow">
+          <div class="itemInfo">
+            <strong>👑 Royal Bakery</strong>
+            <small>350 Baker Bucks · Level 20 · 2,500 donuts sold · +15% income</small>
+          </div>
+          <button class="smallBtn gold" onclick="buyRoyalBakery()">350 🪙</button>
+        </div>
+      `;
+
+
+  document.getElementById("prestigeBox").innerHTML=`
+    <div class="notice">
+      Current Prestige: <strong>${state.prestigeCount}</strong><br>
+      Bakery Crowns: <strong>${state.crowns}</strong><br>
+      Crown bonus: <strong>+${Math.round(state.crowns*2.5)}%</strong>
+    </div>
+    <button
+      class="primary"
+      style="margin-top:8px"
+      onclick="prestige()"
+    >
+      👑 Prestige Bakery
+    </button>
+  `;
+}
+
+
+/* =========================================================
+   RENDER DONUT COLLECTION
+   ========================================================= */
+
+function renderDonuts(){
+
+  const list=document.getElementById("donutCollection");
+
+  list.innerHTML=
+    donuts.map(d=>{
+
+      const unlocked=
+        state.unlockedDonuts.includes(d.id);
+
+      return `
+        <div class="itemRow">
+          <div class="itemInfo">
+            <strong>
+              ${d.emoji}
+              ${escapeHtml(d.name)}
+              ${
+                d.season
+                  ? `<span class="badge">${escapeHtml(d.season)}</span>`
+                  : ""
+              }
+            </strong>
+
+            <small>
+              ${
+                unlocked
+                ? "Value: "+money(d.value)+" · Unlocked"
+                : "🔒 Unlocks at bakery level "+d.level
+              }
+            </small>
+          </div>
+
+          ${
+            unlocked
+            ? `<span class="badge">READY</span>`
+            : `<span class="unlock">LEVEL ${d.level}</span>`
+          }
+        </div>
+      `;
+
+    }).join("");
+
+}
+
+
+/* =========================================================
+   RENDER BAKER BUCK SHOP
+   ========================================================= */
+
+function renderBucks(){
+
+  document.getElementById("bucksShop").innerHTML=
+    buckUpgrades.map(item=>{
+
+      const owned=state.buckOwned.includes(item.id);
+
+      return `
+        <div class="itemRow">
+          <div class="itemInfo">
+            <strong>🪙 ${escapeHtml(item.name)}</strong>
+            <small>
+              ${escapeHtml(item.desc)} · Level ${item.level} · ${formatNumber(item.sold)} donuts sold
+            </small>
+          </div>
+
+          ${
+            owned
+            ? `<span class="badge">OWNED</span>`
+            : `<button
+                class="smallBtn purple"
+                onclick="buyBuckUpgrade('${item.id}')"
+              >
+                ${item.cost} 🪙
+              </button>`
+          }
+        </div>
+      `;
+
+    }).join("");
+}
+
+
+/* =========================================================
+   RENDER ACHIEVEMENTS
+   ========================================================= */
+
+function renderAchievements(){
+
+  document.getElementById("achievements").innerHTML=
+    achievements.map(a=>{
+
+      const done=achievementDone(a);
+
+      return `
+        <div class="achievement ${done?"done":""}">
+          <strong>
+            ${done?"🏆":"🔒"} ${escapeHtml(a[1])}
+          </strong>
+          <div class="sub">${escapeHtml(a[3])}</div>
+        </div>
+      `;
+
+    }).join("");
+}
+
+
+/* =========================================================
+   MAIN UI
+   ========================================================= */
+
+function updateUI(){
+
+  state.level=calculateLevel();
+
+  document.getElementById("cash").textContent=
+    money(state.cash);
+
+  document.getElementById("bucks").textContent=
+    formatNumber(state.bucks);
+
+  document.getElementById("crowns").textContent=
+    formatNumber(state.crowns);
+
+  document.getElementById("level").textContent=
+    state.level;
+
+  document.getElementById("businessLevel").textContent=
+    state.level;
+
+  document.getElementById("sold").textContent=
+    formatNumber(state.sold);
+
+  document.getElementById("unlockedCount").textContent=
+    state.unlockedDonuts.length;
+
+  document.getElementById("collectionCount").textContent=
+    state.unlockedDonuts.length;
+
+  document.getElementById("mysteryCount").textContent=
+    state.discoveredMystery.length;
+
+  const eps=calculateEPS();
+
+  document.getElementById("eps").textContent=
+    money(eps)+"/s";
+
+  document.getElementById("businessIncome").textContent=
+    money(eps)+"/s";
+
+  document.getElementById("offlineEarned").textContent=
+    money(state.offlineEarned||0);
+
+  document.getElementById("milestone").textContent=
+    money(state.lifetimeCash);
+
+
+  const shift=getCurrentShift();
+
+  document.getElementById("shiftLength").textContent=
+    shift.label;
+
+  if(state.shift.active){
+
+    const elapsed=
+      Math.max(
+        0,
+        (Date.now()-state.shift.startedAt)/1000
+      );
+
+    const percent=
+      Math.min(
+        100,
+        elapsed/state.shift.duration*100
+      );
+
+    document.getElementById("shiftProgress").style.width=
+      percent+"%";
+
+    document.getElementById("shiftStatus").textContent=
+      "Shift active · "+Math.floor(elapsed)+" seconds elapsed";
+
+    document.getElementById("shiftBtn").textContent=
+      "End Shift";
+
+    document.getElementById("shiftEarned").textContent=
+      money(state.shift.earned);
+
+  }else{
+
+    document.getElementById("shiftProgress").style.width="0%";
+
+    document.getElementById("shiftStatus").textContent=
+      "Ready to open!";
+
+    document.getElementById("shiftBtn").textContent=
+      "Start Shift";
+
+    document.getElementById("shiftEarned").textContent=
+      money(state.shift.earned||0);
+  }
+
+
+  if(state.customer){
+
+    const reward=
+      ordersMatch()
+        ? calculateOrderReward()
+        : 0;
+
+    document.getElementById("orderReward").textContent=
+      money(reward);
+
+    document.getElementById("orderStatus").textContent=
+      "Match the customer's order, then serve it.";
+
+  }else{
+
+    document.getElementById("orderReward").textContent="$0";
+
+    document.getElementById("orderStatus").textContent=
+      "Ready for a customer!";
+  }
+
+
+  renderOrderChoices();
+  renderEquipment();
+  renderLocations();
+  renderDonuts();
+  renderBucks();
+  renderAchievements();
+
+}
+
+
+/* =========================================================
+   OFFLINE NOTICE
+   ========================================================= */
+
+function showOfflineNotice(amount,seconds){
+
+  setTimeout(()=>{
+
+    toast(
+      "💰 While you were away: "+
+      money(amount)+
+      " earned!"
+    );
+
+    speak(
+      "Welcome back! Your bakery earned "+
+      money(amount)+
+      " while you were away."
+    );
+
+  },800);
+}
+
+
+/* =========================================================
+   TOAST
+   ========================================================= */
+
+let toastTimer;
+
+function toast(message){
+
+  const el=document.getElementById("toast");
+
+  el.textContent=message;
+  el.classList.add("show");
+
+  clearTimeout(toastTimer);
+
+  toastTimer=setTimeout(()=>{
+    el.classList.remove("show");
+  },2600);
+}
+
+
+/* =========================================================
+   HELPERS
+   ========================================================= */
+
+function money(value){
+
+  if(!Number.isFinite(value)) return "$0.00";
+
+  if(value>=1e12)
+    return "$"+(value/1e12).toFixed(2)+"T";
+
+  if(value>=1e9)
+    return "$"+(value/1e9).toFixed(2)+"B";
+
+  if(value>=1e6)
+    return "$"+(value/1e6).toFixed(2)+"M";
+
+  if(value>=1e3)
+    return "$"+(value/1e3).toFixed(2)+"K";
+
+  return "$"+value.toFixed(2);
+}
+
+
+function formatNumber(value){
+
+  return Math.floor(value||0)
+    .toLocaleString();
+}
+
+
+function escapeHtml(text){
+
+  return String(text)
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+}
+
+
+function escapeJs(text){
+
+  return String(text)
+    .replaceAll("\\","\\\\")
+    .replaceAll("'","\\'");
+}
+
+
+/* =========================================================
+   RESET
+   ========================================================= */
+
+function resetGameConfirm(){
+
+  const answer=
+    confirm(
+      "Are you sure you want to completely reset Desmond's Donuts? "+
+      "All progress will be lost."
+    );
+
+  if(!answer) return;
+
+  localStorage.removeItem(SAVE_KEY);
+
+  location.reload();
+}
+
+
+/* =========================================================
+   FIRST PROGRESSION CHECK
+   ========================================================= */
+
+unlockProgress();
+updateUI();
+
+
+/*
+  Save frequently, but NEVER update lastOfflineTime here.
+  This is what makes offline earnings work correctly.
+*/
+
+setInterval(()=>{
+  saveGame();
+},5000);
 
 </script>
 
