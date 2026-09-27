@@ -3,1806 +3,1787 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport"
-      content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#071126">
+      content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+
 <title>Desmond's Donut Dash</title>
 
 <style>
-:root{
-  --bg:#050914;
-  --panel:#0b1730;
-  --panel2:#101f3d;
-  --line:#31528b;
-  --pink:#ff4fd8;
-  --purple:#9b5cff;
-  --blue:#32a9ff;
-  --cyan:#50e8ff;
-  --gold:#ffd43b;
-  --green:#39e879;
-  --red:#ff5964;
-  --white:#f5f8ff;
-  --muted:#aebbd4;
+*{
+  box-sizing:border-box;
+  -webkit-tap-highlight-color:transparent;
 }
 
-*{box-sizing:border-box}
-
-html,body{
-  margin:0;
-  min-height:100%;
-  background:
-    radial-gradient(circle at 20% 10%,#152a5c 0,#081229 28%,#050914 70%);
-  color:var(--white);
-  font-family:Arial,Helvetica,sans-serif;
-}
-
+html,
 body{
-  padding-bottom:90px;
+  margin:0;
+  width:100%;
+  height:100%;
+  overflow:hidden;
+  position:fixed;
+  inset:0;
+  background:#050714;
+  color:white;
+  font-family:
+    Arial,
+    Helvetica,
+    sans-serif;
 }
 
 button{
-  font:inherit;
-  color:inherit;
-  cursor:pointer;
+  font-family:inherit;
+  color:white;
   border:0;
+  cursor:pointer;
 }
 
-button:focus-visible{
-  outline:4px solid var(--gold);
-  outline-offset:3px;
+/* =========================
+   BACKGROUND
+========================= */
+
+#game{
+  width:100vw;
+  height:100vh;
+  height:100dvh;
+  overflow:hidden;
+  position:relative;
+
+  background:
+    radial-gradient(
+      circle at 50% 30%,
+      #25205b 0%,
+      #11183b 28%,
+      #080d20 62%,
+      #03050e 100%
+    );
 }
 
-.app{
-  width:min(1180px,100%);
-  margin:auto;
-  padding:12px;
+/* decorative sprinkles */
+
+.sprinkles{
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  overflow:hidden;
+  opacity:.8;
 }
 
-/* HEADER */
+.sprinkles span{
+  position:absolute;
+  width:12px;
+  height:4px;
+  border-radius:5px;
+  transform:rotate(35deg);
+  box-shadow:0 0 7px currentColor;
+}
 
-header{
+.s1{left:3%;top:17%;color:#ff55c8}
+.s2{left:10%;top:72%;color:#5eeaff;transform:rotate(80deg)!important}
+.s3{left:18%;top:9%;color:#ffd83d}
+.s4{left:28%;top:78%;color:#ff6c5c;transform:rotate(120deg)!important}
+.s5{left:39%;top:13%;color:#62ff91}
+.s6{left:51%;top:89%;color:#ff4ed0}
+.s7{left:63%;top:8%;color:#58ddff}
+.s8{left:72%;top:77%;color:#ffd83d}
+.s9{left:84%;top:17%;color:#ff6b6b}
+.s10{left:94%;top:69%;color:#63ff9b}
+.s11{left:7%;top:45%;color:#ffd83d}
+.s12{left:91%;top:40%;color:#d978ff}
+.s13{left:45%;top:4%;color:#ff5cbf}
+.s14{left:57%;top:52%;color:#62eaff}
+.s15{left:30%;top:40%;color:#ffd83d}
+
+/* decorative donuts */
+
+.bg-donut{
+  position:absolute;
+  pointer-events:none;
+  opacity:.18;
+  filter:drop-shadow(0 0 12px #ff42c8);
+}
+
+.bg-donut.one{
+  width:95px;
+  height:95px;
+  left:-25px;
+  top:25%;
+  transform:rotate(-20deg);
+}
+
+.bg-donut.two{
+  width:75px;
+  height:75px;
+  right:-20px;
+  bottom:23%;
+  transform:rotate(20deg);
+}
+
+.donut-shape{
+  width:100%;
+  height:100%;
+  border-radius:50%;
+  background:
+    radial-gradient(circle at center,#080d20 0 27%,transparent 28%),
+    linear-gradient(135deg,#ff65ce,#7639ff);
+  border:14px solid #ffb83e;
+}
+
+
+/* =========================
+   MAIN SCREEN
+========================= */
+
+.screen{
+  position:absolute;
+  inset:0;
+  padding:
+    max(7px,env(safe-area-inset-top))
+    max(7px,env(safe-area-inset-right))
+    max(72px,calc(68px + env(safe-area-inset-bottom)))
+    max(7px,env(safe-area-inset-left));
+
   display:grid;
-  grid-template-columns:1fr auto auto auto;
-  gap:10px;
-  align-items:center;
-  margin-bottom:12px;
+
+  /*
+    Three rows.
+    Nothing can create page scrolling.
+  */
+  grid-template-rows:
+    auto
+    minmax(0,1fr)
+    minmax(0,1fr);
+
+  gap:7px;
+
+  max-width:1200px;
+  margin:auto;
+}
+
+
+/* =========================
+   HEADER
+========================= */
+
+.header{
+  display:grid;
+  grid-template-columns:
+    minmax(170px,1.5fr)
+    minmax(100px,.8fr)
+    minmax(100px,.8fr)
+    auto;
+
+  gap:7px;
+  min-height:0;
 }
 
 .logo{
+  display:flex;
+  align-items:center;
+  padding:4px 10px;
+
   font-weight:1000;
-  font-size:clamp(25px,5vw,52px);
+  font-size:clamp(20px,3.4vw,38px);
   line-height:.85;
-  letter-spacing:-2px;
-  color:#ffd23f;
+
+  color:#ffd33d;
+
   text-shadow:
-    3px 3px 0 #ff43bd,
-    6px 6px 0 #5224a5,
-    0 0 20px #ff43bd;
+    2px 2px 0 #ff37bd,
+    4px 4px 0 #4b1b99,
+    0 0 13px #ff37bd;
 }
 
-.logo span{
+.logo small{
   display:block;
-  color:#43dcff;
-  font-size:.72em;
-  letter-spacing:-1px;
+  color:#49ddff;
+  font-size:.56em;
+  margin-top:4px;
+  text-shadow:
+    2px 2px 0 #48219c;
 }
 
 .stat{
-  min-width:130px;
-  background:linear-gradient(180deg,#13274d,#08152d);
-  border:2px solid #31558f;
-  border-radius:16px;
-  padding:9px 13px;
-  box-shadow:0 5px 18px #0008;
+  min-width:0;
+  background:
+    linear-gradient(
+      145deg,
+      #142751,
+      #080f25
+    );
+
+  border:2px solid #315b99;
+  border-radius:13px;
+
+  padding:5px 9px;
+
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+
+  box-shadow:
+    inset 0 0 15px #0008,
+    0 3px 10px #0009;
 }
 
-.stat .label{
-  color:var(--muted);
-  font-size:12px;
-  text-transform:uppercase;
+.stat-label{
+  color:#91a7cc;
+  font-size:9px;
   font-weight:900;
+  text-transform:uppercase;
 }
 
-.stat .value{
-  font-size:22px;
+.stat-value{
+  font-size:clamp(15px,2.4vw,25px);
   font-weight:1000;
+  color:#fff;
 }
 
-.gear{
-  width:54px;
-  height:54px;
-  border-radius:50%;
-  background:#102348;
-  border:2px solid #426aa7;
-  font-size:27px;
+.stat-value.green{
+  color:#50f38b;
 }
 
-/* TOP GRID */
+.settings{
+  width:45px;
+  height:45px;
+  align-self:center;
 
-.top-grid{
-  display:grid;
-  grid-template-columns:1.55fr .85fr;
-  gap:12px;
+  border-radius:13px;
+
+  background:#111f40;
+  border:2px solid #4269a5;
+
+  font-size:23px;
 }
 
-/* PANELS */
+
+/* =========================
+   PANELS
+========================= */
 
 .panel{
+  min-height:0;
+  overflow:hidden;
+
   background:
-    linear-gradient(180deg,#102347e8,#071329f5);
-  border:2px solid #294c82;
-  border-radius:20px;
-  padding:14px;
+    linear-gradient(
+      150deg,
+      rgba(20,37,75,.96),
+      rgba(5,12,29,.98)
+    );
+
+  border:2px solid #315488;
+  border-radius:16px;
+
   box-shadow:
-    inset 0 0 25px #0005,
-    0 7px 22px #0009;
+    inset 0 0 20px #0007,
+    0 4px 15px #000b;
 }
 
 .panel-title{
-  font-size:20px;
+  color:#f4f7ff;
+  font-size:clamp(13px,2vw,19px);
   font-weight:1000;
   text-transform:uppercase;
-  letter-spacing:.5px;
-  margin-bottom:10px;
-  color:#fff;
+
+  text-shadow:0 2px 0 #000;
+
+  padding-bottom:5px;
 }
 
-.sub{
-  color:var(--muted);
-  font-size:13px;
-}
 
-/* DONUT STATION */
+/* =========================
+   TOP GAME AREA
+========================= */
 
-.station{
-  min-height:360px;
-  position:relative;
-  overflow:hidden;
-}
+.top-area{
+  min-height:0;
 
-.station:before{
-  content:"";
-  position:absolute;
-  inset:0;
-  background:
-    radial-gradient(circle at 15% 20%,#ff39d822 0 2px,transparent 3px),
-    radial-gradient(circle at 80% 30%,#3eeaff22 0 2px,transparent 3px),
-    radial-gradient(circle at 60% 75%,#ffd83b22 0 2px,transparent 3px);
-  pointer-events:none;
-}
-
-.station-content{
-  position:relative;
   display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:14px;
-  align-items:center;
+  grid-template-columns:
+    minmax(0,1.35fr)
+    minmax(180px,.75fr);
+
+  gap:7px;
 }
 
-.baker{
-  min-height:235px;
+
+/* CUSTOMER */
+
+.customer-panel{
+  padding:9px;
+  min-width:0;
+  display:grid;
+
+  grid-template-rows:auto minmax(0,1fr) auto;
+}
+
+.customer-content{
+  min-height:0;
+
+  display:grid;
+  grid-template-columns:
+    minmax(75px,.45fr)
+    minmax(0,1.55fr);
+
+  gap:7px;
+}
+
+.character{
+  min-width:0;
+  border-radius:12px;
+
+  background:
+    radial-gradient(
+      circle at 50% 40%,
+      #273f72,
+      #09142e 72%
+    );
+
+  border:1px solid #365d97;
+
   display:flex;
   align-items:center;
   justify-content:center;
-  background:
-    radial-gradient(circle,#263f72,#0a1730 70%);
-  border-radius:18px;
-  border:2px solid #34578e;
-  font-size:125px;
+
+  font-size:clamp(48px,8vw,88px);
 }
 
-.customer{
-  background:#08142b;
-  border:2px solid #375a93;
-  border-radius:18px;
-  padding:15px;
-  min-height:235px;
+.order-box{
+  min-width:0;
+
+  background:#071126;
+  border:1px solid #345a92;
+  border-radius:12px;
+
+  padding:9px;
+
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+
+  overflow:hidden;
 }
 
-.customer-name{
-  color:var(--cyan);
+.customer-label{
+  color:#56e8ff;
+  font-size:9px;
   font-weight:1000;
-  font-size:13px;
   text-transform:uppercase;
 }
 
-.order-name{
-  font-size:26px;
+.order-title{
+  font-size:clamp(15px,2.4vw,25px);
   font-weight:1000;
-  margin:6px 0;
+  margin:3px 0;
+
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
 }
 
-.order-detail{
-  color:#d8e4ff;
-  line-height:1.5;
+.order-details{
+  color:#c4d1e9;
+  font-size:clamp(10px,1.7vw,14px);
+  line-height:1.25;
 }
 
 .reward{
-  margin-top:12px;
-  padding:10px;
-  background:#12284a;
-  border-radius:12px;
-  color:var(--gold);
+  margin-top:5px;
+  color:#ffd83d;
   font-weight:1000;
-}
-
-/* GALACTIC */
-
-.galactic{
-  position:relative;
-  min-height:360px;
-  border-color:#a044ff;
-  background:
-    radial-gradient(circle at 50% 35%,#4d1590 0,#180b3e 42%,#071229 78%);
-  overflow:hidden;
-}
-
-.galactic:before{
-  content:"✦  ·  ★  ·  ✦  ·  ★  ·  ✦";
-  position:absolute;
-  inset:10px;
-  color:#c26dff;
-  font-size:25px;
-  opacity:.45;
-  letter-spacing:12px;
-}
-
-.galactic-content{
-  position:relative;
-  z-index:1;
-  text-align:center;
-}
-
-.galactic h2{
-  margin:5px 0 4px;
-  color:#d884ff;
-  text-shadow:0 0 15px #a32dff;
-  font-size:28px;
-}
-
-.galactic-donut{
-  width:145px;
-  height:145px;
-  margin:15px auto;
-  border-radius:50%;
-  position:relative;
-  background:
-    radial-gradient(circle at 50% 50%,#071329 0 25%,transparent 26%),
-    radial-gradient(circle at 35% 30%,#62eaff 0 5%,transparent 6%),
-    radial-gradient(circle at 65% 38%,#ff55dc 0 5%,transparent 6%),
-    radial-gradient(circle at 40% 70%,#ffd33f 0 5%,transparent 6%),
-    linear-gradient(145deg,#194bff,#7e21dc 45%,#ff3bc6);
-  border:10px solid #ffae43;
-  box-shadow:
-    0 0 20px #7e39ff,
-    0 0 45px #d735ff;
-}
-
-.galactic-donut:after{
-  content:"✦ ★ ✦";
-  position:absolute;
-  inset:40px 0;
-  color:white;
-  font-size:20px;
-  text-shadow:0 0 9px #fff;
-}
-
-.rush{
-  background:#220b48;
-  border:2px solid #d53dff;
-  border-radius:14px;
-  padding:10px;
-  font-weight:1000;
-  color:#ffe65c;
-}
-
-.rush strong{
-  display:block;
-  color:#55eaff;
-  font-size:20px;
-}
-
-/* ACTION */
-
-.primary{
-  width:100%;
-  margin-top:12px;
-  padding:15px;
-  border-radius:15px;
-  background:linear-gradient(#4aff82,#12b94f);
-  color:#04150b;
-  font-size:19px;
-  font-weight:1000;
-  box-shadow:0 5px 0 #087c37,0 0 20px #28ed6d44;
-}
-
-.secondary{
-  padding:11px 14px;
-  border-radius:12px;
-  background:#142b50;
-  border:2px solid #345b94;
-  font-weight:900;
-}
-
-.danger{
-  background:#351626;
-  border-color:#7e2943;
-}
-
-/* BUILDER */
-
-.builder{
-  margin-top:12px;
-}
-
-.choice-row{
-  display:flex;
-  flex-wrap:wrap;
-  gap:8px;
-}
-
-.choice{
-  min-width:90px;
-  padding:10px;
-  border-radius:12px;
-  background:#0a1832;
-  border:2px solid #2d4f86;
-  text-align:center;
-  font-weight:900;
-}
-
-.choice.selected{
-  border-color:var(--gold);
-  box-shadow:0 0 14px #ffd43b55;
-  background:#17284c;
-}
-
-.choice.locked{
-  opacity:.45;
-  cursor:not-allowed;
-}
-
-.emoji{
-  display:block;
-  font-size:31px;
-  margin-bottom:4px;
-}
-
-/* LOWER GRID */
-
-.lower-grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:12px;
-  margin-top:12px;
-}
-
-.order-list{
-  display:grid;
-  gap:8px;
-}
-
-.active-order{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  padding:10px;
-  background:#09162d;
-  border:1px solid #294a7d;
-  border-radius:12px;
-}
-
-.progress{
-  width:90px;
-  height:8px;
-  background:#020713;
-  border-radius:20px;
-  overflow:hidden;
-}
-
-.progress span{
-  display:block;
-  width:45%;
-  height:100%;
-  background:linear-gradient(90deg,#37e8ff,#9c54ff);
-}
-
-.upgrade{
-  display:flex;
-  justify-content:space-between;
-  gap:10px;
-  align-items:center;
-  padding:12px;
-  background:#09162d;
-  border:1px solid #294a7d;
-  border-radius:12px;
-  margin-bottom:8px;
-}
-
-.upgrade h3{
-  margin:0;
-  font-size:16px;
-}
-
-.upgrade p{
-  margin:4px 0 0;
-  color:var(--muted);
   font-size:12px;
 }
 
-.upgrade button{
-  white-space:nowrap;
-  background:linear-gradient(#50f38a,#19b957);
-  color:#04150b;
-  padding:10px;
-  border-radius:10px;
+.customer-actions{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:6px;
+  margin-top:6px;
+}
+
+
+/* BUTTONS */
+
+.big-button{
+  min-height:38px;
+  border-radius:11px;
+
+  background:
+    linear-gradient(#42ef79,#13a94c);
+
+  color:#03120a;
+
+  font-size:clamp(11px,1.8vw,16px);
   font-weight:1000;
+
+  box-shadow:
+    0 3px 0 #087435,
+    0 0 12px #25eb7240;
 }
 
-/* MYSTERY */
-
-.mystery{
-  margin-top:12px;
-  border-color:#7350b7;
+.big-button.purple{
+  background:
+    linear-gradient(#d26aff,#7135d9);
+  color:white;
+  box-shadow:
+    0 3px 0 #3d197e,
+    0 0 13px #b040ff44;
 }
 
-.mystery-box{
+
+/* =========================
+   GALACTIC
+========================= */
+
+.galactic-panel{
+  min-width:0;
+  position:relative;
+  padding:9px;
+
   display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:12px;
-  background:#080f22;
-  border:2px dashed #70539c;
-  border-radius:14px;
-  padding:14px;
-}
-
-.lock{
-  font-size:45px;
-}
-
-.mystery-title{
-  color:#d48cff;
-  font-size:20px;
-  font-weight:1000;
-}
-
-.mystery-text{
-  color:var(--muted);
-}
-
-/* GOLDEN DONUT */
-
-.golden{
-  display:none;
-  position:fixed;
-  inset:0;
-  z-index:50;
-  background:#02040bd9;
+  flex-direction:column;
   align-items:center;
   justify-content:center;
-  padding:20px;
+
+  background:
+    radial-gradient(
+      circle at 50% 40%,
+      #421678,
+      #130d34 48%,
+      #071027 90%
+    );
+
+  border-color:#8b45d8;
 }
 
-.golden.show{
-  display:flex;
+.galactic-stars{
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+
+  background:
+    radial-gradient(circle at 15% 20%,#fff 0 1px,transparent 2px),
+    radial-gradient(circle at 80% 25%,#fff 0 1px,transparent 2px),
+    radial-gradient(circle at 30% 75%,#fff 0 1px,transparent 2px),
+    radial-gradient(circle at 72% 72%,#fff 0 1px,transparent 2px),
+    radial-gradient(circle at 50% 12%,#fff 0 1px,transparent 2px);
 }
 
-.golden-card{
-  max-width:420px;
+.galactic-title{
+  position:relative;
+  color:#d879ff;
+  font-size:clamp(15px,2.5vw,24px);
+  font-weight:1000;
+  text-shadow:
+    0 0 8px #9f2dff,
+    0 0 16px #9f2dff;
+  text-align:center;
+}
+
+.galactic-donut{
+  position:relative;
+
+  width:clamp(80px,12vw,130px);
+  aspect-ratio:1;
+
+  border-radius:50%;
+
+  background:
+    radial-gradient(
+      circle at 50% 50%,
+      #080c22 0 25%,
+      transparent 26%
+    ),
+    radial-gradient(
+      circle at 30% 30%,
+      #56eaff 0 4%,
+      transparent 5%
+    ),
+    radial-gradient(
+      circle at 65% 30%,
+      #ff54d4 0 5%,
+      transparent 6%
+    ),
+    radial-gradient(
+      circle at 45% 70%,
+      #ffd63c 0 4%,
+      transparent 5%
+    ),
+    linear-gradient(
+      135deg,
+      #2464ff,
+      #7826e8 50%,
+      #ff3cc7
+    );
+
+  border:10px solid #ffab3f;
+
+  box-shadow:
+    0 0 14px #8e3cff,
+    0 0 30px #d43cff;
+}
+
+.galactic-message{
+  position:relative;
+
   width:100%;
   text-align:center;
-  padding:25px;
-  border-radius:24px;
-  background:
-    radial-gradient(circle,#5a4210,#161007 65%);
-  border:3px solid var(--gold);
-  box-shadow:0 0 50px #ffd43b55;
-}
 
-.golden-donut{
-  font-size:110px;
-  filter:drop-shadow(0 0 20px #ffd43b);
-}
+  border:1px solid #a344d5;
+  background:#210b48;
+  border-radius:10px;
 
-/* BOTTOM NAV */
+  padding:5px;
 
-.bottom-nav{
-  position:fixed;
-  left:0;
-  right:0;
-  bottom:0;
-  z-index:40;
-  background:#050c1cF7;
-  border-top:2px solid #284879;
-  display:grid;
-  grid-template-columns:repeat(6,1fr);
-  padding:7px max(7px,env(safe-area-inset-left))
-          calc(7px + env(safe-area-inset-bottom))
-          max(7px,env(safe-area-inset-right));
-  backdrop-filter:blur(10px);
-}
+  color:#ffe65a;
 
-.nav-btn{
-  background:transparent;
-  min-height:64px;
-  border-radius:12px;
-  color:#b8c6e1;
-  font-size:11px;
+  font-size:clamp(9px,1.5vw,13px);
   font-weight:1000;
 }
 
-.nav-btn span{
+
+/* =========================
+   BOTTOM GAME AREA
+========================= */
+
+.bottom-area{
+  min-height:0;
+
+  display:grid;
+
+  grid-template-columns:
+    minmax(0,1.35fr)
+    minmax(0,.65fr);
+
+  gap:7px;
+}
+
+
+/* =========================
+   BUILD ORDER
+========================= */
+
+.builder{
+  padding:8px;
+  min-height:0;
+
+  display:grid;
+
+  grid-template-rows:auto auto 1fr auto;
+
+  overflow:hidden;
+}
+
+.category-label{
+  color:#65ddff;
+  font-size:9px;
+  font-weight:1000;
+  margin:2px 0;
+  text-transform:uppercase;
+}
+
+.options{
+  display:flex;
+  gap:5px;
+  min-width:0;
+  overflow:hidden;
+}
+
+.option{
+  flex:1;
+  min-width:0;
+
+  background:#09162e;
+
+  border:1px solid #31598e;
+  border-radius:9px;
+
+  padding:4px 2px;
+
+  text-align:center;
+
+  font-size:clamp(8px,1.35vw,12px);
+  font-weight:900;
+}
+
+.option .icon{
   display:block;
-  font-size:25px;
+  font-size:clamp(20px,3.4vw,34px);
+  line-height:1;
   margin-bottom:2px;
 }
 
-.nav-btn.active{
-  color:#fff;
-  background:#142a50;
-  box-shadow:inset 0 0 0 1px #3e67a2;
+.option.selected{
+  border-color:#ffd63d;
+
+  box-shadow:
+    0 0 10px #ffd63d55;
+
+  background:#15284b;
 }
 
-/* MODAL */
 
-.modal{
-  display:none;
-  position:fixed;
-  inset:0;
-  z-index:45;
-  background:#02040bdc;
+/* =========================
+   RIGHT LOWER
+========================= */
+
+.right-lower{
+  min-height:0;
+
+  display:grid;
+  grid-template-rows:
+    minmax(0,1fr)
+    minmax(0,1fr);
+
+  gap:7px;
+}
+
+.mini-panel{
+  min-height:0;
+  padding:8px;
+  overflow:hidden;
+}
+
+
+/* ACTIVE ORDERS */
+
+.active-orders{
+  display:flex;
+  gap:5px;
+  height:calc(100% - 24px);
+}
+
+.active-order{
+  flex:1;
+  min-width:0;
+
+  border-radius:9px;
+  background:#09162e;
+  border:1px solid #31598e;
+
+  display:flex;
+  flex-direction:column;
   align-items:center;
   justify-content:center;
-  padding:18px;
+
+  font-size:clamp(9px,1.4vw,12px);
+  font-weight:900;
 }
 
-.modal.show{
+.active-order .donut{
+  font-size:clamp(25px,4vw,40px);
+}
+
+.bar{
+  width:75%;
+  height:5px;
+  margin-top:5px;
+
+  border-radius:5px;
+  background:#02050e;
+  overflow:hidden;
+}
+
+.bar span{
+  display:block;
+  width:55%;
+  height:100%;
+  background:#39dfff;
+}
+
+
+/* UPGRADES */
+
+.upgrade-row{
+  height:calc(100% - 24px);
+
   display:flex;
+  align-items:center;
+  gap:7px;
+
+  background:#09162e;
+  border:1px solid #31598e;
+  border-radius:9px;
+
+  padding:7px;
 }
 
-.modal-card{
-  width:min(600px,100%);
-  max-height:85vh;
-  overflow:auto;
-  background:#0b1730;
-  border:2px solid #3b5f98;
-  border-radius:20px;
-  padding:20px;
-  box-shadow:0 20px 60px #000;
+.upgrade-icon{
+  font-size:35px;
 }
 
-.modal-card h2{
-  margin-top:0;
-  color:#58e8ff;
+.upgrade-info{
+  min-width:0;
+  flex:1;
 }
 
-/* MOBILE */
+.upgrade-name{
+  font-weight:1000;
+  font-size:clamp(10px,1.5vw,14px);
+}
 
-@media(max-width:800px){
-  header{
-    grid-template-columns:1fr 1fr;
+.upgrade-desc{
+  color:#9eafd0;
+  font-size:9px;
+}
+
+.upgrade-button{
+  background:#31df68;
+  color:#04120a;
+  border-radius:8px;
+  padding:8px 9px;
+  font-size:9px;
+  font-weight:1000;
+}
+
+
+/* =========================
+   MYSTERY
+========================= */
+
+.mystery-strip{
+  position:absolute;
+  left:50%;
+  transform:translateX(-50%);
+
+  bottom:
+    calc(68px + env(safe-area-inset-bottom));
+
+  z-index:5;
+
+  width:min(250px,55vw);
+
+  background:#100d21;
+  border:2px solid #9d58ff;
+  border-radius:12px;
+
+  padding:5px 9px;
+
+  display:none;
+
+  text-align:center;
+
+  box-shadow:
+    0 0 15px #9d58ff44;
+}
+
+.mystery-strip strong{
+  color:#d77aff;
+  font-size:11px;
+}
+
+.mystery-strip small{
+  display:block;
+  color:#aeb9d0;
+  font-size:8px;
+}
+
+
+/* =========================
+   NAVIGATION
+========================= */
+
+.bottom-nav{
+  position:fixed;
+
+  left:0;
+  right:0;
+  bottom:0;
+
+  height:
+    calc(63px + env(safe-area-inset-bottom));
+
+  padding:
+    4px
+    max(4px,env(safe-area-inset-right))
+    env(safe-area-inset-bottom)
+    max(4px,env(safe-area-inset-left));
+
+  z-index:30;
+
+  background:
+    linear-gradient(
+      #0b1731f5,
+      #040914fa
+    );
+
+  border-top:2px solid #294b82;
+
+  display:grid;
+  grid-template-columns:repeat(6,1fr);
+
+  backdrop-filter:blur(12px);
+}
+
+.nav{
+  min-width:0;
+
+  background:transparent;
+
+  color:#aebdd7;
+
+  border-radius:9px;
+
+  font-size:clamp(7px,1.4vw,10px);
+  font-weight:1000;
+}
+
+.nav-icon{
+  display:block;
+  font-size:clamp(18px,4vw,28px);
+  line-height:1;
+  margin-bottom:2px;
+}
+
+.nav.active{
+  color:white;
+  background:#13284c;
+  border:1px solid #3b62a0;
+}
+
+
+/* =========================
+   TABLET / SMALL SCREEN
+========================= */
+
+@media(max-width:600px){
+
+  .screen{
+    padding:4px 4px 70px;
+    gap:4px;
+
+    grid-template-rows:
+      48px
+      minmax(0,1fr)
+      minmax(0,1fr);
+  }
+
+  .header{
+    gap:4px;
   }
 
   .logo{
-    grid-column:1/-1;
+    font-size:18px;
+    padding:2px;
   }
 
-  .top-grid,
-  .lower-grid,
-  .station-content{
-    grid-template-columns:1fr;
+  .logo small{
+    font-size:10px;
   }
 
-  .baker{
-    min-height:150px;
-    font-size:90px;
+  .stat{
+    padding:3px 5px;
+    border-radius:9px;
   }
 
-  .galactic{
-    min-height:330px;
+  .stat-label{
+    font-size:6px;
   }
 
-  .choice{
-    flex:1 1 85px;
+  .stat-value{
+    font-size:12px;
   }
 
-  .bottom-nav{
-    grid-template-columns:repeat(6,1fr);
+  .settings{
+    width:35px;
+    height:35px;
+    font-size:18px;
   }
 
-  .nav-btn{
+  .top-area{
+    gap:4px;
+  }
+
+  .bottom-area{
+    gap:4px;
+  }
+
+  .panel{
+    border-radius:11px;
+  }
+
+  .customer-panel,
+  .builder,
+  .mini-panel,
+  .galactic-panel{
+    padding:5px;
+  }
+
+  .customer-content{
+    gap:4px;
+  }
+
+  .character{
+    font-size:48px;
+  }
+
+  .order-box{
+    padding:5px;
+  }
+
+  .customer-actions{
+    gap:4px;
+  }
+
+  .big-button{
+    min-height:30px;
     font-size:9px;
   }
 
-  .nav-btn span{
-    font-size:22px;
+  .galactic-donut{
+    width:70px;
+    border-width:7px;
+  }
+
+  .galactic-message{
+    padding:3px;
+  }
+
+  .option{
+    padding:2px 1px;
+    border-radius:6px;
+  }
+
+  .option .icon{
+    font-size:21px;
+  }
+
+  .upgrade-icon{
+    font-size:25px;
+  }
+
+  .upgrade-button{
+    padding:5px;
+    font-size:7px;
+  }
+
+  .upgrade-desc{
+    display:none;
+  }
+}
+
+
+/* VERY SHORT SCREENS */
+
+@media(max-height:600px){
+
+  .screen{
+    grid-template-rows:
+      42px
+      minmax(0,1fr)
+      minmax(0,1fr);
+  }
+
+  .bottom-nav{
+    height:
+      calc(52px + env(safe-area-inset-bottom));
+  }
+
+  .nav-icon{
+    font-size:19px;
+  }
+
+  .nav{
+    font-size:7px;
+  }
+
+  .mystery-strip{
+    bottom:
+      calc(55px + env(safe-area-inset-bottom));
+  }
+}
+
+
+/* DESKTOP */
+
+@media(min-width:1000px){
+
+  .screen{
+    padding-bottom:78px;
+  }
+
+  .bottom-nav{
+    height:70px;
   }
 }
 </style>
 </head>
 
+
 <body>
 
-<div class="app">
+<div id="game">
 
-<header>
-  <div class="logo" aria-label="Desmond's Donut Dash">
-    DESMOND'S
-    <span>🍩 DONUT DASH</span>
+  <!-- decorative background -->
+  <div class="sprinkles" aria-hidden="true">
+    <span class="s1"></span>
+    <span class="s2"></span>
+    <span class="s3"></span>
+    <span class="s4"></span>
+    <span class="s5"></span>
+    <span class="s6"></span>
+    <span class="s7"></span>
+    <span class="s8"></span>
+    <span class="s9"></span>
+    <span class="s10"></span>
+    <span class="s11"></span>
+    <span class="s12"></span>
+    <span class="s13"></span>
+    <span class="s14"></span>
+    <span class="s15"></span>
   </div>
 
-  <div class="stat" aria-live="polite">
-    <div class="label">Baker Bucks</div>
-    <div class="value" id="cash">$0</div>
+  <div class="bg-donut one">
+    <div class="donut-shape"></div>
   </div>
 
-  <div class="stat" aria-live="polite">
-    <div class="label">Earnings / Second</div>
-    <div class="value" id="eps">$0.05</div>
+  <div class="bg-donut two">
+    <div class="donut-shape"></div>
   </div>
 
-  <div class="stat" aria-live="polite">
-    <div class="label">Level</div>
-    <div class="value" id="level">1</div>
-  </div>
 
-  <button class="gear"
-          aria-label="Open settings"
-          onclick="openModal('settings')">⚙️</button>
-</header>
+  <!-- EVERYTHING FITS INSIDE THIS SCREEN -->
+  <main class="screen">
 
+    <!-- HEADER -->
 
-<div class="top-grid">
+    <header class="header">
 
-  <section class="panel station">
-    <div class="panel-title">🍩 Donut Station</div>
-
-    <div class="station-content">
-
-      <div class="baker" aria-label="Cartoon donut baker">
-        👨‍🍳
+      <div class="logo">
+        DESMOND'S
+        <small>🍩 DONUT DASH</small>
       </div>
 
-      <div class="customer" aria-live="polite">
-        <div class="customer-name">CUSTOMER ORDER</div>
-        <div class="order-name" id="customerOrder">
-          Ready for a customer!
+      <div class="stat">
+        <div class="stat-label">
+          Baker Bucks
         </div>
 
-        <div class="order-detail" id="orderDetail">
-          Press Take Order to begin.
-        </div>
-
-        <div class="reward" id="reward">
-          Reward: $0
+        <div
+          class="stat-value"
+          id="money">
+          $0
         </div>
       </div>
 
-    </div>
+      <div class="stat">
+        <div class="stat-label">
+          Earnings / Sec
+        </div>
 
-    <button class="primary"
-            id="orderButton"
-            onclick="takeOrder()">
-      🍩 TAKE ORDER
-    </button>
-
-    <button class="secondary"
-            style="width:100%;margin-top:8px"
-            onclick="nextCustomer()">
-      ➡️ NEXT CUSTOMER
-    </button>
-  </section>
-
-
-  <section class="panel galactic">
-
-    <div class="galactic-content">
-
-      <h2>🌌 GALACTIC DONUT</h2>
-
-      <div class="galactic-donut"
-           aria-label="Galactic Donut"></div>
-
-      <div class="rush">
-        <strong id="cosmicStatus">COSMIC RUSH</strong>
-        Serve a Galactic Donut to activate a special bonus!
+        <div
+          class="stat-value green"
+          id="eps">
+          $0.05
+        </div>
       </div>
 
-      <p class="sub" style="margin-top:15px">
-        Rare orders appear as you level up.
-      </p>
-
-      <button class="primary"
-              onclick="serveGalactic()">
-        🌌 SERVE GALACTIC DONUT
+      <button
+        class="settings"
+        aria-label="Settings"
+        onclick="announce('Settings')">
+        ⚙️
       </button>
 
-    </div>
+    </header>
 
-  </section>
+
+    <!-- TOP AREA -->
+
+    <section class="top-area">
+
+      <!-- CUSTOMER -->
+
+      <section class="panel customer-panel">
+
+        <div class="panel-title">
+          👤 Customer Order
+        </div>
+
+        <div class="customer-content">
+
+          <div
+            class="character"
+            aria-label="Customer">
+            😎
+          </div>
+
+          <div class="order-box">
+
+            <div class="customer-label">
+              Today's Customer
+            </div>
+
+            <div
+              class="order-title"
+              id="orderTitle">
+              Ready for an order!
+            </div>
+
+            <div
+              class="order-details"
+              id="orderDetails">
+              Tap Take Order to get started.
+            </div>
+
+            <div
+              class="reward"
+              id="reward">
+              Reward: $0
+            </div>
+
+          </div>
+
+        </div>
+
+        <div class="customer-actions">
+
+          <button
+            class="big-button"
+            onclick="takeOrder()"
+            aria-label="Take customer order">
+            🍩 TAKE ORDER
+          </button>
+
+          <button
+            class="big-button purple"
+            onclick="nextCustomer()"
+            aria-label="Next customer">
+            NEXT CUSTOMER ➜
+          </button>
+
+        </div>
+
+      </section>
+
+
+      <!-- GALACTIC DONUT -->
+
+      <section
+        class="panel galactic-panel"
+        aria-label="Galactic Donut">
+
+        <div class="galactic-stars"></div>
+
+        <div class="galactic-title">
+          🌌 GALACTIC DONUT
+        </div>
+
+        <div
+          class="galactic-donut"
+          aria-label="Galactic Donut"></div>
+
+        <div class="galactic-message">
+          <span id="cosmic">
+            ⚡ COSMIC RUSH
+          </span>
+          <br>
+          Rare donut — huge rewards!
+        </div>
+
+        <button
+          class="big-button"
+          style="position:relative;margin-top:6px;width:100%"
+          onclick="galacticDonut()"
+          aria-label="Serve Galactic Donut">
+          🌌 SERVE
+        </button>
+
+      </section>
+
+    </section>
+
+
+    <!-- LOWER AREA -->
+
+    <section class="bottom-area">
+
+      <!-- BUILD ORDER -->
+
+      <section class="panel builder">
+
+        <div class="panel-title">
+          🛠️ Build The Order
+        </div>
+
+
+        <div>
+
+          <div class="category-label">
+            Donuts
+          </div>
+
+          <div class="options">
+
+            <button class="option"
+                    onclick="choose('donut','plain')">
+              <span class="icon">🍩</span>
+              Plain
+            </button>
+
+            <button class="option"
+                    onclick="choose('donut','chocolate')">
+              <span class="icon">🍫</span>
+              Chocolate
+            </button>
+
+            <button class="option"
+                    onclick="choose('donut','glazed')">
+              <span class="icon">🍩</span>
+              Glazed
+            </button>
+
+            <button class="option"
+                    onclick="choose('donut','strawberry')">
+              <span class="icon">🍓</span>
+              Strawberry
+            </button>
+
+            <button class="option"
+                    onclick="choose('donut','blueberry')">
+              <span class="icon">🫐</span>
+              Blueberry
+            </button>
+
+            <button class="option"
+                    onclick="choose('donut','galactic')">
+              <span class="icon">🌌</span>
+              Galactic
+            </button>
+
+          </div>
+
+        </div>
+
+
+        <div>
+
+          <div class="category-label">
+            Fillings
+          </div>
+
+          <div class="options">
+
+            <button class="option"
+                    onclick="choose('filling','none')">
+              <span class="icon">—</span>
+              None
+            </button>
+
+            <button class="option"
+                    onclick="choose('filling','cream')">
+              <span class="icon">🍦</span>
+              Cream
+            </button>
+
+            <button class="option"
+                    onclick="choose('filling','chocolate')">
+              <span class="icon">🍫</span>
+              Chocolate
+            </button>
+
+          </div>
+
+        </div>
+
+
+        <div>
+
+          <div class="category-label">
+            Toppings
+          </div>
+
+          <div class="options">
+
+            <button class="option"
+                    onclick="choose('topping','sprinkles')">
+              <span class="icon">🌈</span>
+              Sprinkles
+            </button>
+
+            <button class="option"
+                    onclick="choose('topping','oreo')">
+              <span class="icon">⚫</span>
+              Oreo
+            </button>
+
+            <button class="option"
+                    onclick="choose('topping','mm')">
+              <span class="icon">🔴</span>
+              M&M's
+            </button>
+
+            <button class="option"
+                    onclick="choose('topping','bacon')">
+              <span class="icon">🥓</span>
+              Bacon
+            </button>
+
+            <button class="option"
+                    onclick="choose('topping','cookie')">
+              <span class="icon">🍪</span>
+              Cookie
+            </button>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- RIGHT SIDE -->
+
+      <section class="right-lower">
+
+        <!-- ACTIVE ORDERS -->
+
+        <section class="panel mini-panel">
+
+          <div class="panel-title">
+            📋 Active Orders
+          </div>
+
+          <div class="active-orders">
+
+            <div class="active-order">
+              <span class="donut">🍓</span>
+              <span>Strawberry</span>
+              <div class="bar">
+                <span></span>
+              </div>
+            </div>
+
+            <div class="active-order">
+              <span class="donut">🍫</span>
+              <span>Chocolate</span>
+              <div class="bar">
+                <span style="width:70%"></span>
+              </div>
+            </div>
+
+            <div class="active-order">
+              <span class="donut">🍩</span>
+              <span>Glazed</span>
+              <div class="bar">
+                <span style="width:30%"></span>
+              </div>
+            </div>
+
+          </div>
+
+        </section>
+
+
+        <!-- UPGRADES -->
+
+        <section class="panel mini-panel">
+
+          <div class="panel-title">
+            ⬆️ Shop Upgrades
+          </div>
+
+          <div class="upgrade-row">
+
+            <div class="upgrade-icon">
+              🔥
+            </div>
+
+            <div class="upgrade-info">
+
+              <div class="upgrade-name">
+                Faster Ovens
+              </div>
+
+              <div class="upgrade-desc">
+                Increase idle earnings
+              </div>
+
+            </div>
+
+            <button
+              class="upgrade-button"
+              onclick="upgrade()">
+              UPGRADE<br>
+              $100
+            </button>
+
+          </div>
+
+        </section>
+
+      </section>
+
+    </section>
+
+  </main>
+
+
+  <!-- MYSTERY FLAVORS -->
+
+  <div
+    class="mystery-strip"
+    id="mystery">
+
+    <strong>
+      ❓ MYSTERY FLAVORS
+    </strong>
+
+    <small>
+      🔒 Locked — unlock through progression
+    </small>
+
+  </div>
+
+
+  <!-- FIXED NAVIGATION -->
+
+  <nav
+    class="bottom-nav"
+    aria-label="Game navigation">
+
+    <button
+      class="nav active"
+      onclick="announce('Shop')"
+      aria-label="Shop">
+      <span class="nav-icon">🏪</span>
+      SHOP
+    </button>
+
+    <button
+      class="nav"
+      onclick="announce('Upgrades')"
+      aria-label="Upgrades">
+      <span class="nav-icon">⬆️</span>
+      UPGRADES
+    </button>
+
+    <button
+      class="nav"
+      onclick="announce('Locations')"
+      aria-label="Locations">
+      <span class="nav-icon">📍</span>
+      LOCATIONS
+    </button>
+
+    <button
+      class="nav"
+      onclick="announce('Mystery flavors are locked')"
+      aria-label="Mystery flavors">
+      <span class="nav-icon">❓</span>
+      MYSTERY
+    </button>
+
+    <button
+      class="nav"
+      onclick="announce('Donut Song')"
+      aria-label="Donut Song">
+      <span class="nav-icon">🎵</span>
+      DONUT SONG
+    </button>
+
+    <button
+      class="nav"
+      onclick="announce('More options')"
+      aria-label="More">
+      <span class="nav-icon">•••</span>
+      MORE
+    </button>
+
+  </nav>
 
 </div>
-
-
-<section class="panel builder">
-
-  <div class="panel-title">🛠️ Build The Order</div>
-
-  <div class="sub" style="margin-bottom:8px">DONUT</div>
-
-  <div class="choice-row" id="donuts"></div>
-
-  <div class="sub" style="margin:12px 0 8px">FILLING</div>
-
-  <div class="choice-row" id="fillings"></div>
-
-  <div class="sub" style="margin:12px 0 8px">
-    TOPPINGS — CHOOSE UP TO 2
-  </div>
-
-  <div class="choice-row" id="toppings"></div>
-
-  <button class="primary"
-          onclick="makeDonut()">
-    🍩 MAKE DONUT
-  </button>
-
-</section>
-
-
-<section class="panel mystery">
-
-  <div class="panel-title">❓ Mystery Flavors</div>
-
-  <div class="mystery-box">
-
-    <div>
-      <div class="mystery-title">Mystery Flavors</div>
-      <div class="mystery-text">
-        New flavors are hidden and must be unlocked.
-      </div>
-    </div>
-
-    <div class="lock" aria-label="Locked">🔒</div>
-
-  </div>
-
-  <div class="sub" style="margin-top:8px">
-    Unlocks become available as your bakery level increases.
-  </div>
-
-</section>
-
-
-<div class="lower-grid">
-
-  <section class="panel">
-
-    <div class="panel-title">📋 Active Orders</div>
-
-    <div class="order-list" id="activeOrders">
-
-      <div class="active-order">
-        <span>🍩 Strawberry</span>
-        <div class="progress"><span></span></div>
-        <strong>12s</strong>
-      </div>
-
-      <div class="active-order">
-        <span>🍫 Chocolate</span>
-        <div class="progress"><span style="width:65%"></span></div>
-        <strong>28s</strong>
-      </div>
-
-      <div class="active-order">
-        <span>🍩 Glazed</span>
-        <div class="progress"><span style="width:30%"></span></div>
-        <strong>45s</strong>
-      </div>
-
-    </div>
-
-  </section>
-
-
-  <section class="panel">
-
-    <div class="panel-title">⬆️ Shop Upgrades</div>
-
-    <div class="upgrade">
-
-      <div>
-        <h3>🔥 Faster Ovens</h3>
-        <p>Increase idle earnings.</p>
-      </div>
-
-      <button onclick="buyUpgrade('oven')">
-        UPGRADE<br>
-        <span id="ovenCost">$100</span>
-      </button>
-
-    </div>
-
-
-    <div class="upgrade">
-
-      <div>
-        <h3>⚙️ Better Equipment</h3>
-        <p>Improve bakery production.</p>
-      </div>
-
-      <button onclick="buyUpgrade('equipment')">
-        UPGRADE<br>
-        <span id="equipmentCost">$250</span>
-      </button>
-
-    </div>
-
-
-    <div class="upgrade">
-
-      <div>
-        <h3>👨‍🍳 Extra Staff</h3>
-        <p>Boost automatic income.</p>
-      </div>
-
-      <button onclick="buyUpgrade('staff')">
-        UPGRADE<br>
-        <span id="staffCost">$500</span>
-      </button>
-
-    </div>
-
-  </section>
-
-</div>
-
-
-<section class="panel" style="margin-top:12px">
-
-  <div class="panel-title">💰 Idle Bakery</div>
-
-  <div style="
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    gap:12px;
-    flex-wrap:wrap;
-  ">
-
-    <div>
-      <div class="sub">Your bakery keeps earning while you're away.</div>
-      <div style="
-        font-size:25px;
-        font-weight:1000;
-        color:var(--green);
-        margin-top:5px
-      " id="offline">
-        $0.00
-      </div>
-    </div>
-
-    <button class="primary"
-            style="width:auto;margin:0"
-            onclick="collectOffline()">
-      💵 COLLECT
-    </button>
-
-  </div>
-
-</section>
-
-
-<section class="panel" style="margin-top:12px">
-
-  <div class="panel-title">👑 Bakery Progress</div>
-
-  <div class="sub">Donuts Sold</div>
-  <div style="font-size:25px;font-weight:1000" id="sold">0</div>
-
-  <div class="sub" style="margin-top:8px">Baker Bucks</div>
-  <div style="font-size:25px;font-weight:1000" id="bucks">0</div>
-
-  <div class="sub" style="margin-top:8px">
-    Galactic Donuts Served
-  </div>
-  <div style="font-size:25px;font-weight:1000" id="galacticCount">
-    0
-  </div>
-
-</section>
-
-</div>
-
-
-<!-- GOLDEN DONUT -->
-
-<div class="golden" id="goldenModal">
-
-  <div class="golden-card">
-
-    <div style="
-      color:var(--gold);
-      font-size:30px;
-      font-weight:1000
-    ">
-      🍩 GOLDEN DONUT!
-    </div>
-
-    <div class="golden-donut">🍩</div>
-
-    <p>
-      A rare Golden Donut appeared!
-    </p>
-
-    <p style="color:var(--gold);font-size:24px;font-weight:1000">
-      +$500
-    </p>
-
-    <button class="primary"
-            onclick="collectGolden()">
-      💰 COLLECT PRIZE
-    </button>
-
-  </div>
-
-</div>
-
-
-<!-- SETTINGS -->
-
-<div class="modal" id="settings">
-
-  <div class="modal-card">
-
-    <h2>⚙️ Settings</h2>
-
-    <button class="primary"
-            onclick="saveGame();closeModals()">
-      💾 SAVE GAME
-    </button>
-
-    <button class="secondary"
-            style="width:100%;margin-top:10px"
-            onclick="speak('Desmonds Donut Dash. Your bakery currently has '+game.cash.toFixed(2)+' dollars and earns '+game.eps.toFixed(2)+' dollars per second.')">
-      🔊 READ GAME STATUS
-    </button>
-
-    <button class="secondary danger"
-            style="width:100%;margin-top:10px"
-            onclick="resetGame()">
-      ⚠️ RESET GAME
-    </button>
-
-    <button class="secondary"
-            style="width:100%;margin-top:10px"
-            onclick="closeModals()">
-      CLOSE
-    </button>
-
-  </div>
-
-</div>
-
-
-<!-- BOTTOM NAV -->
-
-<nav class="bottom-nav" aria-label="Main navigation">
-
-  <button class="nav-btn active"
-          onclick="scrollToTop()"
-          aria-label="Shop">
-    <span>🏪</span>
-    SHOP
-  </button>
-
-  <button class="nav-btn"
-          onclick="showMessage('Upgrades are available above.')"
-          aria-label="Upgrades">
-    <span>⬆️</span>
-    UPGRADES
-  </button>
-
-  <button class="nav-btn"
-          onclick="showMessage('New bakery locations unlock as you progress.')"
-          aria-label="Locations">
-    <span>📍</span>
-    LOCATIONS
-  </button>
-
-  <button class="nav-btn"
-          onclick="showMessage('Mystery flavors are locked until you reach the required level.')"
-          aria-label="Mystery">
-    <span>❓</span>
-    MYSTERY
-  </button>
-
-  <button class="nav-btn"
-          onclick="playDonutSong()"
-          aria-label="Donut Song">
-    <span>🎵</span>
-    DONUT SONG
-  </button>
-
-  <button class="nav-btn"
-          onclick="openModal('settings')"
-          aria-label="More">
-    <span>•••</span>
-    MORE
-  </button>
-
-</nav>
 
 
 <script>
-/* =========================================================
-   DESMOND'S DONUT DASH
-   DARK GALACTIC DONUT BUILD
-   ========================================================= */
 
-const SAVE_KEY = "desmondsDonutDashGalactic";
+/* ==========================================
+   GAME STATE
+========================================== */
 
-const baseDonuts = [
-  {id:"plain",name:"Plain",emoji:"🍩",price:1,level:1},
-  {id:"chocolate",name:"Chocolate",emoji:"🍫",price:2,level:1},
-  {id:"glazed",name:"Glazed",emoji:"🍩",price:3,level:1},
-  {id:"strawberry",name:"Strawberry",emoji:"🍓",price:5,level:3},
-  {id:"blueberry",name:"Blueberry",emoji:"🫐",price:7,level:5},
-  {id:"galactic",name:"Galactic",emoji:"🌌",price:25,level:8}
-];
+let money = 0;
+let earnings = .05;
+let level = 1;
 
-const fillings = [
-  {id:"none",name:"None",emoji:"—",price:0},
-  {id:"cream",name:"Cream",emoji:"🍦",price:3},
-  {id:"chocolateCream",name:"Chocolate Cream",emoji:"🍫",price:5}
-];
+let order = null;
 
-const toppings = [
-  {id:"sprinkles",name:"Sprinkles",emoji:"🌈",price:2},
-  {id:"oreo",name:"Oreo",emoji:"⚫",price:3},
-  {id:"mm",name:"M&M's",emoji:"🔴",price:4},
-  {id:"bacon",name:"Bacon",emoji:"🥓",price:5},
-  {id:"cookie",name:"Cookie Dough",emoji:"🍪",price:6}
-];
-
-let game = {
-  cash:0,
-  bucks:0,
-  sold:0,
-  level:1,
-  xp:0,
-  eps:.05,
-
-  oven:0,
-  equipment:0,
-  staff:0,
-
-  galacticCount:0,
-  cosmicRushUntil:0,
-
-  currentOrder:null,
-  selectedDonut:null,
-  selectedFilling:null,
-  selectedToppings:[],
-
-  lastSave:Date.now(),
-  golden:false
-};
+let selectedDonut = "";
+let selectedFilling = "";
+let selectedToppings = [];
 
 
-/* ---------- SAVE / LOAD ---------- */
+/* ==========================================
+   ACCESSIBILITY
+========================================== */
 
-function saveGame(){
-  game.lastSave=Date.now();
-  localStorage.setItem(SAVE_KEY,JSON.stringify(game));
-}
+function announce(text){
 
-function loadGame(){
+  if("speechSynthesis" in window){
 
-  const raw=localStorage.getItem(SAVE_KEY);
+    speechSynthesis.cancel();
 
-  if(!raw)return;
+    const speech =
+      new SpeechSynthesisUtterance(text);
 
-  try{
-    const saved=JSON.parse(raw);
-    game={...game,...saved};
-  }catch(e){
-    console.log("Save could not be loaded.");
-  }
+    speech.rate=.9;
 
-  calculateEPS();
-}
-
-
-/* ---------- MONEY ---------- */
-
-function calculateEPS(){
-
-  game.eps =
-    .05 +
-    game.oven * .05 +
-    game.equipment * .12 +
-    game.staff * .25;
-
-  if(Date.now() < game.cosmicRushUntil){
-    game.eps *= 3;
+    speechSynthesis.speak(speech);
   }
 }
 
 
-/* ---------- LEVEL ---------- */
-
-function addXP(amount){
-
-  game.xp += amount;
-
-  const needed = game.level * 100;
-
-  if(game.xp >= needed){
-
-    game.xp -= needed;
-    game.level++;
-
-    speak(
-      "Level up! You are now bakery level " +
-      game.level + "."
-    );
-
-    if(game.level === 8){
-      speak("The Galactic Donut is now unlocked!");
-    }
-
-    if(game.level === 20){
-      speak("Mystery flavors are now unlocked!");
-    }
-  }
-}
-
-
-/* ---------- ORDERS ---------- */
+/* ==========================================
+   TAKE ORDER
+========================================== */
 
 function takeOrder(){
 
-  if(game.currentOrder){
-    speak("You already have an active customer order.");
-    return;
-  }
+  const donuts=[
+    "Plain",
+    "Chocolate",
+    "Glazed",
+    "Strawberry",
+    "Blueberry"
+  ];
 
-  const available =
-    baseDonuts.filter(d=>d.level<=game.level);
+  const donut=
+    donuts[
+      Math.floor(Math.random()*donuts.length)
+    ];
 
-  const donut =
-    available[Math.floor(Math.random()*available.length)];
-
-  const filling =
-    fillings[Math.floor(Math.random()*fillings.length)];
-
-  const toppingCount =
-    Math.random() < .55 ? 0 :
-    Math.random() < .75 ? 1 : 2;
-
-  const shuffled=[...toppings].sort(()=>Math.random()-.5);
-
-  const orderToppings=
-    shuffled.slice(0,toppingCount).map(t=>t.id);
-
-  game.currentOrder={
-    donut:donut.id,
-    filling:filling.id,
-    toppings:orderToppings,
-    reward:
-      donut.price +
-      filling.price +
-      orderToppings.reduce(
-        (sum,id)=>sum+(toppings.find(t=>t.id===id)?.price||0),
-        0
-      ) + 10
+  order={
+    donut:donut,
+    reward:Math.floor(
+      10+Math.random()*30
+    )
   };
 
-  displayOrder();
+  document.getElementById(
+    "orderTitle"
+  ).textContent=
+    donut+" Donut";
 
-  speak(
-    "New order. " +
-    donut.name +
-    ", " +
-    (filling.id==="none" ? "no filling" : filling.name) +
-    ", " +
-    (orderToppings.length
-      ? orderToppings.map(id=>toppings.find(t=>t.id===id).name).join(" and ")
-      : "no toppings")
+  document.getElementById(
+    "orderDetails"
+  ).textContent=
+    "Freshly made with your selected toppings.";
+
+  document.getElementById(
+    "reward"
+  ).textContent=
+    "Reward: $"+order.reward;
+
+  announce(
+    "New customer order. "+
+    donut+
+    " donut. Reward "+
+    order.reward+
+    " dollars."
   );
 }
 
 
-function displayOrder(){
-
-  const o=game.currentOrder;
-
-  if(!o)return;
-
-  const donut=baseDonuts.find(d=>d.id===o.donut);
-  const filling=fillings.find(f=>f.id===o.filling);
-
-  const topNames=o.toppings.map(
-    id=>toppings.find(t=>t.id===id).name
-  );
-
-  document.getElementById("customerOrder").textContent =
-    donut.name + " Donut";
-
-  document.getElementById("orderDetail").textContent =
-    (filling.id==="none"
-      ? "No filling"
-      : filling.name)
-    +
-    (topNames.length
-      ? " • " + topNames.join(" • ")
-      : "");
-
-  document.getElementById("reward").textContent =
-    "Reward: $" + o.reward;
-
-  document.getElementById("orderButton").textContent =
-    "🍩 ORDER ACTIVE";
-}
-
+/* ==========================================
+   NEXT CUSTOMER
+========================================== */
 
 function nextCustomer(){
-
-  if(game.currentOrder){
-    speak("Finish the current order before taking the next customer.");
-    return;
-  }
 
   takeOrder();
 }
 
 
-/* ---------- BUILDER ---------- */
+/* ==========================================
+   CHOOSE INGREDIENT
+========================================== */
 
-function renderChoices(){
+function choose(type,value){
 
-  const donutBox=document.getElementById("donuts");
+  if(type==="donut"){
 
-  donutBox.innerHTML="";
+    selectedDonut=value;
 
-  baseDonuts.forEach(d=>{
-
-    const unlocked=d.level<=game.level;
-
-    const b=document.createElement("button");
-
-    b.className=
-      "choice " +
-      (game.selectedDonut===d.id ? "selected ":"") +
-      (!unlocked ? "locked":"");
-
-    b.disabled=!unlocked;
-
-    b.setAttribute(
-      "aria-label",
-      unlocked
-        ? "Choose "+d.name+" donut"
-        : d.name+" donut locked until level "+d.level
+    announce(
+      value+" donut selected."
     );
 
-    b.innerHTML=
-      `<span class="emoji">${d.emoji}</span>
-       ${d.name}
-       ${!unlocked ? "<br>🔒 L"+d.level:""}`;
-
-    b.onclick=()=>{
-      game.selectedDonut=d.id;
-      renderChoices();
-      speak(d.name+" donut selected.");
-    };
-
-    donutBox.appendChild(b);
-  });
-
-
-  const fillingBox=document.getElementById("fillings");
-
-  fillingBox.innerHTML="";
-
-  fillings.forEach(f=>{
-
-    const b=document.createElement("button");
-
-    b.className=
-      "choice " +
-      (game.selectedFilling===f.id ? "selected":"");
-
-    b.innerHTML=
-      `<span class="emoji">${f.emoji}</span>${f.name}`;
-
-    b.onclick=()=>{
-      game.selectedFilling=f.id;
-      renderChoices();
-      speak(f.name+" filling selected.");
-    };
-
-    fillingBox.appendChild(b);
-  });
-
-
-  const toppingBox=document.getElementById("toppings");
-
-  toppingBox.innerHTML="";
-
-  toppings.forEach(t=>{
-
-    const selected=
-      game.selectedToppings.includes(t.id);
-
-    const b=document.createElement("button");
-
-    b.className=
-      "choice " +
-      (selected ? "selected":"");
-
-    b.innerHTML=
-      `<span class="emoji">${t.emoji}</span>${t.name}`;
-
-    b.onclick=()=>{
-
-      if(selected){
-
-        game.selectedToppings=
-          game.selectedToppings.filter(id=>id!==t.id);
-
-      }else{
-
-        if(game.selectedToppings.length>=2){
-          speak("You can choose up to two toppings.");
-          return;
-        }
-
-        game.selectedToppings.push(t.id);
-      }
-
-      renderChoices();
-    };
-
-    toppingBox.appendChild(b);
-  });
-}
-
-
-function makeDonut(){
-
-  if(!game.selectedDonut){
-    speak("Choose a donut first.");
-    return;
   }
 
-  const filling=
-    game.selectedFilling || "none";
+  if(type==="filling"){
 
-  const toppingsSelected=
-    game.selectedToppings;
+    selectedFilling=value;
 
-  if(!game.currentOrder){
+    announce(
+      value+" filling selected."
+    );
 
-    speak("There is no customer order. Take an order first.");
-    return;
   }
 
-  const correct=
-    game.currentOrder.donut===game.selectedDonut &&
-    game.currentOrder.filling===filling &&
-    sameToppings(
-      game.currentOrder.toppings,
-      toppingsSelected
-    );
+  if(type==="topping"){
 
-  if(correct){
+    if(selectedToppings.includes(value)){
 
-    let payout=game.currentOrder.reward;
+      selectedToppings=
+        selectedToppings.filter(
+          x=>x!==value
+        );
 
-    if(Date.now()<game.cosmicRushUntil){
-      payout*=2;
-    }
-
-    game.cash+=payout;
-    game.sold++;
-    addXP(15);
-
-    speak(
-      "Perfect order! You earned $" +
-      payout.toFixed(0)
-    );
-
-    game.currentOrder=null;
-
-  }else{
-
-    game.cash+=1;
-    game.sold++;
-
-    addXP(3);
-
-    speak(
-      "Order completed, but it wasn't perfect. " +
-      "You earned one dollar."
-    );
-
-    game.currentOrder=null;
-  }
-
-  game.selectedDonut=null;
-  game.selectedFilling=null;
-  game.selectedToppings=[];
-
-  renderChoices();
-  updateScreen();
-
-  saveGame();
-
-  maybeGolden();
-}
-
-
-function sameToppings(a,b){
-
-  if(a.length!==b.length)return false;
-
-  return [...a].sort().join(",") ===
-         [...b].sort().join(",");
-}
-
-
-/* ---------- GALACTIC ---------- */
-
-function serveGalactic(){
-
-  if(game.level<8){
-
-    speak(
-      "The Galactic Donut unlocks at bakery level 8."
-    );
-
-    return;
-  }
-
-  game.galacticCount++;
-
-  game.cosmicRushUntil =
-    Date.now() + 60 * 60 * 1000;
-
-  game.cash+=50;
-
-  addXP(40);
-
-  speak(
-    "Galactic Donut served! " +
-    "Cosmic Rush is active."
-  );
-
-  calculateEPS();
-  updateScreen();
-  saveGame();
-}
-
-
-/* ---------- UPGRADES ---------- */
-
-function buyUpgrade(type){
-
-  const levels={
-    oven:game.oven,
-    equipment:game.equipment,
-    staff:game.staff
-  };
-
-  const costs={
-    oven:100 * Math.pow(1.7,levels.oven),
-    equipment:250 * Math.pow(1.8,levels.equipment),
-    staff:500 * Math.pow(1.9,levels.staff)
-  };
-
-  const cost=Math.floor(costs[type]);
-
-  if(game.cash<cost){
-
-    speak(
-      "You need $" +
-      cost.toFixed(0) +
-      " for that upgrade."
-    );
-
-    return;
-  }
-
-  game.cash-=cost;
-  game[type]++;
-
-  calculateEPS();
-  updateScreen();
-  saveGame();
-
-  speak("Upgrade purchased.");
-}
-
-
-/* ---------- GOLDEN DONUT ---------- */
-
-function maybeGolden(){
-
-  if(game.golden)return;
-
-  if(Math.random()<.08){
-
-    game.golden=true;
-
-    document
-      .getElementById("goldenModal")
-      .classList.add("show");
-
-    speak(
-      "Golden Donut! A rare bonus appeared."
-    );
-  }
-}
-
-
-function collectGolden(){
-
-  game.cash+=500;
-  game.golden=false;
-
-  document
-    .getElementById("goldenModal")
-    .classList.remove("show");
-
-  speak("Golden Donut collected. Five hundred dollars added.");
-
-  updateScreen();
-  saveGame();
-}
-
-
-/* ---------- OFFLINE EARNINGS ---------- */
-
-function calculateOffline(){
-
-  const now=Date.now();
-  const elapsed=
-    Math.min(
-      now-game.lastSave,
-      8*60*60*1000
-    );
-
-  const seconds=
-    Math.max(0,elapsed/1000);
-
-  return seconds*game.eps;
-}
-
-
-function collectOffline(){
-
-  const amount=calculateOffline();
-
-  if(amount<=0){
-
-    speak("There are no offline earnings yet.");
-
-    return;
-  }
-
-  game.cash+=amount;
-  game.lastSave=Date.now();
-
-  updateScreen();
-  saveGame();
-
-  speak(
-    "You collected $" +
-    amount.toFixed(2) +
-    " in offline earnings."
-  );
-}
-
-
-/* ---------- SCREEN ---------- */
-
-function updateScreen(){
-
-  calculateEPS();
-
-  document.getElementById("cash").textContent =
-    "$"+game.cash.toFixed(2);
-
-  document.getElementById("eps").textContent =
-    "$"+game.eps.toFixed(2);
-
-  document.getElementById("level").textContent =
-    game.level;
-
-  document.getElementById("sold").textContent =
-    game.sold;
-
-  document.getElementById("bucks").textContent =
-    game.bucks;
-
-  document.getElementById("galacticCount").textContent =
-    game.galacticCount;
-
-  document.getElementById("offline").textContent =
-    "$"+calculateOffline().toFixed(2);
-
-  document.getElementById("ovenCost").textContent =
-    "$"+Math.floor(100*Math.pow(1.7,game.oven));
-
-  document.getElementById("equipmentCost").textContent =
-    "$"+Math.floor(250*Math.pow(1.8,game.equipment));
-
-  document.getElementById("staffCost").textContent =
-    "$"+Math.floor(500*Math.pow(1.9,game.staff));
-
-  if(Date.now()<game.cosmicRushUntil){
-
-    const remaining=
-      Math.ceil(
-        (game.cosmicRushUntil-Date.now())/1000
+      announce(
+        value+" removed."
       );
 
-    const mins=Math.floor(remaining/60);
-    const secs=remaining%60;
+    }else{
 
-    document.getElementById("cosmicStatus").textContent =
-      "⚡ COSMIC RUSH — "+
-      mins+":"+
-      String(secs).padStart(2,"0");
+      if(selectedToppings.length>=2){
 
-  }else{
+        announce(
+          "You can choose two toppings."
+        );
 
-    document.getElementById("cosmicStatus").textContent =
-      "COSMIC RUSH";
-  }
+        return;
+      }
 
-  if(game.currentOrder){
+      selectedToppings.push(value);
 
-    displayOrder();
-
-  }else{
-
-    document.getElementById("customerOrder").textContent =
-      "Ready for a customer!";
-
-    document.getElementById("orderDetail").textContent =
-      "Press Take Order to begin.";
-
-    document.getElementById("reward").textContent =
-      "Reward: $0";
-
-    document.getElementById("orderButton").textContent =
-      "🍩 TAKE ORDER";
+      announce(
+        value+" topping selected."
+      );
+    }
   }
 }
 
 
-/* ---------- SPEECH / ACCESSIBILITY ---------- */
+/* ==========================================
+   GALACTIC DONUT
+========================================== */
 
-function speak(text){
+function galacticDonut(){
 
-  if("speechSynthesis" in window){
+  if(level<8){
 
-    window.speechSynthesis.cancel();
+    announce(
+      "Galactic Donut unlocks at level 8."
+    );
 
-    const utterance=
-      new SpeechSynthesisUtterance(text);
-
-    utterance.rate=.95;
-
-    window.speechSynthesis.speak(utterance);
+    return;
   }
-}
 
+  money+=50;
+  earnings+=.25;
 
-/* ---------- SONG ---------- */
+  document.getElementById(
+    "money"
+  ).textContent=
+    "$"+money.toFixed(2);
 
-function playDonutSong(){
+  document.getElementById(
+    "eps"
+  ).textContent=
+    "$"+earnings.toFixed(2);
 
-  speak(
-    "Desmond's Donut Dash! " +
-    "Make the dough, serve the show, " +
-    "watch those Baker Bucks grow!"
+  document.getElementById(
+    "cosmic"
+  ).textContent=
+    "⚡ COSMIC RUSH ACTIVE!";
+
+  announce(
+    "Galactic Donut served! Cosmic Rush activated."
   );
 }
 
 
-/* ---------- MODALS ---------- */
+/* ==========================================
+   UPGRADE
+========================================== */
 
-function openModal(id){
+function upgrade(){
 
-  document.getElementById(id)
-    .classList.add("show");
-}
+  const cost=100;
 
-function closeModals(){
+  if(money<cost){
 
-  document
-    .querySelectorAll(".modal")
-    .forEach(m=>m.classList.remove("show"));
-}
+    announce(
+      "You need "+
+      cost+
+      " Baker Bucks."
+    );
 
+    return;
+  }
 
-/* ---------- MESSAGE ---------- */
+  money-=cost;
+  earnings+=.10;
 
-function showMessage(message){
-  speak(message);
-  alert(message);
-}
+  document.getElementById(
+    "money"
+  ).textContent=
+    "$"+money.toFixed(2);
 
+  document.getElementById(
+    "eps"
+  ).textContent=
+    "$"+earnings.toFixed(2);
 
-/* ---------- RESET ---------- */
-
-function resetGame(){
-
-  if(!confirm(
-    "Reset all Desmond's Donut Dash progress?"
-  ))return;
-
-  localStorage.removeItem(SAVE_KEY);
-
-  location.reload();
-}
-
-
-/* ---------- NAV ---------- */
-
-function scrollToTop(){
-
-  window.scrollTo({
-    top:0,
-    behavior:"smooth"
-  });
+  announce(
+    "Faster ovens upgraded."
+  );
 }
 
 
-/* ---------- IDLE LOOP ---------- */
-
-let lastTick=Date.now();
+/* ==========================================
+   IDLE EARNINGS
+========================================== */
 
 setInterval(()=>{
 
-  const now=Date.now();
+  money+=earnings;
 
-  const delta=
-    Math.min(
-      (now-lastTick)/1000,
-      5
-    );
-
-  lastTick=now;
-
-  calculateEPS();
-
-  game.cash+=game.eps*delta;
-
-  if(Math.random()<.0008){
-    maybeGolden();
-  }
-
-  updateScreen();
+  document.getElementById(
+    "money"
+  ).textContent=
+    "$"+money.toFixed(2);
 
 },1000);
 
 
-/* ---------- AUTO SAVE ---------- */
+/* ==========================================
+   PREVENT ANY SCROLLING
+========================================== */
 
-setInterval(saveGame,10000);
+document.addEventListener(
+  "touchmove",
+  function(event){
+
+    if(
+      event.target.closest(
+        "button"
+      )
+    ){
+      return;
+    }
+
+    event.preventDefault();
+
+  },
+  {passive:false}
+);
+
+document.addEventListener(
+  "wheel",
+  function(event){
+    event.preventDefault();
+  },
+  {passive:false}
+);
 
 
-/* ---------- START ---------- */
+/* ==========================================
+   START
+========================================== */
 
-loadGame();
-renderChoices();
-updateScreen();
-
-window.addEventListener("beforeunload",saveGame);
+document.getElementById(
+  "money"
+).textContent=
+  "$"+money.toFixed(2);
 
 </script>
 
