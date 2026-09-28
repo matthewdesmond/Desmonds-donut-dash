@@ -68,7 +68,8 @@ radial-gradient(circle at 50% 45%,#59276b 0,#34173f 48%,#24102f 100%)}
 #home .hero{height:132px;min-height:132px;padding:0;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#35133f 0%,#4b1c59 48%,#24112f 100%);border:1px solid #70447e;box-shadow:0 0 24px rgba(255,79,163,.13),0 0 35px rgba(53,230,255,.06)}
 #home .heroText{position:absolute;left:18px;top:18px;z-index:5}
 #home .heroText b{display:block;font-size:20px;line-height:1.15;color:#fff}
-#home .heroText span{display:block;margin-top:7px;font-size:13px;color:#d8bfdc}
+#home .heroText > span{display:block;margin-top:7px;font-size:13px;color:#d8bfdc}
+#home .heroText > span span{display:inline;margin-top:0;font-size:inherit;color:inherit}
 #home .hero:after{display:none}
 #home .heroDonut{font-size:108px;line-height:1;transform:translateY(2px);filter:drop-shadow(0 10px 7px rgba(0,0,0,.55));animation:homeDonutFloat 3s ease-in-out infinite;user-select:none}
 #home .donutPerson{display:none!important}
@@ -201,6 +202,7 @@ if(typeof s.crowns!=='number')s.crowns=0;
 if(typeof s.royalBakery!=='boolean')s.royalBakery=false;
 if(s.shift && (!Number.isFinite(Number(s.shift.until)) || !Number.isFinite(Number(s.shift.lastCalcAt)))) s.shift=null;
 if(s.order)normalizeBuild();
+
 function load(){try{return JSON.parse(localStorage.getItem(KEY))}catch(e){return null}}
 function blankDonutBuild(){return {donut:null,filling:null,toppings:[],mystery:null}}
 function blankBuild(qty=1){
@@ -210,136 +212,165 @@ function blankBuild(qty=1){
     madeQty:0
   };
 }
-function totalOrderQty(o){return (o?.groups||[]).reduce((sum,g)=>sum+Number(g.qty||0),0)}
-function totalLocationBonus(){return s.locationsOwned.reduce((sum,i)=>sum+(locations[i]?.bonus||0),0)}
-function upgradeBonus(){return s.upgrades.reduce((sum,lv,i)=>sum+lv*upgrades[i][2],0)}
-function activePower(type){
- const now=Date.now();let total=0;
- for(const p of powerups){const x=s.powerups[p.name];if(x&&x.until>now&&x.type===type)total+=p.pct}
- return total;
+
+function normalizeBuild(){
+ if(!s.order){s.build=null;return}
+ const qty=Math.max(1,Number(s.order.qty)||1);
+ if(!s.build || !Array.isArray(s.build.donuts)){
+   const old=s.build;
+   s.build=blankBuild(qty);
+   if(old){
+     const oldDonut=Array.isArray(old.donuts)?old.donuts[0]:old;
+     s.build.donuts[0]={
+       donut:oldDonut?.donut||null,
+       filling:oldDonut?.filling||null,
+       toppings:Array.isArray(oldDonut?.toppings)?oldDonut.toppings:[],
+       mystery:oldDonut?.mystery||null
+     };
+   }
+ }
+ s.build.donuts=[s.build.donuts[0]||blankDonutBuild()];
+ s.build.current=0;
+ s.build.madeQty=Math.max(0,Math.min(Number(s.build.madeQty)||0,qty));
 }
-function getEPS(){
- let base=0.05+s.level*.05;
- base*=1+totalLocationBonus()/100;
- base*=1+upgradeBonus()/100;
- base*=1+s.crowns*.05;
- if(s.royalBakery)base*=1.15;
- base*=1+activePower('idle')/100;
- if(Date.now()<s.cosmicUntil)base*=3;
- return base;
+
+function save(){s.lastAwayAt=Date.now();localStorage.setItem(KEY,JSON.stringify(s))}
+function fmt(n){if(n<1000)return '$'+Math.floor(n).toLocaleString();let u=['K','M','B','T'];let i=-1;while(n>=1000&&i<u.length-1){n/=1000;i++}return '$'+n.toFixed(n<10?1:0)+u[i]}
+function totalLocationBonus(){return locations.reduce((a,l,i)=>a+(s.locationsOwned.includes(i)?l.bonus:0),0)}
+function upgradeBonus(){return s.upgrades.reduce((a,l,i)=>a+l*upgrades[i][2],0)}
+function getEPS(){let base=0.12+(s.level-1)*0.04;base*=1+upgradeBonus()/100;base*=1+totalLocationBonus()/100;if(s.royalBakery)base*=1.15;let mult=1+(s.crowns*.05);if(Date.now()<s.cosmicUntil)mult*=3;mult*=1+(activePower('idle')/100);return base*mult}
+function activePower(type){let now=Date.now(),total=0;for(const p of powerups){const x=s.powerups[p.name];if(x&&x.until>now&&x.type===type)total+=p.pct}return total}
+function levelUpCheck(){while(s.xp>=100+s.level*35){s.xp-=100+s.level*35;s.level++;toast('🎉 LEVEL UP! Level '+s.level);speech('Level '+s.level+'! A new bakery milestone is available.')}}
+
+function showTab(id,btn){document.querySelectorAll('.screen').forEach(x=>x.classList.remove('active'));document.getElementById(id).classList.add('active');document.querySelectorAll('.nav button').forEach(x=>x.classList.remove('active'));btn.classList.add('active');renderAll()}
+function speech(t){if(!('speechSynthesis' in window))return;window.speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);u.rate=.92;u.pitch=1;window.speechSynthesis.speak(u)}
+
+function playDonutSong(){
+ if(!('speechSynthesis' in window))return;
+ window.speechSynthesis.cancel();
+ if(window.__donutSongAudio){try{window.__donutSongAudio.close()}catch(e){}}
+ const C=window.AudioContext||window.webkitAudioContext;
+ let audio=C?new C():null;
+ const now=audio?audio.currentTime:0;
+ const notes=[261.63,329.63,392.00,329.63,293.66,349.23,440.00,349.23,261.63,329.63,392.00,523.25,440.00,392.00,329.63,261.63];
+ if(audio){
+   notes.forEach((freq,i)=>{
+     const o=audio.createOscillator(),g=audio.createGain();
+     o.type='triangle';o.frequency.value=freq;
+     const t=now+i*.38;
+     g.gain.setValueAtTime(.0001,t);
+     g.gain.exponentialRampToValueAtTime(.045,t+.025);
+     g.gain.exponentialRampToValueAtTime(.0001,t+.32);
+     o.connect(g).connect(audio.destination);o.start(t);o.stop(t+.34);
+   });
+   window.__donutSongAudio=audio;
+ }
+ const lines=[
+   ["🎵 Donuts in the bakery, rising to the sky!",1.18,1.18],
+   ["Glaze 'em, sprinkle 'em, watch those donuts fly!",1.10,1.12],
+   ["Bake it, sell it, stack that dough!",1.24,1.18],
+   ["Desmond's Donut Dash — let's go, go, go!",1.30,1.22],
+   ["Chocolate, jelly, rainbow too!",1.12,1.16],
+   ["Level up the bakery — that's what we do!",1.16,1.12],
+   ["Grab a donut, make it sweet!",1.24,1.18],
+   ["Desmond's Dash can't be beat!",1.34,1.20]
+ ];
+ let delay=250;
+ lines.forEach((line,i)=>{
+   setTimeout(()=>{
+     if(!('speechSynthesis' in window))return;
+     const u=new SpeechSynthesisUtterance(line[0]);
+     u.rate=line[1];u.pitch=line[2];u.volume=1;
+     window.speechSynthesis.speak(u);
+   },delay);
+   delay+=i===3?650:1050;
+ });
+ setTimeout(()=>{if(audio){try{audio.close()}catch(e){}}},9500);
 }
-function fmt(n){
- n=Number(n)||0;
- if(n>=1e9)return '$'+(n/1e9).toFixed(2)+'B';
- if(n>=1e6)return '$'+(n/1e6).toFixed(2)+'M';
- if(n>=1e3)return '$'+(n/1e3).toFixed(2)+'K';
- return '$'+n.toFixed(n<100?2:0);
-}
-function speech(t){try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);u.rate=.95;u.pitch=1.05;speechSynthesis.speak(u)}catch(e){}}
-function toast(t){
- const el=document.getElementById('toast');el.textContent=t;el.classList.remove('hidden');
- clearTimeout(window.__toast);window.__toast=setTimeout(()=>el.classList.add('hidden'),2400);
-}
-function save(){localStorage.setItem(KEY,JSON.stringify(s))}
-function showTab(id,btn){
- document.querySelectorAll('.screen').forEach(x=>x.classList.remove('active'));
- document.getElementById(id).classList.add('active');
- document.querySelectorAll('.nav button').forEach(x=>x.classList.remove('active'));
- btn.classList.add('active');
- renderAll();
-}
+
+function toast(t){const el=document.getElementById('toast');el.textContent=t;el.classList.remove('hidden');clearTimeout(window.__toast);window.__toast=setTimeout(()=>el.classList.add('hidden'),1800)}
 function openModal(html){document.getElementById('modal').innerHTML=html;document.getElementById('modalBack').classList.add('show')}
 function closeModal(){document.getElementById('modalBack').classList.remove('show')}
-function levelUpCheck(){
- while(s.xp>=s.level*100){s.xp-=s.level*100;s.level++;toast(`🎉 Level ${s.level}! New bakery options unlocked.`);speech(`Congratulations! You reached level ${s.level}.`)}
-}
-function totalBaseBonus(){return totalLocationBonus()+upgradeBonus()+s.crowns*5+(s.royalBakery?15:0)}
-function formatRemaining(ms){let sec=Math.max(0,Math.ceil(ms/1000));let h=Math.floor(sec/3600);let m=Math.floor((sec%3600)/60);let s2=sec%60;return h?`${h}h ${m}m`:m?`${m}m ${s2}s`:`${s2}s`}
+
+function formatRemaining(ms){const total=Math.max(0,Math.ceil(ms/1000));const h=Math.floor(total/3600);const m=Math.floor((total%3600)/60);const sec=total%60;return h>0?`${h}:${String(m).padStart(2,'0')}:${String(sec).padStart(2,'0')}`:`${m}:${String(sec).padStart(2,'0')}`}
 function renderHome(){
- document.getElementById('cash').textContent=fmt(s.cash);
- document.getElementById('bucks').textContent=s.bucks.toLocaleString();
- document.getElementById('level').textContent=s.level;
- document.getElementById('xpText').textContent=`${Math.floor(s.xp)} / ${s.level*100} XP`;
- document.getElementById('sold').textContent=s.sold.toLocaleString();
- document.getElementById('streak').textContent=s.streak;
- document.getElementById('crowns').textContent=s.crowns;
- const eps=s.shift&&s.shift.until>Date.now()?getEPS()*(s.shift.mult||1)*(1+activePower('shift')/100):getEPS();
- document.getElementById('eps').textContent=fmt(eps)+'/s';
- const ot=document.getElementById('orderTitle'),ol=document.getElementById('orderLine');
- if(s.order){
-  ot.textContent=`👤 ${s.order.customer}`;
-  ol.textContent=orderText(s.order);
- }else{
-  ot.textContent='👤 No customer waiting';
-  ol.textContent='Take an order to start serving customers.';
- }
- const shiftBtn=document.getElementById('shiftButton');
- if(s.shift&&s.shift.until>Date.now()){
-  shiftBtn.innerHTML='⏱️ SHIFT ACTIVE<small id="shiftTimer">STARTING...</small>';
- }else{
-  shiftBtn.innerHTML='⏱️ START SHIFT<small id="shiftTimer">Earn automatically</small>';
- }
+ document.getElementById('cash').textContent=fmt(s.cash);document.getElementById('bucks').textContent=s.bucks;
+ document.getElementById('level').textContent=s.level;document.getElementById('xpText').textContent=`${Math.floor(s.xp)} / ${100+s.level*35} XP`;
+ document.getElementById('eps').textContent=fmt(getEPS())+'/s';document.getElementById('sold').textContent=s.sold.toLocaleString();
+ document.getElementById('streak').textContent=s.streak;document.getElementById('crowns').textContent=s.crowns;
+ document.getElementById('orderTitle').textContent=s.order?'👤 '+s.order.customer+' is waiting':'👤 No customer waiting';
+ document.getElementById('orderLine').textContent=s.order?'Wants: '+orderText(s.order):'Take an order to start serving customers.';
+ const tb=document.getElementById('takeOrderButton');
+ tb.innerHTML=s.order?'🧾 VIEW ORDER<small>Hear the full order</small>':'🧾 TAKE ORDER<small>Hear the full order</small>';
+ tb.setAttribute('aria-label',s.order?'View and hear current order':'Take customer order and hear it');
+ const sb=document.getElementById('shiftButton');
+ sb.innerHTML=s.shift&&s.shift.until>Date.now()?`⏱️ SHIFT RUNNING<small>${formatRemaining(s.shift.until-Date.now())} REMAINING</small>`:'⏱️ START SHIFT<small>15 MIN SHIFT</small>';
+ document.getElementById('status').textContent=s.shift&&s.shift.until>Date.now()?`Shift active • ${formatRemaining(s.shift.until-Date.now())} remaining`:(Date.now()<s.cosmicUntil?'🌌 COSMIC RUSH ACTIVE!':'Bakery ready!');
 }
-function orderText(o){
- if(!o)return '';
- return (o.groups||[]).map(g=>{
-  let x=`${g.qty}× ${g.donut}`;
-  if(g.filling)x+=` with ${g.filling}`;
-  if(g.mystery)x+=` • Mystery: ${g.mystery}`;
-  if(g.toppings?.length)x+=` • ${g.toppings.join(' + ')}`;
-  if(g.golden)x+=' • 🌟 GOLDEN';
-  if(g.special)x+=' • 🌌 GALACTIC';
-  return x;
- }).join(' | ');
+function orderText(o){let a=`${o.qty} ${o.donut}`;if(o.filling)a+=`, ${o.filling}`;if(o.toppings.length)a+=`, ${o.toppings.join(' and ')}`;if(o.mystery)a+=`, mystery flavor ${o.mystery}`;return a}
+function customerName(){return ['Jamie','Taylor','Sam','Avery','Jordan','Casey','Riley','Morgan'][Math.floor(Math.random()*8)]}
+function recipeKey(r){
+ return JSON.stringify([
+  r.donut||null,
+  r.filling||null,
+  r.mystery||null,
+  [...(r.toppings||[])].sort()
+ ]);
 }
-function randomFrom(a){return a[Math.floor(Math.random()*a.length)]}
-function createRecipe(){
- let donut=randomFrom(baseDonuts);
- let filling=Math.random()<.55?randomFrom(fillings):null;
- let tops=[];
- if(Math.random()<.75)tops=[randomFrom(toppings)];
- if(Math.random()<.25)tops=[...tops,randomFrom(toppings).filter?randomFrom(toppings):randomFrom(toppings)];
- tops=[...new Set(tops)].slice(0,2);
+function randomRecipe(){
+ const donut=baseDonuts[Math.floor(Math.random()*baseDonuts.length)];
+ const filling=Math.random()<.65?fillings[Math.floor(Math.random()*fillings.length)]:null;
+ const tops=[...toppings].sort(()=>Math.random()-.5).slice(0,Math.floor(Math.random()*3));
  return {donut,filling,toppings:tops,mystery:null};
 }
-function createMystery(){
- if(s.level<10||Math.random()>.18)return null;
- const unlockedCount=Math.min(mystery.length,Math.max(1,Math.floor((s.level-10)/2)+1));
- const pool=mystery.slice(0,unlockedCount);
- return randomFrom(pool);
-}
-function generateOrder(){
- const assorted=Math.random()<.35;
- const count=assorted?(2+Math.floor(Math.random()*3)):1;
+function makeOrder(){
+ const assorted=s.level>=3;
+ const groupCount=assorted ? (2+Math.floor(Math.random()*3)) : 1;
  const groups=[];
- for(let i=0;i<count;i++){
-  const r=createRecipe();
-  r.mystery=createMystery();
-  const golden=s.level>=15&&Math.random()<.05;
-  const special=s.level>=35&&Math.random()<.03;
-  groups.push({...r,qty:1+Math.floor(Math.random()*3),golden,special});
+ const used=new Set();
+ for(let i=0;i<groupCount;i++){
+  let r=randomRecipe();
+  let guard=0;
+  while(used.has(recipeKey(r))&&guard++<20) r=randomRecipe();
+  used.add(recipeKey(r));
+  r.qty=1+Math.floor(Math.random()*3);
+  groups.push(r);
  }
- return {customer:randomFrom(['Mia','Jack','Nolan','Emma','Luke','Sophie','Ava','Noah','Ella','Max']),groups};
+ const special=Math.random()<.03&&s.level>=35;
+ const golden=!special&&Math.random()<.04&&s.level>=15;
+ if(special){groups[0].special=true}
+ if(golden){groups[0].golden=true}
+ if(s.level>=5&&Math.random()<.18){
+  const g=groups[Math.floor(Math.random()*groups.length)];
+  g.mystery=mystery[Math.floor(Math.random()*mystery.length)];
+ }
+ return {customer:customerName(),groups,assorted:groups.length>1};
+}
+function totalOrderQty(o){return (o?.groups||[]).reduce((a,g)=>a+(Number(g.qty)||0),0)}
+function orderText(o){
+ if(!o)return '';
+ if(o.groups){
+  return o.groups.map(g=>{
+   let a=`${g.qty} ${g.donut}`;
+   if(g.filling)a+=`, ${g.filling}`;
+   if(g.mystery)a+=`, ${g.mystery}`;
+   if(g.toppings?.length)a+=`, ${g.toppings.join(' and ')}`;
+   return a;
+  }).join('; ');
+ }
+ let a=`${o.qty} ${o.donut}`;if(o.filling)a+=`, ${o.filling}`;if(o.toppings?.length)a+=`, ${o.toppings.join(' and ')}`;return a;
 }
 function takeOrder(){
- if(s.order){openOrderBuilder(true);return}
- s.order=generateOrder();
- normalizeBuild();
- renderAll();
- openOrderBuilder(true);
- save();
+ if(s.order){normalizeBuild();openOrderBuilder(true);return}
+ s.order=makeOrder();
+ s.build={slots:s.order.groups.map(()=>({donut:null,filling:null,toppings:[],mystery:null,madeQty:0})),current:0};
+ openOrderBuilder(true);save();renderHome();
 }
 function speakOrder(o){
- if(!o)return;
- let orderTextSpeech=(o.groups||[]).map(g=>{
-  let x=`${g.qty} ${g.donut} donut${g.qty===1?'':'s'}`;
-  if(g.filling)x+=` with ${g.filling}`;
-  if(g.mystery)x+=`, mystery flavor ${g.mystery}`;
-  if(g.toppings?.length)x+=`, topped with ${g.toppings.join(' and ')}`;
-  return x;
- }).join('. ');
- let extra=o.groups.some(g=>g.golden)?' One of these is a Golden Donut with a special reward.':'';
- speech(`New order from ${o.customer}. ${orderTextSpeech}.${extra}`);
+ let extra='';
+ if(o.groups?.some(g=>g.special))extra=' One of these is a Galactic Donut. Cosmic Rush activates when served.';
+ else if(o.groups?.some(g=>g.golden))extra=' One of these is a Golden Donut with a special reward.';
+ speech(`New order from ${o.customer}. ${orderText(o)}.${extra}`);
 }
 function normalizeBuild(){
  if(!s.order){s.build=null;return}
@@ -485,7 +516,7 @@ function renderMore(){
  <div class="item"><div class="itemTop"><span class="icon">👑</span><div><h3>Royal Bakery</h3><p>${s.royalBakery?'ACTIVE • +15% total income':'Requires Level 20, 2,500 donuts sold and 350 Baker Bucks • +15% total income'}</p></div><button onclick="buyRoyalBakery()">${s.royalBakery?'ACTIVE':'BUY'}</button></div></div>
  <div class="item"><div class="itemTop"><span class="icon">🏆</span><div><h3>Prestige</h3><p>Requires Level 25, 5,000 donuts and $100,000 • awards Bakery Crowns. Each crown permanently adds +5% income.</p></div><button onclick="prestige()">PRESTIGE</button></div></div>
  <div class="item"><div class="itemTop"><span class="icon">📊</span><div><h3>Stats</h3><p>Level ${s.level} • ${s.sold.toLocaleString()} donuts • ${s.locationsOwned.length}/10 locations • +${totalLocationBonus()}% location income • +${upgradeBonus()}% upgrades</p></div></div></div>
- <div class="item"><div class="itemTop"><span class="icon">🎤</span><div><h3>Donut Rap</h3><p>Hear a fun bakery announcement.</p></div><button onclick="speech('Welcome to Desmond’s Donut Dash! Bake it, sell it, level it up, and build the ultimate donut empire!')">PLAY</button></div></div>
+ <div class="item"><div class="itemTop"><span class="icon">🎤</span><div><h3>Donut Rap</h3><p>Hear a fun bakery announcement.</p></div><button onclick="playDonutSong()">PLAY</button></div></div>
  <div class="item"><div class="itemTop"><span class="icon">❓</span><div><h3>How To Play</h3><p>Start a shift to earn shift cash, serve exact orders, buy upgrades and locations, use powerups, and unlock rare donuts.</p></div></div></div>
  <div class="item"><div class="row"><button onclick="save();toast('Game saved!')">💾 SAVE GAME</button><button onclick="resetGame()">♻️ RESET</button></div></div>`;
 }
